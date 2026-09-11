@@ -21,6 +21,7 @@ import com.margelo.nitro.bridgething.session.BridgethingOtaRun
 import com.margelo.nitro.bridgething.session.BridgethingPairPickResult
 import com.margelo.nitro.bridgething.session.BridgethingOtaManifest
 import com.margelo.nitro.bridgething.session.BridgethingOtaPollConfig
+import com.margelo.nitro.bridgething.session.BridgethingProviderCredentials
 import com.margelo.nitro.bridgething.session.BridgethingProviderInfo
 import com.margelo.nitro.bridgething.session.BridgethingResourceOrigin
 import com.margelo.nitro.bridgething.session.BridgethingResumeTarget
@@ -42,6 +43,7 @@ public interface BridgethingSessionBackend {
     public suspend fun connectProvider(id: String)
     public suspend fun disconnectProvider(id: String)
     public suspend fun cancelAuth(id: String)
+    public suspend fun completeProviderAuth(id: String, credentials: BridgethingProviderCredentials)
     public suspend fun setProviderPriority(ids: Array<String>)
 
     public suspend fun snapshot(): BridgethingSessionSnapshot
