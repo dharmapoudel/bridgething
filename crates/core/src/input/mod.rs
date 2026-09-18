@@ -1,15 +1,10 @@
 #[cfg(feature = "input")]
 mod evdev_listener;
 
-use std::time::Duration;
-
 use tokio::task::JoinHandle;
 use tokio_util::sync::CancellationToken;
 
 use crate::{chrome::ChromeCommand, handler::gateway::webapp::navigate_url_for_active, state::State};
-
-const HUB_GESTURE_THRESHOLD: usize = 5;
-const HUB_GESTURE_WINDOW: Duration = Duration::from_millis(1500);
 
 #[derive(Debug)]
 pub struct InputManager {
@@ -62,14 +57,4 @@ pub(crate) async fn trigger_hub_switch(state: &State) {
   } else {
     tracing::info!("hub gesture fired: switched to launcher");
   }
-}
-
-#[cfg_attr(not(feature = "input"), allow(dead_code))]
-pub(crate) fn gesture_window() -> Duration {
-  HUB_GESTURE_WINDOW
-}
-
-#[cfg_attr(not(feature = "input"), allow(dead_code))]
-pub(crate) fn gesture_threshold() -> usize {
-  HUB_GESTURE_THRESHOLD
 }

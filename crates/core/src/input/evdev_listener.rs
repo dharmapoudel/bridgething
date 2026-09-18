@@ -1,15 +1,12 @@
-use std::{
-  collections::VecDeque,
-  path::{Path, PathBuf},
-  time::{Duration, Instant},
-};
+use std::path::{Path, PathBuf};
+use std::time::Duration;
 
 use evdev::{Device, EventType, KeyCode};
 use libbridgething::LauncherGesture;
 use tokio::time::sleep;
 use tokio_util::sync::CancellationToken;
 
-use super::{gesture_threshold, gesture_window, trigger_hub_switch};
+use super::trigger_hub_switch;
 use crate::{chrome::ChromeCommand, handler::gateway::webapp::navigate_url_for_active, state::State};
 
 const RETRY_BACKOFF: Duration = Duration::from_secs(5);
@@ -90,9 +87,6 @@ async fn handle_browser_nav(state: &State, key: KeyCode) {
 async fn run_loop(path: &Path, state: &State, cancel: &CancellationToken) -> Result<(), String> {
   let device = Device::open(path).map_err(|e| format!("open: {e}"))?;
   let mut events = device.into_event_stream().map_err(|e| format!("stream: {e}"))?;
-  let mut window: VecDeque<Instant> = VecDeque::with_capacity(gesture_threshold());
-  let span = gesture_window();
-  let threshold = gesture_threshold();
   let mut held = false;
   let mut hold_deadline = Box::pin(sleep(Duration::ZERO));
 
@@ -127,21 +121,11 @@ async fn run_loop(path: &Path, state: &State, cancel: &CancellationToken) -> Res
                 .reset(tokio::time::Instant::now() + LONG_PRESS_THRESHOLD);
             }
             (LauncherGesture::LongPress, 0) => held = false,
+            // Custom firmware: fivePress fires on a single M press. The
+            // companion app still labels the option "Press M 5x".
             (LauncherGesture::FivePress, 1) => {
-              let now = Instant::now();
-              while let Some(front) = window.front() {
-                if now.duration_since(*front) > span {
-                  window.pop_front();
-                } else {
-                  break;
-                }
-              }
-              window.push_back(now);
-              tracing::trace!(count = window.len(), "hub gesture: KEY_M press");
-              if window.len() >= threshold {
-                window.clear();
-                trigger_hub_switch(state).await;
-              }
+              tracing::debug!("hub gesture: KEY_M single press");
+              trigger_hub_switch(state).await;
             }
             _ => {}
           }
