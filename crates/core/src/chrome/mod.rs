@@ -110,7 +110,7 @@ fn chrome_status_url() -> String {
 type ChromeTx = tokio::sync::mpsc::Sender<ChromeCommand>;
 type ChromeRx = tokio::sync::mpsc::Receiver<ChromeCommand>;
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub enum ChromeCommand {
   Navigate(String),
   NavigateExternal(String),
@@ -128,6 +128,9 @@ pub enum ChromeCommand {
   /// the rotated orientation; the injected rotation script handles the visual
   /// rotation to fill the physical panel.
   SetRotation { degrees: u16 },
+  CaptureScreenshot {
+    reply: tokio::sync::oneshot::Sender<Option<Vec<u8>>>,
+  },
 }
 
 #[derive(Clone)]
@@ -203,6 +206,12 @@ impl Chrome {
   pub async fn send(&self, command: ChromeCommand) -> Result<()> {
     tracing::debug!("sending command to chrome: {:?}", command);
     Ok(self.tx.send(command).await?)
+  }
+
+  pub async fn capture_screenshot(&self) -> Option<Vec<u8>> {
+    let (reply, rx) = tokio::sync::oneshot::channel();
+    self.send(ChromeCommand::CaptureScreenshot { reply }).await.ok()?;
+    rx.await.ok().flatten()
   }
 
   pub async fn shutdown(&self) {
@@ -306,6 +315,10 @@ impl ChromeWorker {
             }
             ChromeCommand::SetInjections { scripts, run_immediately } => {
               self.handle_set_injections(scripts, run_immediately).await
+            }
+            ChromeCommand::CaptureScreenshot { reply } => {
+              let png = self.handle_capture_screenshot().await;
+              let _ = reply.send(png);
             }
             ChromeCommand::SetRotation { degrees } => {
               self.rotation = degrees;
@@ -480,6 +493,20 @@ impl ChromeWorker {
       })
       .await
       .unwrap_or_default();
+  }
+
+  async fn handle_capture_screenshot(&mut self) -> Option<Vec<u8>> {
+    tracing::debug!("capturing screenshot via CDP");
+    self
+      .with_first_tab("screenshot", |tab| {
+        tab.capture_screenshot(
+          headless_chrome::protocol::cdp::Page::CaptureScreenshotFormatOption::Png,
+          None,
+          None,
+          true,
+        )
+      })
+      .await
   }
 
   async fn handle_clear_http_cache(&mut self) {

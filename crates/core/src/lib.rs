@@ -20,6 +20,7 @@ mod paths;
 mod peer;
 mod player;
 mod proxy;
+mod screenshot;
 mod state;
 mod transfer;
 mod transport;
@@ -416,7 +417,7 @@ pub async fn init(config: DaemonConfig) -> Daemon {
   let client_handler = ClientHandler::new(state.clone(), bluetooth.clone(), transport.clone());
   let gateway_handler = GatewayHandler::new(state.clone(), bluetooth.clone(), ota, transport);
 
-  let _input = input::InputManager::spawn(state.clone());
+  let _input = input::InputManager::spawn(state.clone(), bluetooth.clone());
 
   let (bringup, headless_inject) = match config.bluetooth {
     #[cfg(target_os = "linux")]
@@ -604,6 +605,7 @@ fn spawn_ota_event_forwarder(
         BridgeToGatewaySystemMsgEvent::DeviceNicknameChanged(_) => None,
         BridgeToGatewaySystemMsgEvent::LauncherGestureChanged(_) => None,
         BridgeToGatewaySystemMsgEvent::LogEntry(_) => None,
+        BridgeToGatewaySystemMsgEvent::ScreenshotCaptured(_) => None,
       };
       match event {
         BridgeToGatewaySystemMsgEvent::OtaProgress(_) => bluetooth.gateway_man.broadcast_event_background(event).await,

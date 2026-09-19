@@ -512,6 +512,10 @@ struct GatewayRuntime {
 }
 
 impl GatewayMan {
+  pub fn peer_owners(&self) -> &PeerOwners {
+    &self.peer_owners
+  }
+
   fn allocate() -> (Self, GatewayBootstrap) {
     let (outbound_tx, outbound_rx) = tokio::sync::mpsc::channel(GATEWAY_OUTBOUND_CAPACITY);
     let pending: PendingRequests = Arc::new(Mutex::new(HashMap::new()));

@@ -710,6 +710,7 @@ pub trait SystemHandler {
     payload: LauncherGestureReply,
   ) -> impl Future<Output = Result<(), WireError>> + Send;
   fn log_entry(&self, payload: LogEntry) -> impl Future<Output = Result<(), WireError>> + Send;
+  fn screenshot_captured(&self, payload: ScreenshotCaptured) -> impl Future<Output = Result<(), WireError>> + Send;
 }
 
 pub trait TransferHandler {
@@ -1589,6 +1590,17 @@ where
     BridgeToGatewayMsgData::System(BridgeToGatewaySystemMsg::LogEntry(payload)) => {
       if let Err(error) = <H as SystemHandler>::log_entry(handlers, payload).await {
         tracing::warn!(surface = "system", variant = "logEntry", ?error, "inbound not handled");
+      }
+      Ok(())
+    }
+    BridgeToGatewayMsgData::System(BridgeToGatewaySystemMsg::ScreenshotCaptured(payload)) => {
+      if let Err(error) = <H as SystemHandler>::screenshot_captured(handlers, payload).await {
+        tracing::warn!(
+          surface = "system",
+          variant = "screenshotCaptured",
+          ?error,
+          "inbound not handled"
+        );
       }
       Ok(())
     }

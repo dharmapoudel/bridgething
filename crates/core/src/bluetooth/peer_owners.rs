@@ -66,6 +66,10 @@ impl PeerOwners {
     self.inner.lock().expect("peer_owners poisoned").get(addr).copied()
   }
 
+  pub fn addresses(&self) -> Vec<Address> {
+    self.inner.lock().expect("peer_owners poisoned").keys().copied().collect()
+  }
+
   pub fn active_kinds(&self) -> HashSet<GatewayType> {
     self
       .inner

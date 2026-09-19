@@ -4,7 +4,10 @@ mod evdev_listener;
 use tokio::task::JoinHandle;
 use tokio_util::sync::CancellationToken;
 
-use crate::{chrome::ChromeCommand, handler::gateway::webapp::navigate_url_for_active, state::State};
+use crate::{
+  bluetooth::BluetoothMan, chrome::ChromeCommand,
+  handler::gateway::webapp::navigate_url_for_active, state::State,
+};
 
 #[derive(Debug)]
 pub struct InputManager {
@@ -12,20 +15,20 @@ pub struct InputManager {
 }
 
 impl InputManager {
-  pub fn spawn(state: State) -> Self {
+  pub fn spawn(state: State, bluetooth: BluetoothMan) -> Self {
     let cancel_token = CancellationToken::new();
-    let handle = tokio::spawn(run(state, cancel_token));
+    let handle = tokio::spawn(run(state, bluetooth, cancel_token));
     Self { _handle: handle }
   }
 }
 
 #[cfg(feature = "input")]
-async fn run(state: State, cancel: CancellationToken) {
-  evdev_listener::listen_for_hub_gesture(state, cancel).await;
+async fn run(state: State, bluetooth: BluetoothMan, cancel: CancellationToken) {
+  evdev_listener::listen_for_hub_gesture(state, bluetooth, cancel).await;
 }
 
 #[cfg(not(feature = "input"))]
-async fn run(_state: State, cancel: CancellationToken) {
+async fn run(_state: State, _bluetooth: BluetoothMan, cancel: CancellationToken) {
   tracing::debug!("input feature disabled; gesture listener idle");
   cancel.cancelled().await;
 }

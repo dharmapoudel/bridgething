@@ -7,12 +7,15 @@ use tokio::time::sleep;
 use tokio_util::sync::CancellationToken;
 
 use super::trigger_hub_switch;
-use crate::{chrome::ChromeCommand, handler::gateway::webapp::navigate_url_for_active, state::State};
+use crate::{
+  bluetooth::BluetoothMan, chrome::ChromeCommand, handler::gateway::webapp::navigate_url_for_active,
+  state::State,
+};
 
 const RETRY_BACKOFF: Duration = Duration::from_secs(5);
 const LONG_PRESS_THRESHOLD: Duration = Duration::from_millis(800);
 
-pub async fn listen_for_hub_gesture(state: State, cancel: CancellationToken) {
+pub async fn listen_for_hub_gesture(state: State, bluetooth: BluetoothMan, cancel: CancellationToken) {
   loop {
     if cancel.is_cancelled() {
       return;
@@ -20,7 +23,7 @@ pub async fn listen_for_hub_gesture(state: State, cancel: CancellationToken) {
     match find_gpio_keys_device().await {
       Some(path) => {
         tracing::info!("hub gesture: listening on {}", path.display());
-        if let Err(e) = run_loop(&path, &state, &cancel).await {
+        if let Err(e) = run_loop(&path, &state, &bluetooth, &cancel).await {
           tracing::warn!("hub gesture loop on {} ended: {:?}", path.display(), e);
         }
       }
@@ -84,11 +87,19 @@ async fn handle_browser_nav(state: &State, key: KeyCode) {
   }
 }
 
-async fn run_loop(path: &Path, state: &State, cancel: &CancellationToken) -> Result<(), String> {
+async fn run_loop(
+  path: &Path,
+  state: &State,
+  bluetooth: &BluetoothMan,
+  cancel: &CancellationToken,
+) -> Result<(), String> {
   let device = Device::open(path).map_err(|e| format!("open: {e}"))?;
   let mut events = device.into_event_stream().map_err(|e| format!("stream: {e}"))?;
   let mut held = false;
   let mut hold_deadline = Box::pin(sleep(Duration::ZERO));
+  let mut key2_down = false;
+  let mut key3_down = false;
+  let mut screenshot_fired = false;
 
   loop {
     tokio::select! {
@@ -128,6 +139,29 @@ async fn run_loop(path: &Path, state: &State, cancel: &CancellationToken) -> Res
               trigger_hub_switch(state).await;
             }
             _ => {}
+          }
+          continue;
+        }
+
+        if key == KeyCode::KEY_2 || key == KeyCode::KEY_3 {
+          let down = ev.value() == 1;
+          if key == KeyCode::KEY_2 {
+            key2_down = down;
+          } else {
+            key3_down = down;
+          }
+          if !down {
+            screenshot_fired = false;
+            continue;
+          }
+          if key2_down && key3_down && !screenshot_fired {
+            screenshot_fired = true;
+            tracing::info!("screenshot chord: KEY_2+KEY_3 pressed");
+            let state = state.clone();
+            let bluetooth = bluetooth.clone();
+            tokio::spawn(async move {
+              crate::screenshot::capture_and_push(&state, &bluetooth).await;
+            });
           }
           continue;
         }
