@@ -233,6 +233,7 @@ export type BridgeToGatewayWebappMsg =
   | { event: 'active'; data: WebappActive }
   | { event: 'switched'; data: WebappActive }
   | { event: 'uninstalled'; data: WebappActive }
+  | { event: 'restored'; data: WebappActive }
   | { event: 'webappError'; data: WebappError }
   | { event: 'resource'; data: WebappResourceReply }
   | { event: 'slots'; data: WebappSlots }
@@ -429,6 +430,7 @@ export type GatewayToBridgeWebappMsg =
   | { event: 'getActive' }
   | { event: 'switchTo'; data: WebappSwitchTo }
   | { event: 'uninstall'; data: WebappUninstall }
+  | { event: 'restoreBuiltin'; data: WebappRestoreBuiltin }
   | { event: 'resource'; data: WebappResource }
   | { event: 'getSlots' }
   | { event: 'setSlot'; data: WebappSetSlot }
@@ -741,6 +743,11 @@ export type WebappResourceReply = {
   mime: string | null;
   body: TransferBody | null;
 };
+
+/**
+ * Clears the uninstall tombstone of a builtin webapp, making it visible again.
+ */
+export type WebappRestoreBuiltin = { id: string };
 
 export type WebappSetSlot = { slot: WebappSlot; id: string | null };
 

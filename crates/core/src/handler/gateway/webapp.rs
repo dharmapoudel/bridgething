@@ -10,7 +10,7 @@ use libbridgething::{
     WebappConfigGet, WebappConfigGetReply, WebappConfigList, WebappConfigListReply, WebappConfigSet, WebappDocAck,
     WebappDocDelete, WebappDocGet, WebappDocGetReply, WebappDocList, WebappDocListReply, WebappDocSet, WebappList,
     WebappResource, WebappResourceKind, WebappResourceReply, WebappSetSlot, WebappSlot, WebappSwitchTo,
-    WebappUninstall,
+    WebappUninstall, WebappRestoreBuiltin,
   },
   protocol::Compress,
 };
@@ -90,8 +90,10 @@ impl GatewayToBridgeWebappMsgRequestDispatch for WebappHandler {
 
   async fn uninstall(&self, params: WebappUninstall) -> HandlerResult {
     let WebappUninstall { id } = params;
-    if self.handle.state.webapps.is_builtin(id).await {
-      tracing::warn!("({:?}) refusing uninstall of builtin webapp {id}", &self.handle.address);
+    // Reserved builtins (hub/browser/stock) can never be uninstalled; other
+    // builtins are tombstoned by the registry so they stay hidden.
+    if self.handle.state.webapps.is_builtin(id).await && crate::state::is_reserved(id) {
+      tracing::warn!("({:?}) refusing uninstall of reserved builtin webapp {id}", &self.handle.address);
       self
         .handle
         .respond_err::<WebappUninstall>(WebappError::CannotUninstallBuiltin { id: id.to_string() })
@@ -145,6 +147,19 @@ impl GatewayToBridgeWebappMsgRequestDispatch for WebappHandler {
 
     let active = active_payload(&self.handle).await?;
     self.handle.respond_to::<WebappUninstall>(active).await;
+    Ok(())
+  }
+
+  async fn restore_builtin(&self, params: WebappRestoreBuiltin) -> HandlerResult {
+    let WebappRestoreBuiltin { id } = params;
+    let restored = self.handle.state.webapps.restore_builtin(id).await?;
+    if restored {
+      tracing::info!("({:?}) restored builtin webapp {id}", &self.handle.address);
+    } else {
+      tracing::debug!("({:?}) webapp {id} was not tombstoned; nothing to restore", &self.handle.address);
+    }
+    let active = active_payload(&self.handle).await?;
+    self.handle.respond_to::<WebappRestoreBuiltin>(active).await;
     Ok(())
   }
 

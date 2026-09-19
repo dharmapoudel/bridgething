@@ -1,5 +1,5 @@
 use std::{
-  collections::{BTreeMap, HashMap},
+  collections::{BTreeMap, HashMap, HashSet},
   path::{Component, Path, PathBuf},
   sync::Arc,
 };
@@ -23,8 +23,12 @@ pub const OVERLAY_MAX_BYTES: u64 = 512 * 1024;
 const EXTRACTED_SIZE_CAP_BYTES: u64 = 1024 * 1024 * 1024;
 const RESERVED_BUILTIN_IDS: &[Uuid] = &[STOCK_WEBAPP_ID, HUB_WEBAPP_ID, BROWSER_WEBAPP_ID];
 const DEV_SHADOW_NAMESPACE: Uuid = Uuid::from_u128(0x019759e0_dec0_5ade_8000_b71d6e7de5af);
+/// Tombstoned (user-uninstalled) builtin webapps, persisted as a JSON array of
+/// uuid strings next to the installed root. Builtins live in the read-only
+/// system image, so "uninstall" hides them instead of deleting files.
+const TOMBSTONE_FILE: &str = "uninstalled_builtins.json";
 
-fn is_reserved(id: Uuid) -> bool {
+pub(crate) fn is_reserved(id: Uuid) -> bool {
   RESERVED_BUILTIN_IDS.contains(&id)
 }
 
@@ -57,6 +61,37 @@ pub struct WebappRegistry {
   builtin_root: PathBuf,
   provenance: WebappProvenanceStore,
   bundles: Arc<RwLock<HashMap<Uuid, WebappBundle>>>,
+  tombstone_path: PathBuf,
+  tombstones: Arc<RwLock<HashSet<Uuid>>>,
+}
+
+fn load_tombstones(path: &Path) -> HashSet<Uuid> {
+  let bytes = match std::fs::read(path) {
+    Ok(bytes) => bytes,
+    Err(_) => return HashSet::new(),
+  };
+  let ids: Vec<String> = match serde_json::from_slice(&bytes) {
+    Ok(ids) => ids,
+    Err(_) => return HashSet::new(),
+  };
+  ids.iter().filter_map(|s| Uuid::parse_str(s).ok()).collect()
+}
+
+async fn save_tombstones(path: &Path, tombstones: &HashSet<Uuid>) {
+  let ids: Vec<String> = tombstones.iter().map(|id| id.to_string()).collect();
+  let body = match serde_json::to_vec(&ids) {
+    Ok(body) => body,
+    Err(err) => {
+      tracing::warn!("webapps: cannot serialize builtin tombstones: {err}");
+      return;
+    }
+  };
+  let tmp = path.with_extension("tmp");
+  if let Err(err) = fs::write(&tmp, body).await {
+    tracing::warn!(path = %path.display(), "webapps: cannot write tombstones: {err}");
+  } else if let Err(err) = fs::rename(&tmp, path).await {
+    tracing::warn!(path = %path.display(), "webapps: cannot replace tombstones: {err}");
+  }
 }
 
 impl WebappRegistry {
@@ -76,11 +111,19 @@ impl WebappRegistry {
       builtin_root.display()
     );
 
+    let tombstone_path = installed_root.join(TOMBSTONE_FILE);
+    let tombstones = load_tombstones(&tombstone_path);
+    if !tombstones.is_empty() {
+      tracing::info!("webapp registry: {} builtin tombstones loaded", tombstones.len());
+    }
+
     let me = Self {
       installed_root,
       builtin_root,
       provenance,
       bundles: Arc::new(RwLock::new(HashMap::new())),
+      tombstone_path,
+      tombstones: Arc::new(RwLock::new(tombstones)),
     };
     me.rescan().await;
     Ok(me)
@@ -88,6 +131,7 @@ impl WebappRegistry {
 
   pub async fn rescan(&self) {
     let mut bundles: HashMap<Uuid, WebappBundle> = HashMap::new();
+    let tombstones = self.tombstones.read().await.clone();
     for path in scan_root(&self.builtin_root).await {
       if let Some(bundle) = load_bundle(&path, WebappSource::Builtin).await
         && bundles.insert(bundle.manifest.id, bundle).is_some()
@@ -95,6 +139,9 @@ impl WebappRegistry {
         tracing::warn!("duplicate webapp uuid in builtin root: {}", path.display());
       }
     }
+    // Drop tombstoned builtins: the user uninstalled them; the files stay in
+    // the read-only system image but the apps stay hidden across rescans.
+    bundles.retain(|id, _| !tombstones.contains(id));
     let provenance = self.provenance.all().await.unwrap_or_else(|err| {
       tracing::warn!(?err, "webapp provenance read failed; treating all as unknown");
       HashMap::new()
@@ -354,13 +401,50 @@ impl WebappRegistry {
       Some(b) => b,
       None => return Ok(false),
     };
-    if !matches!(bundle.source, WebappSource::Installed) {
-      return Ok(false);
+    match bundle.source {
+      WebappSource::Installed => {
+        fs::remove_dir_all(&bundle.path).await?;
+        self.provenance.clear(id).await?;
+        self.rescan().await;
+        Ok(true)
+      }
+      // Builtins live in the read-only system image: tombstone the id so the
+      // app stays hidden across rescans. Reserved ids (hub/browser/stock) are
+      // never tombstoned; the handler refuses those before reaching here.
+      WebappSource::Builtin if !is_reserved(id) => {
+        {
+          let mut tombstones = self.tombstones.write().await;
+          tombstones.insert(id);
+          save_tombstones(&self.tombstone_path, &tombstones).await;
+        }
+        self.bundles.write().await.remove(&id);
+        tracing::info!("webapp {id} builtin tombstoned (uninstalled)");
+        Ok(true)
+      }
+      _ => Ok(false),
     }
-    fs::remove_dir_all(&bundle.path).await?;
-    self.provenance.clear(id).await?;
-    self.rescan().await;
-    Ok(true)
+  }
+
+  /// Restore a tombstoned builtin webapp. Returns true when a tombstone was cleared.
+  pub async fn restore_builtin(&self, id: Uuid) -> StateResult<bool> {
+    let removed = {
+      let mut tombstones = self.tombstones.write().await;
+      let removed = tombstones.remove(&id);
+      if removed {
+        save_tombstones(&self.tombstone_path, &tombstones).await;
+      }
+      removed
+    };
+    if removed {
+      self.rescan().await;
+      tracing::info!("webapp {id} builtin tombstone cleared (restored)");
+    }
+    Ok(removed)
+  }
+
+  /// Ids of currently tombstoned (user-uninstalled) builtin webapps.
+  pub async fn uninstalled_builtin_ids(&self) -> Vec<Uuid> {
+    self.tombstones.read().await.iter().copied().collect()
   }
 }
 
@@ -1178,5 +1262,93 @@ mod tests {
   #[test]
   fn all_noise_normalizes_empty() {
     assert_eq!(normalize_webapp_name("the app"), "");
+  }
+
+  fn plant_builtin(builtin_root: &Path) -> Uuid {
+    let id = Uuid::now_v7();
+    let dir = builtin_root.join(bundle_dir_name(id));
+    std::fs::create_dir_all(&dir).expect("bundle dir");
+    std::fs::write(dir.join("index.html"), b"<h1>builtin</h1>").expect("index");
+    std::fs::write(
+      dir.join("manifest.json"),
+      format!(r#"{{"id":"{id}","name":"builtin-test","version":"0.1.0"}}"#),
+    )
+    .expect("manifest");
+    id
+  }
+
+  #[tokio::test]
+  async fn builtin_uninstall_tombstones_and_hides() {
+    let tmp = TempDir::new().expect("tmp");
+    let builtin_root = tmp.path().join("builtin");
+    std::fs::create_dir_all(&builtin_root).expect("builtin root");
+    let id = plant_builtin(&builtin_root);
+    let reg = registry(tmp.path()).await;
+    assert!(reg.bundle(id).await.is_some(), "builtin visible before uninstall");
+
+    assert!(reg.uninstall(id).await.expect("uninstall"), "uninstall reports removal");
+    assert!(reg.bundle(id).await.is_none(), "builtin hidden after uninstall");
+    assert!(reg.uninstalled_builtin_ids().await.contains(&id));
+
+    // A rescan must not resurrect it.
+    reg.rescan().await;
+    assert!(reg.bundle(id).await.is_none(), "tombstoned builtin stays hidden across rescan");
+  }
+
+  #[tokio::test]
+  async fn builtin_tombstone_survives_reinit() {
+    let tmp = TempDir::new().expect("tmp");
+    let builtin_root = tmp.path().join("builtin");
+    std::fs::create_dir_all(&builtin_root).expect("builtin root");
+    let id = plant_builtin(&builtin_root);
+    let reg = registry(tmp.path()).await;
+    assert!(reg.uninstall(id).await.expect("uninstall"));
+    drop(reg);
+
+    let reg2 = registry(tmp.path()).await;
+    assert!(
+      reg2.bundle(id).await.is_none(),
+      "tombstone persists across daemon restarts"
+    );
+    assert!(reg2.uninstalled_builtin_ids().await.contains(&id));
+  }
+
+  #[tokio::test]
+  async fn restore_builtin_brings_it_back() {
+    let tmp = TempDir::new().expect("tmp");
+    let builtin_root = tmp.path().join("builtin");
+    std::fs::create_dir_all(&builtin_root).expect("builtin root");
+    let id = plant_builtin(&builtin_root);
+    let reg = registry(tmp.path()).await;
+    assert!(reg.uninstall(id).await.expect("uninstall"));
+    assert!(reg.bundle(id).await.is_none());
+
+    assert!(reg.restore_builtin(id).await.expect("restore"), "restore reports success");
+    assert!(reg.bundle(id).await.is_some(), "builtin visible again after restore");
+    assert!(!reg.restore_builtin(id).await.expect("restore"), "second restore is a no-op");
+  }
+
+  #[tokio::test]
+  async fn reserved_builtin_uninstall_is_refused_by_registry() {
+    let tmp = TempDir::new().expect("tmp");
+    let builtin_root = tmp.path().join("builtin");
+    std::fs::create_dir_all(&builtin_root).expect("builtin root");
+    // Plant a bundle carrying the hub's reserved id.
+    let dir = builtin_root.join(bundle_dir_name(HUB_WEBAPP_ID));
+    std::fs::create_dir_all(&dir).expect("bundle dir");
+    std::fs::write(dir.join("index.html"), b"<h1>hub</h1>").expect("index");
+    std::fs::write(
+      dir.join("manifest.json"),
+      format!(r#"{{"id":"{HUB_WEBAPP_ID}","name":"hub","version":"0.1.0"}}"#),
+    )
+    .expect("manifest");
+    let reg = registry(tmp.path()).await;
+    assert!(reg.bundle(HUB_WEBAPP_ID).await.is_some());
+
+    // Reserved ids are never tombstoned: uninstall is a no-op at the registry
+    // level (the gateway handler refuses with CannotUninstallBuiltin first).
+    assert!(!reg.uninstall(HUB_WEBAPP_ID).await.expect("uninstall"));
+    assert!(reg.bundle(HUB_WEBAPP_ID).await.is_some(), "reserved builtin stays installed");
+    assert!(reg.uninstalled_builtin_ids().await.is_empty());
   }
 }

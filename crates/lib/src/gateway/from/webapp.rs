@@ -60,6 +60,25 @@ pub struct WebappUninstall {
   pub id: Uuid,
 }
 
+#[serde_with::skip_serializing_none]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, TS, WireRequest)]
+#[serde(rename_all = "camelCase")]
+#[ts(export, export_to = "gateway.ts")]
+#[wire_request(
+  direction = GatewayToBridge,
+  surface = Webapp,
+  request_variant = RestoreBuiltin,
+  response = crate::gateway::WebappActive,
+  response_variant = Restored,
+  error = crate::WebappError,
+  error_variant = WebappError,
+)]
+/// Clears the uninstall tombstone of a builtin webapp, making it visible again.
+pub struct WebappRestoreBuiltin {
+  #[ts(type = "string")]
+  pub id: Uuid,
+}
+
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, TS)]
 #[serde(rename_all = "camelCase")]
 #[ts(export, export_to = "gateway.ts")]
@@ -292,6 +311,8 @@ pub enum GatewayToBridgeWebappMsg {
   SwitchTo(WebappSwitchTo),
   #[bridge_request]
   Uninstall(WebappUninstall),
+  #[bridge_request]
+  RestoreBuiltin(WebappRestoreBuiltin),
   #[bridge_request]
   Resource(WebappResource),
   #[bridge_request]

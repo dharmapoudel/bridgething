@@ -152,6 +152,8 @@ pub enum BridgeToGatewayWebappMsg {
   #[bridge_response]
   Uninstalled(WebappActive),
   #[bridge_response]
+  Restored(WebappActive),
+  #[bridge_response]
   WebappError(WebappError),
   #[bridge_response]
   Resource(WebappResourceReply),

@@ -1,5 +1,5 @@
 {
-  "version": "0.13.1",
+  "version": "0.13.4",
   "surfaces": [
     {
       "name": "asset",
@@ -342,6 +342,11 @@
           "method": "displaySetLevel",
           "payload": "DisplaySetLevel",
           "payload_ref": "DisplaySetLevel"
+        },
+        {
+          "method": "displaySetRotation",
+          "payload": "DisplaySetRotation",
+          "payload_ref": "DisplaySetRotation"
         }
       ],
       "handlers": []
@@ -1984,6 +1989,16 @@
         }
       ]
     },
+    "DisplaySetRotation": {
+      "kind": "struct",
+      "description": "Display rotation in degrees clockwise. One of 0, 90, 180, 270.\nAt 90/270 the page lays out as 480x800 portrait and is rotated to fill\nthe physical 800x480 panel.",
+      "fields": [
+        {
+          "name": "degrees",
+          "type": "number"
+        }
+      ]
+    },
     "DocAck": {
       "kind": "struct",
       "description": "The stored value after a `set` or `delete`.",
@@ -2403,6 +2418,11 @@
           "name": "ambientLevel",
           "type": "number",
           "description": "0 to 100."
+        },
+        {
+          "name": "rotation",
+          "type": "number",
+          "description": "Display rotation in degrees clockwise: one of 0, 90, 180, 270.\nDefaults to 0 on daemons that predate rotation support."
         }
       ]
     },

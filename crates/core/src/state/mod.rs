@@ -50,7 +50,7 @@ pub use telephony::TelephonyManager;
 pub use time::TimeManager;
 pub use tunnel_routes::{TunnelInbound, TunnelRoutes};
 pub use webapps::{BROWSER_WEBAPP_ID, HUB_WEBAPP_ID, STOCK_WEBAPP_ID, WebappRegistry};
-pub(crate) use webapps::{extract_zip, sha256_hex};
+pub(crate) use webapps::{extract_zip, is_reserved, sha256_hex};
 
 pub const GEO_PERMISSION: &str = "geo";
 

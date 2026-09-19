@@ -422,6 +422,12 @@ impl<'a> WebappSurface<'a> {
   pub async fn uninstall(&self, request: WebappUninstall) -> Result<WebappActive, RequestFailure<WebappError>> {
     self.0.request(request).await
   }
+  pub async fn restore_builtin(
+    &self,
+    request: WebappRestoreBuiltin,
+  ) -> Result<WebappActive, RequestFailure<WebappError>> {
+    self.0.request(request).await
+  }
   pub async fn get_slots(&self) -> Result<WebappSlots, RequestFailure<::core::convert::Infallible>> {
     self.0.request(GetWebappSlots).await
   }
@@ -1715,6 +1721,14 @@ where
       tracing::debug!(
         surface = "webapp",
         variant = "uninstalled",
+        "response with no pending request"
+      );
+      Ok(())
+    }
+    BridgeToGatewayMsgData::Webapp(BridgeToGatewayWebappMsg::Restored(_)) => {
+      tracing::debug!(
+        surface = "webapp",
+        variant = "restored",
         "response with no pending request"
       );
       Ok(())
