@@ -37,7 +37,16 @@ pub(crate) async fn trigger_hub_switch(state: &State) {
     return;
   };
   if matches!(state.active_webapp().await, Ok(Some(active)) if active == id) {
-    tracing::debug!("hub gesture fired while already on the launcher; ignoring");
+    // The hub hosts sub-views (settings, wizard) as client-side state, not
+    // separate webapps, so the daemon cannot tell "launcher home" from
+    // "settings page". A no-op here strands the user in settings with a dead
+    // M button. Re-navigate to the hub URL to reset the hub to its home view.
+    let url = navigate_url_for_active(state).await;
+    if let Err(e) = state.chrome.send(ChromeCommand::Navigate(url)).await {
+      tracing::warn!("hub gesture: failed to reset launcher view: {:?}", e);
+    } else {
+      tracing::info!("hub gesture fired: reset launcher to home view");
+    }
     return;
   }
   if state.webapps.resolve(id).await.is_none() {
