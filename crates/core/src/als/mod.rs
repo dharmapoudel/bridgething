@@ -22,6 +22,12 @@ const ALS_PATH: &str = "/sys/bus/iio/devices/iio:device0/in_intensity0_raw";
 const BACKLIGHT_DIR: &str = "/sys/class/backlight/backlight";
 const ALS_PREFS_FILE: &str = "als.json";
 
+/// Minimum manual brightness as a fraction of max backlight. Prevents the
+/// full-darkness trap: at 0 ticks the panel is black and the persisted prefs
+/// would restore black on every reboot, leaving no on-device way to turn the
+/// screen back up.
+const MANUAL_BRIGHTNESS_FLOOR: f32 = 0.02;
+
 #[derive(Debug, Clone)]
 pub struct AlsConfig {
   pub poll_interval: Duration,
@@ -181,7 +187,12 @@ impl Inner {
 
   fn level_to_ticks(&self, level: f32) -> u32 {
     let level = level.clamp(0.0, 1.0);
-    (level * self.max_brightness as f32 + 0.5) as u32
+    // Floor manual brightness at 2% of max backlight. A 0% level would turn
+    // the panel fully dark with no on-device way to recover (the prefs are
+    // restored on reboot), so the daemon never writes below this floor no
+    // matter which client requested the level.
+    let floor = (self.max_brightness as f32 * MANUAL_BRIGHTNESS_FLOOR + 0.5) as u32;
+    ((level * self.max_brightness as f32 + 0.5) as u32).max(floor)
   }
 }
 
@@ -621,6 +632,36 @@ mod tests {
       "the daemon reports a brightness the panel never took"
     );
     assert_eq!(after.effective_level, settled.effective_level);
+  }
+
+  #[tokio::test]
+  async fn manual_brightness_never_drops_below_the_floor() {
+    let root = scratch("als-test-floor");
+    let backlight = root.join("backlight");
+    std::fs::create_dir_all(&backlight).expect("scratch backlight");
+    std::fs::write(backlight.join("max_brightness"), "255\n").expect("max_brightness");
+    std::fs::write(backlight.join("actual_brightness"), "255\n").expect("actual_brightness");
+    std::fs::write(backlight.join("brightness"), "255\n").expect("brightness");
+
+    let (manager, _rig) = manager_at(&root).await;
+    manager.set_mode(BrightnessMode::Manual).await.expect("mode switch");
+    manager
+      .set_level(0.0)
+      .await
+      .expect("level write")
+      .expect("manual mode accepts a level");
+    let panel: String = std::fs::read_to_string(backlight.join("brightness"))
+      .expect("panel brightness")
+      .trim()
+      .to_string();
+    // 2% of 255 rounds to 5 ticks: the panel never goes fully dark.
+    assert_eq!(panel, "5", "manual 0% is floored, not black: {panel}");
+    let state = manager.snapshot().await.brightness;
+    assert!(
+      (state.effective_level - 5.0 / 255.0).abs() < 0.001,
+      "effective level reports the floor honestly: {}",
+      state.effective_level
+    );
   }
 
   #[tokio::test]
