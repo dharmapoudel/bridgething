@@ -16,6 +16,7 @@ use crate::{
   net::{ClientMan, WireEventBus},
   paths,
   peer::PeerTracker,
+  rotation::RotationManager,
   transfer::{TransferError, outbound::TransferOutbound, sinks::TransferSinks},
 };
 
@@ -74,6 +75,7 @@ pub struct AppState {
   pub time: TimeManager,
   pub audio: AudioManager,
   pub als: AlsManager,
+  pub rotation: RotationManager,
   pub mic: MicManager,
   pub devices: DeviceStore,
   pub kv: KvStore,
@@ -120,6 +122,7 @@ impl AppState {
       time,
       audio,
       als,
+      rotation,
       mic,
       devices,
       kv,
@@ -156,6 +159,7 @@ impl AppState {
       time,
       audio,
       als,
+      rotation,
       mic,
       devices,
       kv,
@@ -289,6 +293,14 @@ impl AppState {
 
   async fn resolve_injections(&self) -> Vec<chrome::InjectedScript> {
     let mut scripts = Vec::new();
+    // Display rotation: always injected (no-op at 0°) so the corner gesture
+    // is available on every page. The baked-in degrees match the CDP metrics
+    // override applied via ChromeCommand::SetRotation.
+    let degrees = self.rotation.rotation().await;
+    scripts.push(chrome::InjectedScript {
+      source: self.rotation.script(degrees, &self.rotation_ws_url()),
+      world: None,
+    });
     if let Some(source) = self.resolve_overlay_script().await {
       scripts.push(chrome::InjectedScript {
         source,
@@ -302,6 +314,10 @@ impl AppState {
       });
     }
     scripts
+  }
+
+  fn rotation_ws_url(&self) -> String {
+    format!("ws://127.0.0.1:{}/", self.modern_port)
   }
 
   pub async fn sync_injections(&self, run_immediately: bool) {
@@ -354,6 +370,7 @@ pub struct StateAssembly {
   pub time: TimeManager,
   pub audio: AudioManager,
   pub als: AlsManager,
+  pub rotation: RotationManager,
   pub mic: MicManager,
   pub devices: DeviceStore,
   pub kv: KvStore,

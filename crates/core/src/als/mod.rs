@@ -138,6 +138,9 @@ impl Inner {
         effective_level: self.current_level(),
       },
       ambient_level: self.ambient_level(),
+      // Filled in by the hardware handler from the RotationManager; ALS
+      // doesn't own rotation state.
+      rotation: 0,
     }
   }
 

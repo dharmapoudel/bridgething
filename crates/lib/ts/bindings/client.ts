@@ -448,6 +448,7 @@ export type ClientToBridgeGeoMsg =
 export type ClientToBridgeHardwareMsg =
   | { event: 'displaySetMode'; data: DisplaySetMode }
   | { event: 'displaySetLevel'; data: DisplaySetLevel }
+  | { event: 'displaySetRotation'; data: DisplaySetRotation }
   | { event: 'stateGet' };
 
 /**
@@ -632,6 +633,13 @@ export type DisplaySetLevel = {
 };
 
 export type DisplaySetMode = { mode: BrightnessMode };
+
+/**
+ * Display rotation in degrees clockwise. One of 0, 90, 180, 270.
+ * At 90/270 the page lays out as 480x800 portrait and is rotated to fill
+ * the physical 800x480 panel.
+ */
+export type DisplaySetRotation = { degrees: number };
 
 /**
  * The stored value after a `set` or `delete`.

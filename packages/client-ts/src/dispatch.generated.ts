@@ -45,6 +45,7 @@ import type {
   DiagnosticsReply,
   DisplaySetLevel,
   DisplaySetMode,
+  DisplaySetRotation,
   DocAck,
   DocChanged,
   DocDelete,
@@ -1392,6 +1393,16 @@ export class HardwareSurface {
       id: newUuid(),
       meta: { kind: 'command' },
       data: { type: 'hardware', data: { event: 'displaySetLevel', data: payload } },
+    };
+    await this._client.send(msg);
+  }
+
+  /** Send `Hardware::DisplaySetRotation` to the daemon. */
+  async displaySetRotation(payload: DisplaySetRotation): Promise<void> {
+    const msg: ClientToBridgeMsg = {
+      id: newUuid(),
+      meta: { kind: 'command' },
+      data: { type: 'hardware', data: { event: 'displaySetRotation', data: payload } },
     };
     await this._client.send(msg);
   }

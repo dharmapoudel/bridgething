@@ -30,6 +30,10 @@ pub struct HardwareState {
   pub brightness: BrightnessState,
   /// 0 to 100.
   pub ambient_level: u8,
+  /// Display rotation in degrees clockwise: one of 0, 90, 180, 270.
+  /// Defaults to 0 on daemons that predate rotation support.
+  #[serde(default)]
+  pub rotation: u16,
 }
 
 #[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, TS)]
@@ -40,4 +44,6 @@ pub enum HardwareError {
   LevelOutOfRange,
   /// `setLevel` needs `manual` mode. Set the mode first.
   ModeMismatch,
+  /// `displaySetRotation` takes one of 0, 90, 180, 270.
+  InvalidRotation,
 }

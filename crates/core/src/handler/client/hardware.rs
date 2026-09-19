@@ -1,5 +1,6 @@
 use libbridgething::client::{
   BridgeToClientHardwareMsg, ClientToBridgeHardwareMsgDispatch, DisplaySetLevel, DisplaySetMode,
+  DisplaySetRotation,
 };
 
 use super::{HandlerResult, MsgHandle};
@@ -37,8 +38,32 @@ impl ClientToBridgeHardwareMsgDispatch for HardwareHandler {
     Ok(())
   }
 
+  async fn display_set_rotation(&self, params: DisplaySetRotation) -> HandlerResult {
+    let degrees = match self.handle.state.rotation.set_rotation(params.degrees).await {
+      Ok(degrees) => degrees,
+      Err(err) => {
+        tracing::debug!("({}) hardware.displaySetRotation rejected: {err:?}", &self.handle.from);
+        return Ok(());
+      }
+    };
+    // Apply the CDP metrics override, then re-inject the rotation script with
+    // the new degrees baked in (runs immediately in the live page).
+    if let Err(err) = self
+      .handle
+      .state
+      .chrome
+      .send(crate::chrome::ChromeCommand::SetRotation { degrees })
+      .await
+    {
+      tracing::warn!("({}) hardware.displaySetRotation: chrome command failed: {err:?}", &self.handle.from);
+    }
+    self.handle.state.sync_injections(true).await;
+    Ok(())
+  }
+
   async fn state_get(&self) -> HandlerResult {
-    let reply = self.handle.state.als.snapshot_reply().await;
+    let mut reply = self.handle.state.als.snapshot_reply().await;
+    reply.state.rotation = self.handle.state.rotation.rotation().await;
     self
       .handle
       .respond(BridgeToClientHardwareMsg::StateReply(reply))

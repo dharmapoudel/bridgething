@@ -20,6 +20,16 @@ pub struct DisplaySetLevel {
   pub level: f32,
 }
 
+/// Display rotation in degrees clockwise. One of 0, 90, 180, 270.
+/// At 90/270 the page lays out as 480x800 portrait and is rotated to fill
+/// the physical 800x480 panel.
+#[derive(Debug, Clone, Copy, Serialize, Deserialize, PartialEq, Eq, TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export, export_to = "client.ts")]
+pub struct DisplaySetRotation {
+  pub degrees: u16,
+}
+
 #[derive(Debug, Clone, Copy, Default, WireRequest)]
 #[wire_request(
   direction = ClientToBridge,
@@ -41,6 +51,8 @@ pub enum ClientToBridgeHardwareMsg {
   DisplaySetMode(DisplaySetMode),
   #[bridge_command]
   DisplaySetLevel(DisplaySetLevel),
+  #[bridge_command]
+  DisplaySetRotation(DisplaySetRotation),
   #[bridge_request]
   StateGet,
 }

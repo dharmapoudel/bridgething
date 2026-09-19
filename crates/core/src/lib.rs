@@ -3,6 +3,7 @@ mod net;
 
 mod als;
 mod mic;
+mod rotation;
 mod systemd;
 
 mod asset;
@@ -31,6 +32,7 @@ mod overlay;
 use std::{future::Future, net::SocketAddr, path::PathBuf, pin::Pin};
 
 use als::{AlsConfig, AlsManager};
+use rotation::RotationManager;
 use asset::AssetCache;
 use authority::AuthorityRegistry;
 pub use bluetooth::{Address, Iap2Event, Iap2InjectTx, Iap2OutboundTapTx, Iap2TransportCommand};
@@ -239,6 +241,12 @@ pub async fn init(config: DaemonConfig) -> Daemon {
     .await
     .expect("failed to initialize ALS manager")
     .spawn();
+  let rotation = RotationManager::new(
+    config
+      .state_dir
+      .clone()
+      .unwrap_or_else(paths::state_dir),
+  );
   let (mic, mic_handle) = MicManager::init(bus.clone(), bluetooth.clone(), MicConfig::default())
     .await
     .spawn();
@@ -323,6 +331,7 @@ pub async fn init(config: DaemonConfig) -> Daemon {
     time,
     audio,
     als,
+    rotation,
     mic,
     devices,
     kv,
@@ -340,6 +349,20 @@ pub async fn init(config: DaemonConfig) -> Daemon {
     als_handle,
     mic_handle,
   });
+
+  // Apply the persisted display rotation to the kiosk tab. The chrome worker
+  // retries via reconcile() if the tab isn't up yet.
+  {
+    let degrees = state.rotation.rotation().await;
+    if degrees != 0
+      && let Err(err) = state
+        .chrome
+        .send(chrome::ChromeCommand::SetRotation { degrees })
+        .await
+    {
+      tracing::warn!("failed to apply persisted display rotation: {err:?}");
+    }
+  }
 
   spawn_ota_event_forwarder(bluetooth.clone(), state.client_man.clone(), ota_events_rx);
   spawn_nickname_observer(

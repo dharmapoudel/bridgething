@@ -3,13 +3,13 @@
 
 use std::{future::Future, sync::Arc};
 
+use crate::{Gateway, GatewayProtocol, HandlerError};
 use bridgething_sdk_runtime::{Connection, Reply, RequestFailure, SdkError, rt};
 use futures::{Stream, StreamExt, future::ready};
-use libbridgething::{gateway::*, wire::WireError, *};
+use libbridgething::wire::WireError;
+use libbridgething::{gateway::*, *};
 use tokio_stream::wrappers::BroadcastStream;
 use uuid::Uuid;
-
-use crate::{Gateway, GatewayProtocol, HandlerError};
 
 impl Gateway {
   /// The `Audio` surface.

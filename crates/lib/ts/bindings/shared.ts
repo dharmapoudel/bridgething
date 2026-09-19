@@ -271,7 +271,7 @@ export type GeoAccuracy = 'coarse' | 'fine';
 
 export type GeoError = 'permissionDenied' | 'notDeclared' | 'unavailable' | 'unknownToken';
 
-export type HardwareError = 'levelOutOfRange' | 'modeMismatch';
+export type HardwareError = 'levelOutOfRange' | 'modeMismatch' | 'invalidRotation';
 
 export type HardwareState = {
   brightness: BrightnessState;
@@ -279,6 +279,11 @@ export type HardwareState = {
    * 0 to 100.
    */
   ambientLevel: number;
+  /**
+   * Display rotation in degrees clockwise: one of 0, 90, 180, 270.
+   * Defaults to 0 on daemons that predate rotation support.
+   */
+  rotation: number;
 };
 
 export type HttpHeader = { name: string; value: string };

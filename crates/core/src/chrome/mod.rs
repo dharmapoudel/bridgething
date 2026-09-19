@@ -12,10 +12,46 @@ use headless_chrome::{
       AddScriptToEvaluateOnNewDocument, GetNavigationHistory, NavigateToHistoryEntry,
       RemoveScriptToEvaluateOnNewDocument,
     },
+    types::Method,
   },
 };
 use serde::Deserialize;
 use tokio_util::sync::CancellationToken;
+
+/// `Emulation.setDeviceMetricsOverride`. Not shipped by headless_chrome's
+/// generated protocol, so defined by hand via the public [`Method`] trait.
+#[derive(Debug, Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct SetDeviceMetricsOverride {
+  width: u32,
+  height: u32,
+  device_scale_factor: f64,
+  mobile: bool,
+  #[serde(skip_serializing_if = "Option::is_none")]
+  screen_orientation: Option<ScreenOrientation>,
+}
+
+#[derive(Debug, Clone, serde::Serialize)]
+#[serde(rename_all = "camelCase")]
+struct ScreenOrientation {
+  #[serde(rename = "type")]
+  orientation_type: &'static str,
+  angle: u16,
+}
+
+impl Method for SetDeviceMetricsOverride {
+  const NAME: &'static str = "Emulation.setDeviceMetricsOverride";
+  type ReturnObject = serde_json::Value;
+}
+
+/// `Emulation.clearDeviceMetricsOverride`.
+#[derive(Debug, Clone, serde::Serialize)]
+struct ClearDeviceMetricsOverride;
+
+impl Method for ClearDeviceMetricsOverride {
+  const NAME: &'static str = "Emulation.clearDeviceMetricsOverride";
+  type ReturnObject = serde_json::Value;
+}
 
 const ENV_CHROME_PORT: &str = "BRIDGETHING_CHROME_PORT";
 
@@ -87,6 +123,11 @@ pub enum ChromeCommand {
     scripts: Vec<InjectedScript>,
     run_immediately: bool,
   },
+  /// Apply display rotation (0/90/180/270). Sends
+  /// `Emulation.setDeviceMetricsOverride` to the kiosk tab so pages lay out in
+  /// the rotated orientation; the injected rotation script handles the visual
+  /// rotation to fill the physical panel.
+  SetRotation { degrees: u16 },
 }
 
 #[derive(Clone)]
@@ -179,6 +220,11 @@ struct ChromeWorker {
   injection_ids: Vec<String>,
   injections: Vec<InjectedScript>,
   injections_run_immediately: bool,
+  /// Last requested display rotation in degrees. Applied to the kiosk tab via
+  /// CDP; `rotation_applied` tracks whether the tab has it so `reconcile()` can
+  /// retry after Chrome (re)connects.
+  rotation: u16,
+  rotation_applied: bool,
   home_url: String,
   settled: bool,
   stranded_streak: u8,
@@ -213,6 +259,8 @@ impl ChromeWorker {
       injection_ids: Vec::new(),
       injections: Vec::new(),
       injections_run_immediately: false,
+      rotation: 0,
+      rotation_applied: true,
       home_url,
       settled: false,
       stranded_streak: 0,
@@ -258,6 +306,11 @@ impl ChromeWorker {
             }
             ChromeCommand::SetInjections { scripts, run_immediately } => {
               self.handle_set_injections(scripts, run_immediately).await
+            }
+            ChromeCommand::SetRotation { degrees } => {
+              self.rotation = degrees;
+              self.rotation_applied = false;
+              self.apply_rotation().await;
             }
           }
         }
@@ -353,6 +406,52 @@ impl ChromeWorker {
       .await;
   }
 
+  /// Apply the pending display rotation to the kiosk tab via CDP. At 0° the
+  /// metrics override is cleared; otherwise the tab lays out at the rotated
+  /// size (480x800 portrait for 90/270) and the injected rotation script maps
+  /// it onto the physical 800x480 panel.
+  async fn apply_rotation(&mut self) {
+    let degrees = self.rotation;
+    let ok = self
+      .with_first_tab("set-rotation", move |tab| {
+        if degrees == 0 {
+          tab.call_method(ClearDeviceMetricsOverride).map(|_| ())?;
+        } else {
+          let (width, height) = match degrees {
+            90 | 270 => (480, 800),
+            _ => (800, 480),
+          };
+          let orientation_type = match degrees {
+            90 => "portraitPrimary",
+            270 => "portraitSecondary",
+            180 => "landscapeSecondary",
+            _ => "landscapePrimary",
+          };
+          tab
+            .call_method(SetDeviceMetricsOverride {
+              width,
+              height,
+              device_scale_factor: 1.0,
+              mobile: false,
+              screen_orientation: Some(ScreenOrientation {
+                orientation_type,
+                angle: degrees,
+              }),
+            })
+            .map(|_| ())?;
+        }
+        Ok(())
+      })
+      .await
+      .is_some();
+    self.rotation_applied = ok;
+    if ok {
+      tracing::info!(degrees, "display rotation applied to kiosk tab");
+    } else {
+      tracing::warn!(degrees, "display rotation not applied; reconcile will retry");
+    }
+  }
+
   async fn handle_set_injections(&mut self, scripts: Vec<InjectedScript>, run_immediately: bool) {
     self.injections = scripts.clone();
     self.injections_run_immediately = run_immediately;
@@ -409,6 +508,10 @@ impl ChromeWorker {
     if !self.injections.is_empty() && self.injection_ids.is_empty() {
       let (scripts, run_immediately) = (self.injections.clone(), self.injections_run_immediately);
       self.apply_injections(scripts, run_immediately).await;
+    }
+
+    if !self.rotation_applied {
+      self.apply_rotation().await;
     }
 
     self.settled = !recovered && self.connected.load(std::sync::atomic::Ordering::SeqCst);
