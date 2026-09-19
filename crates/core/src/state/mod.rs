@@ -313,6 +313,12 @@ impl AppState {
         world: None,
       });
     }
+    // Hub launcher knob navigation: the script itself no-ops unless the page
+    // is the hub launcher, so it is safe to inject on every page.
+    scripts.push(chrome::InjectedScript {
+      source: crate::launcher_knob::launcher_knob_script(),
+      world: None,
+    });
     scripts
   }
 

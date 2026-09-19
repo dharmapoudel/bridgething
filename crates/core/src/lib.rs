@@ -15,6 +15,7 @@ mod db;
 mod handler;
 mod input;
 mod install;
+mod launcher_knob;
 mod ota;
 mod paths;
 mod peer;
