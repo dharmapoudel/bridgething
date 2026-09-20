@@ -23,7 +23,10 @@ public object CompanionDevicePicker {
     public suspend fun pick(context: Context): BridgethingBtDevice? {
         val activity = BridgethingActivityRegistry.currentActivity
             ?: error("CompanionDevicePicker needs a foreground activity")
-        val manager = context.applicationContext
+        // NB: fetch the manager from the Activity, not the application context:
+        // CompanionDeviceManager.associate() internally casts its context to
+        // Activity, which throws ClassCastException on an application context.
+        val manager = activity
             .getSystemService(Context.COMPANION_DEVICE_SERVICE) as? CompanionDeviceManager
             ?: error("CompanionDeviceManager unavailable on this device")
 

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Matches the JS dark palette bg (#0a0c0e); picked up when the system is in dark mode. -->
+    <color name="app_chrome_bg">#0a0c0e</color>
+</resources>
