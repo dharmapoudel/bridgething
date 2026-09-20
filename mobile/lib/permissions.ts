@@ -11,6 +11,9 @@ const LOCATION =
 const BLUETOOTH_CONNECT =
   Platform.OS === 'android' ? PERMISSIONS.ANDROID.BLUETOOTH_CONNECT : null;
 
+const BLUETOOTH_SCAN =
+  Platform.OS === 'android' ? PERMISSIONS.ANDROID.BLUETOOTH_SCAN : null;
+
 const BACKGROUND_LOCATION =
   Platform.OS === 'android'
     ? PERMISSIONS.ANDROID.ACCESS_BACKGROUND_LOCATION
@@ -56,6 +59,16 @@ export async function bluetoothConnectStatus(): Promise<PermissionState> {
 export async function requestBluetoothConnect(): Promise<PermissionState> {
   if (!BLUETOOTH_CONNECT) return 'granted';
   return toState(await request(BLUETOOTH_CONNECT));
+}
+
+export async function bluetoothScanStatus(): Promise<PermissionState> {
+  if (!BLUETOOTH_SCAN) return 'granted';
+  return toState(await check(BLUETOOTH_SCAN));
+}
+
+export async function requestBluetoothScan(): Promise<PermissionState> {
+  if (!BLUETOOTH_SCAN) return 'granted';
+  return toState(await request(BLUETOOTH_SCAN));
 }
 
 export function openAppSettings(): void {

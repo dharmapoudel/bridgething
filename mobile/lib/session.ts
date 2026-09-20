@@ -22,7 +22,7 @@ import {
 import { startDiagnostics } from './diagnostics';
 import { registerCompanionUpdateDomain } from './companion-update';
 import { registerOtaDomain } from './ota';
-import { requestBluetoothConnect } from './permissions';
+import { requestBluetoothConnect, requestBluetoothScan } from './permissions';
 import type { Tone } from './theme';
 import { registerWebappsDomain } from './webapps';
 import {
@@ -305,6 +305,8 @@ export type PairOutcome =
 export async function runPairFlow(): Promise<PairOutcome> {
   try {
     if (Platform.OS === 'android') {
+      const scan = await requestBluetoothScan();
+      if (scan !== 'granted') return { kind: 'permissionDenied' };
       const bt = await requestBluetoothConnect();
       if (bt !== 'granted') return { kind: 'permissionDenied' };
       const picked = await getSession().presentPairPicker();
