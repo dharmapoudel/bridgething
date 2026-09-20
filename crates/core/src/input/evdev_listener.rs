@@ -14,6 +14,9 @@ use crate::{
 
 const RETRY_BACKOFF: Duration = Duration::from_secs(5);
 const LONG_PRESS_THRESHOLD: Duration = Duration::from_millis(800);
+// Escape hatch: holding the knob this long resets display rotation to
+// landscape, so a wedged portrait mode can never strand the device.
+const ROTATION_RESET_HOLD: Duration = Duration::from_millis(3000);
 
 pub async fn listen_for_hub_gesture(state: State, bluetooth: BluetoothMan, cancel: CancellationToken) {
   loop {
@@ -97,6 +100,8 @@ async fn run_loop(
   let mut events = device.into_event_stream().map_err(|e| format!("stream: {e}"))?;
   let mut held = false;
   let mut hold_deadline = Box::pin(sleep(Duration::ZERO));
+  let mut rotation_held = false;
+  let mut rotation_deadline = Box::pin(sleep(Duration::ZERO));
   let mut key2_down = false;
   let mut key3_down = false;
   let mut screenshot_fired = false;
@@ -112,6 +117,10 @@ async fn run_loop(
         tracing::debug!("hub gesture: KEY_M held");
         trigger_hub_switch(state).await;
       }
+      _ = &mut rotation_deadline, if rotation_held => {
+        rotation_held = false;
+        crate::rotation::reset_rotation_to_landscape(state).await;
+      }
       ev = events.next_event() => {
         let ev = match ev {
           Ok(ev) => ev,
@@ -124,19 +133,33 @@ async fn run_loop(
         let key = KeyCode::new(ev.code());
 
         if key == KeyCode::KEY_M {
-          match (state.meta.launcher_gesture(), ev.value()) {
-            (LauncherGesture::LongPress, 1) => {
-              held = true;
-              hold_deadline
+          match ev.value() {
+            1 => {
+              // Escape hatch: a 3s knob hold resets display rotation to
+              // landscape. Armed on every press, independent of the
+              // hub-switch gesture below.
+              rotation_held = true;
+              rotation_deadline
                 .as_mut()
-                .reset(tokio::time::Instant::now() + LONG_PRESS_THRESHOLD);
+                .reset(tokio::time::Instant::now() + ROTATION_RESET_HOLD);
+              match state.meta.launcher_gesture() {
+                LauncherGesture::LongPress => {
+                  held = true;
+                  hold_deadline
+                    .as_mut()
+                    .reset(tokio::time::Instant::now() + LONG_PRESS_THRESHOLD);
+                }
+                // Custom firmware: fivePress fires on a single M press. The
+                // companion app still labels the option "Press M 5x".
+                LauncherGesture::FivePress => {
+                  tracing::debug!("hub gesture: KEY_M single press");
+                  trigger_hub_switch(state).await;
+                }
+              }
             }
-            (LauncherGesture::LongPress, 0) => held = false,
-            // Custom firmware: fivePress fires on a single M press. The
-            // companion app still labels the option "Press M 5x".
-            (LauncherGesture::FivePress, 1) => {
-              tracing::debug!("hub gesture: KEY_M single press");
-              trigger_hub_switch(state).await;
+            0 => {
+              held = false;
+              rotation_held = false;
             }
             _ => {}
           }

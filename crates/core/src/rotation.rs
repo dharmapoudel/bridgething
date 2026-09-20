@@ -14,6 +14,10 @@
 //! events anyway (touch goes kernel -> Chromium directly; the daemon only
 //! handles GPIO keys).
 //!
+//! Escape hatch: holding the knob (KEY_M) for 3 seconds resets rotation to
+//! landscape via [`reset_rotation_to_landscape`], so a wedged portrait mode
+//! can never strand the device with no way out.
+//!
 //! Downgrade safety: the prefs file is a separate `rotation.json` (not shared
 //! with `als.json`), `rotation` defaults to 0 (no behavior change), and the
 //! client protocol additions are ignored by older daemons/clients.
@@ -124,6 +128,39 @@ impl RotationManager {
         .replace("{WS_URL}", ws_url),
     )
   }
+}
+
+/// Apply a display rotation change end to end: validate and persist the new
+/// value, push the CDP metrics override to the kiosk tab, and re-inject
+/// scripts with the new degrees baked in. Shared by the
+/// `hardware.displaySetRotation` handler and the knob-hold escape hatch.
+pub async fn apply_rotation(state: &crate::state::State, degrees: u16) {
+  let degrees = match state.rotation.set_rotation(degrees).await {
+    Ok(degrees) => degrees,
+    Err(err) => {
+      tracing::debug!("display rotation rejected: {err:?}");
+      return;
+    }
+  };
+  if let Err(err) = state
+    .chrome
+    .send(crate::chrome::ChromeCommand::SetRotation { degrees })
+    .await
+  {
+    tracing::warn!("display rotation: chrome command failed: {err:?}");
+  }
+  state.sync_injections(true).await;
+}
+
+/// Reset display rotation to landscape (0). Physical escape hatch for a
+/// wedged portrait mode: holding the knob 3 seconds calls this. No-op when
+/// already landscape so a stray long hold never churns the kiosk tab.
+pub async fn reset_rotation_to_landscape(state: &crate::state::State) {
+  if state.rotation.rotation().await == 0 {
+    return;
+  }
+  tracing::info!("knob hold: resetting display rotation to landscape");
+  apply_rotation(state, 0).await;
 }
 
 #[cfg(test)]
