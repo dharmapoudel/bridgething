@@ -45,7 +45,7 @@
     highlight = Math.max(0, Math.min(list.length - 1, index));
     var el = list[highlight];
     el.setAttribute(HIGHLIGHT_ATTR, 'true');
-    el.style.outline = '2px solid #00a8e8';
+    el.style.outline = '2px solid #404243';
     el.style.outlineOffset = '2px';
     if (el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
   }
@@ -58,7 +58,10 @@
     if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
     e.preventDefault();
     var dir = e.deltaX > 0 ? 1 : -1;
-    var next = highlight < 0 ? (dir > 0 ? 0 : list.length - 1) : highlight + dir;
+    var next = highlight < 0 ? (dir > 0 ? 0 : list.length - 1)
+      // Wrap around both ends; the + list.length keeps the JS %
+      // non-negative. list is non-empty here (early return above).
+      : (highlight + dir + list.length) % list.length;
     applyHighlight(next);
   }
 
