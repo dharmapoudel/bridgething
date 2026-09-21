@@ -124,9 +124,9 @@ pub enum ChromeCommand {
     run_immediately: bool,
   },
   /// Apply display rotation (0/90/180/270). Sends
-  /// `Emulation.setDeviceMetricsOverride` to the kiosk tab so pages lay out in
-  /// the rotated orientation; the injected rotation script handles the visual
-  /// rotation to fill the physical panel.
+  /// `Emulation.setDeviceMetricsOverride` to the kiosk tab at the fixed
+  /// 800x480 window size with the rotated screen orientation; the injected
+  /// rotation script handles the visual rotation to fill the physical panel.
   SetRotation { degrees: u16 },
   CaptureScreenshot {
     reply: tokio::sync::oneshot::Sender<Option<Vec<u8>>>,
@@ -419,10 +419,12 @@ impl ChromeWorker {
       .await;
   }
 
-  /// Apply the pending display rotation to the kiosk tab via CDP. At 0° the
-  /// metrics override is cleared; otherwise the tab lays out at the rotated
-  /// size (480x800 portrait for 90/270) and the injected rotation script maps
-  /// it onto the physical 800x480 panel.
+  /// Apply the pending display rotation to the kiosk tab via CDP. At 0 degrees
+  /// the metrics override is cleared; otherwise the override stays at the
+  /// physical 800x480 window size and the injected rotation script pins the
+  /// page root to the rotated layout (480x800 for 90/270) and rotates it with
+  /// a CSS transform. Keeping the override at the window size avoids a raster
+  /// surface mismatch that left the right ~320px unpainted in portrait.
   async fn apply_rotation(&mut self) {
     let degrees = self.rotation;
     let ok = self
@@ -430,10 +432,10 @@ impl ChromeWorker {
         if degrees == 0 {
           tab.call_method(ClearDeviceMetricsOverride).map(|_| ())?;
         } else {
-          let (width, height) = match degrees {
-            90 | 270 => (480, 800),
-            _ => (800, 480),
-          };
+          // Fixed window size for every rotation: Blink rasterizes at the
+          // override size, and the window is 800x480, so a 480x800 override
+          // left the right side of the window unpainted in portrait.
+          let (width, height) = (800, 480);
           let orientation_type = match degrees {
             90 => "portraitPrimary",
             270 => "portraitSecondary",

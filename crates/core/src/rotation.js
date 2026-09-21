@@ -1,11 +1,16 @@
-// Bridgething display rotation — injected by the daemon on every page.
+// Bridgething display rotation - injected by the daemon on every page.
 // {DEGREES} and {WS_URL} are baked in at injection time (see rotation.rs).
 //
-// Two coordinated parts make true portrait work:
-// 1. The daemon sends Emulation.setDeviceMetricsOverride so the page *lays out*
-//    at the rotated size (480x800 in portrait). window.innerWidth, media
-//    queries, 100vw etc. all see the rotated dimensions.
-// 2. This script rotates the rendered page with a CSS transform so the portrait
+// Two coordinated parts make portrait work:
+// 1. The daemon sends Emulation.setDeviceMetricsOverride at the fixed 800x480
+//    window size for every rotation. Blink rasterizes at the override size, so
+//    a 480x800 override left the right ~320px of the window unpainted.
+//    screen.orientation still reports the rotated orientation (portraitPrimary
+//    at 90). Note window.innerWidth stays 800; the root-pinning math below
+//    must use LAYOUTS, never window dimensions (touch zones are the opposite:
+//    viewport space, see cornerZone).
+// 2. This script pins the page root to the rotated layout size from LAYOUTS
+//    (480x800 in portrait) and rotates it with a CSS transform so the portrait
 //    layout fills the physical 800x480 panel.
 //
 // Touch needs no remapping: Chromium hit-tests through the transform, so taps
@@ -82,23 +87,16 @@
   window.addEventListener('load', applyRotation);
 
   // --- Corner swipe -> rotate button -------------------------------------
-  // Touch coordinates arrive in *layout* space (post-transform hit testing).
-  // The physical bottom-right corner maps to a different layout corner per
-  // rotation; the zone below tracks it.
+  // Touch coordinates arrive in *viewport* space: the metrics override holds
+  // the viewport at a fixed 800x480 for every rotation, so the physical
+  // bottom-right corner is the same zone in every rotation. Do not derive
+  // this from the layout box (its coordinates never match touch points,
+  // which made the swipe unreachable in portrait).
   function cornerZone() {
     var s = 140;
     var w = window.innerWidth;
     var h = window.innerHeight;
-    switch (DEGREES) {
-      case 90:
-        return { x: w - s, y: 0, w: s, h: s }; // layout top-right
-      case 180:
-        return { x: 0, y: 0, w: s, h: s }; // layout top-left
-      case 270:
-        return { x: 0, y: h - s, w: s, h: s }; // layout bottom-left
-      default:
-        return { x: w - s, y: h - s, w: s, h: s }; // layout bottom-right
-    }
+    return { x: w - s, y: h - s, w: s, h: s };
   }
 
   // Where the floating button sits, in layout space (near physical bottom-right).
@@ -167,17 +165,25 @@
     hideButton();
     if (!document.body) return;
     btn = document.createElement('button');
-    btn.textContent = DEGREES === 0 ? '\u27f3 Portrait' : '\u27f3 Landscape';
+    btn.setAttribute('aria-label', 'Rotate display');
     var anchor = buttonAnchor();
+    // 56px circular button with a rotate-phone glyph, no text label.
     var css =
       'position:fixed;z-index:2147483647;' +
-      'min-width:120px;min-height:56px;padding:12px 18px;' +
-      'font-size:20px;font-family:system-ui,sans-serif;' +
+      'width:56px;height:56px;padding:0;' +
+      'border:1px solid rgba(255,255,255,0.25);border-radius:50%;' +
       'color:#fff;background:rgba(20,20,24,0.92);' +
-      'border:1px solid rgba(255,255,255,0.25);border-radius:14px;' +
-      'box-shadow:0 4px 24px rgba(0,0,0,0.5);';
+      'box-shadow:0 4px 24px rgba(0,0,0,0.5);' +
+      'display:flex;align-items:center;justify-content:center;cursor:pointer;';
     for (var k in anchor) css += k + ':' + anchor[k] + ';';
     btn.setAttribute('style', css);
+    btn.innerHTML =
+      '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" ' +
+      'stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
+      '<rect x="10" y="8" width="4" height="8" rx="1"/>' +
+      '<path d="M23 4v6h-6"/>' +
+      '<path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>' +
+      '</svg>';
     btn.addEventListener('click', function () {
       var target = DEGREES === 0 ? 90 : 0;
       // The daemon applies the CDP metrics override and re-injects this script

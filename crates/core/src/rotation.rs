@@ -2,12 +2,12 @@
 //!
 //! Rotation is applied in two coordinated parts, both driven by the daemon:
 //! 1. `Emulation.setDeviceMetricsOverride` on the kiosk tab (see
-//!    [`crate::chrome::ChromeCommand::SetRotation`]) makes pages *lay out* in
-//!    the rotated orientation — `window.innerWidth` becomes 480 in portrait,
-//!    media queries see portrait, etc.
-//! 2. The injected [`rotation.js`](self::rotation_script) rotates the rendered
-//!    page with a CSS transform so the portrait layout fills the physical
-//!    800x480 panel.
+//!    [`crate::chrome::ChromeCommand::SetRotation`]) keeps the override at the
+//!    physical 800x480 window size so the whole panel paints, while
+//!    `screen.orientation` reports the rotated orientation.
+//! 2. The injected [`rotation.js`](self::rotation_script) pins the page root to
+//!    the rotated layout size (480x800 in portrait) and rotates it with a CSS
+//!    transform so the portrait layout fills the physical 800x480 panel.
 //!
 //! Touch input needs no remapping: Chromium hit-tests through CSS transforms,
 //! so taps land on the visually-rotated elements. The daemon never sees touch
