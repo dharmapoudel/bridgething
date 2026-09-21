@@ -64,11 +64,19 @@
     var root = document.documentElement;
     if (!root) return;
     var t = TRANSFORMS[DEGREES];
+    // The shared app CSS pins body to 800x480. Resizing only <html> leaves
+    // the 800px-wide body overflowing the 480px html in portrait, and
+    // overflow:hidden clips it to a strip. Pin the body to the layout box too.
+    var body = document.body;
     if (!t) {
       root.style.transform = '';
       root.style.transformOrigin = '';
       root.style.width = '';
       root.style.height = '';
+      if (body) {
+        body.style.width = '';
+        body.style.height = '';
+      }
       return;
     }
     var layout = layoutFor(DEGREES);
@@ -76,6 +84,10 @@
     root.style.height = layout.h + 'px';
     root.style.transformOrigin = ORIGINS[DEGREES];
     root.style.transform = t;
+    if (body) {
+      body.style.width = layout.w + 'px';
+      body.style.height = layout.h + 'px';
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -259,6 +271,11 @@
         root.style.transformOrigin = '';
         root.style.width = '';
         root.style.height = '';
+      }
+      var body = document.body;
+      if (body) {
+        body.style.width = '';
+        body.style.height = '';
       }
     },
   };

@@ -11,6 +11,24 @@
   'use strict';
   if (!window.location.pathname.startsWith('/_hub/')) return;
 
+  // The knob's muted-gray outline is the only selection affordance on the
+  // home grid. Touch-pressing a tile flashes its icon white (image touch
+  // feedback); make a press a visual no-op so only the outline ever shows.
+  // Guarded so re-injection does not stack duplicate style elements.
+  if (!document.getElementById('bt-knob-noflash')) {
+    var noFlash = document.createElement('style');
+    noFlash.id = 'bt-knob-noflash';
+    noFlash.textContent =
+      'div.grid button[type="button"],div.grid button[type="button"] *{' +
+      '-webkit-tap-highlight-color:transparent !important;' +
+      '-webkit-user-drag:none !important;user-select:none !important;} ' +
+      'div.grid button[type="button"]:active{' +
+      'background-color:var(--color-screen) !important;' +
+      'border-color:var(--color-rule) !important;} ' +
+      'div.grid button[type="button"] img{pointer-events:none !important;}';
+    (document.head || document.documentElement).appendChild(noFlash);
+  }
+
   var HIGHLIGHT_ATTR = 'data-knob-highlight';
   var ENTER_DEBOUNCE_MS = 350;
   var UNINSTALL_HOLD_MS = 1500;
