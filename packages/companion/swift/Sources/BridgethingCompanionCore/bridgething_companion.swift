@@ -3322,6 +3322,8 @@ public protocol CompanionSessionProtocol: AnyObject, Sendable {
     
     func checkForOtaUpdate(rootUrl: String) async 
     
+    func collectScreenshot(deviceId: String, transferId: String, capturedAtMs: UInt64) async throws  -> ScreenshotFile
+    
     func companionDebug()  -> CompanionDebug
     
     func completeProviderAuth(id: String, tokens: ProviderTokens) async throws 
@@ -3538,6 +3540,22 @@ open func checkForOtaUpdate(rootUrl: String)async   {
             liftFunc: { $0 },
             errorHandler: nil
             
+        )
+}
+    
+open func collectScreenshot(deviceId: String, transferId: String, capturedAtMs: UInt64)async throws  -> ScreenshotFile  {
+    return
+        try  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_bridgething_companion_fn_method_companionsession_collect_screenshot(
+                        self.uniffiCloneHandle(),FfiConverterString.lower(deviceId),FfiConverterString.lower(transferId),FfiConverterUInt64.lower(capturedAtMs)
+                )
+            },
+            pollFunc: ffi_bridgething_companion_rust_future_poll_rust_buffer,
+            completeFunc: ffi_bridgething_companion_rust_future_complete_rust_buffer,
+            freeFunc: ffi_bridgething_companion_rust_future_free_rust_buffer,
+            liftFunc: FfiConverterTypeScreenshotFile_lift,
+            errorHandler: FfiConverterTypeCompanionError_lift
         )
 }
     
@@ -17674,6 +17692,60 @@ public func FfiConverterTypeProviderTokens_lower(_ value: ProviderTokens) -> Rus
 }
 
 
+public struct ScreenshotFile: Equatable, Hashable {
+    public var path: String
+    public var byteSize: UInt64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(path: String, byteSize: UInt64) {
+        self.path = path
+        self.byteSize = byteSize
+    }
+
+    
+
+    
+}
+
+#if compiler(>=6)
+extension ScreenshotFile: Sendable {}
+#endif
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeScreenshotFile: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ScreenshotFile {
+        return
+            try ScreenshotFile(
+                path: FfiConverterString.read(from: &buf), 
+                byteSize: FfiConverterUInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ScreenshotFile, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.path, into: &buf)
+        FfiConverterUInt64.write(value.byteSize, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeScreenshotFile_lift(_ buf: RustBuffer) throws -> ScreenshotFile {
+    return try FfiConverterTypeScreenshotFile.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeScreenshotFile_lower(_ value: ScreenshotFile) -> RustBuffer {
+    return FfiConverterTypeScreenshotFile.lower(value)
+}
+
+
 public struct ServiceHealth: Equatable, Hashable {
     public var kind: ServiceHealthKind
     public var retryAfterSeconds: UInt32?
@@ -23775,6 +23847,8 @@ public enum SessionEvent: Equatable, Hashable {
     )
     case companionUpdateProgress(received: UInt64, total: UInt64
     )
+    case screenshotCaptured(deviceId: String, transferId: String, byteSize: UInt32, capturedAtMs: UInt64
+    )
     case resumed
 
 
@@ -23845,7 +23919,10 @@ public struct FfiConverterTypeSessionEvent: FfiConverterRustBuffer {
         case 16: return .companionUpdateProgress(received: try FfiConverterUInt64.read(from: &buf), total: try FfiConverterUInt64.read(from: &buf)
         )
         
-        case 17: return .resumed
+        case 17: return .screenshotCaptured(deviceId: try FfiConverterString.read(from: &buf), transferId: try FfiConverterString.read(from: &buf), byteSize: try FfiConverterUInt32.read(from: &buf), capturedAtMs: try FfiConverterUInt64.read(from: &buf)
+        )
+        
+        case 18: return .resumed
         
         default: throw UniffiInternalError.unexpectedEnumCase
         }
@@ -23944,8 +24021,16 @@ public struct FfiConverterTypeSessionEvent: FfiConverterRustBuffer {
             FfiConverterUInt64.write(total, into: &buf)
             
         
-        case .resumed:
+        case let .screenshotCaptured(deviceId,transferId,byteSize,capturedAtMs):
             writeInt(&buf, Int32(17))
+            FfiConverterString.write(deviceId, into: &buf)
+            FfiConverterString.write(transferId, into: &buf)
+            FfiConverterUInt32.write(byteSize, into: &buf)
+            FfiConverterUInt64.write(capturedAtMs, into: &buf)
+            
+        
+        case .resumed:
+            writeInt(&buf, Int32(18))
         
         }
     }
@@ -27105,6 +27190,9 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_bridgething_companion_checksum_method_companionsession_check_for_ota_update() != 64188) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_bridgething_companion_checksum_method_companionsession_collect_screenshot() != 6174) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_bridgething_companion_checksum_method_companionsession_companion_debug() != 26391) {
