@@ -293,6 +293,9 @@ impl SystemHandler for Unsupported {
   async fn log_entry(&self, _payload: LogEntry) -> Result<(), WireError> {
     Err(WireError::Unsupported)
   }
+  async fn screenshot_captured(&self, _payload: ScreenshotCaptured) -> Result<(), WireError> {
+    Err(WireError::Unsupported)
+  }
 }
 
 impl TransferHandler for Unsupported {

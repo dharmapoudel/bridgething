@@ -1,7 +1,14 @@
 package com.bridgething
 
 import android.content.Context
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.content.ContentValues
 import android.content.Intent
+import android.os.Build
+import android.provider.MediaStore
+import androidx.core.app.NotificationCompat
 import android.net.Uri
 import android.provider.Settings
 import androidx.core.content.FileProvider
@@ -173,6 +180,9 @@ public class HybridBridgethingSessionImpl(
     @Volatile
     private var onResumed: ((BridgethingSessionSnapshot) -> Unit)? = null
 
+    @Volatile
+    private var onScreenshotReceived: ((String, String, Double) -> Unit)? = null
+
     private val prefs by lazy {
         context.applicationContext.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
@@ -265,6 +275,20 @@ public class HybridBridgethingSessionImpl(
                     val snap = runCatching { snapshot() }.getOrNull() ?: return@launch
                     if (foregroundGen.get() != gen) return@launch
                     safeEmit { if (CompanionHolder.foreground) onResumed?.invoke(snap) }
+                }
+            }
+            is SessionEvent.ScreenshotCaptured -> {
+                val deviceId = event.deviceId
+                val transferId = event.transferId
+                val capturedAtMs = event.capturedAtMs
+                scope.launch {
+                    val path = runCatching { collectScreenshot(deviceId, transferId, capturedAtMs.toDouble()) }
+                        .getOrNull() ?: return@launch
+                    val fileUri = insertScreenshotIntoGallery(path, capturedAtMs)
+                    postScreenshotNotification(deviceId, fileUri)
+                    if (CompanionHolder.foreground) {
+                        safeEmit { onScreenshotReceived?.invoke(deviceId, fileUri, capturedAtMs.toDouble()) }
+                    }
                 }
             }
         }
@@ -712,6 +736,78 @@ public class HybridBridgethingSessionImpl(
     override fun setOnCompanionUpdateProgress(callback: (Double, Double) -> Unit) { onCompanionUpdateProgress = callback }
 
     override fun setOnResumed(callback: (BridgethingSessionSnapshot) -> Unit) { onResumed = callback }
+
+    override suspend fun collectScreenshot(deviceId: String, transferId: String, capturedAtMs: Double): String =
+        requireSession().collectScreenshot(deviceId, transferId, capturedAtMs.toULong()).path
+
+    override fun setOnScreenshotReceived(callback: (String, String, Double) -> Unit) {
+        onScreenshotReceived = callback
+    }
+
+    private fun insertScreenshotIntoGallery(sourcePath: String, capturedAtMs: ULong): String {
+        val appCtx = context.applicationContext
+        val src = File(sourcePath)
+        val displayName = "screenshot-$capturedAtMs.png"
+        val filesCopy = File(appCtx.filesDir, "screenshots/$displayName")
+        filesCopy.parentFile?.mkdirs()
+        runCatching { src.copyTo(filesCopy, overwrite = true) }
+        val values = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, displayName)
+            put(MediaStore.Images.Media.MIME_TYPE, "image/png")
+            put(MediaStore.Images.Media.DATE_TAKEN, capturedAtMs.toLong())
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Bridgething")
+                put(MediaStore.Images.Media.IS_PENDING, 1)
+            }
+        }
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        } else {
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        }
+        val uri = appCtx.contentResolver.insert(collection, values)
+        if (uri != null) {
+            val written = runCatching {
+                appCtx.contentResolver.openOutputStream(uri)?.use { out ->
+                    src.inputStream().use { input -> input.copyTo(out) }
+                }
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    val done = ContentValues().apply { put(MediaStore.Images.Media.IS_PENDING, 0) }
+                    appCtx.contentResolver.update(uri, done, null, null)
+                }
+            }
+            if (written.isFailure) runCatching { appCtx.contentResolver.delete(uri, null, null) }
+        }
+        return uri?.toString() ?: "file://${filesCopy.absolutePath}"
+    }
+
+    private fun postScreenshotNotification(deviceId: String, imageUri: String) {
+        val appCtx = context.applicationContext
+        val channelId = "bridgething.screenshots"
+        val manager = appCtx.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            manager.createNotificationChannel(
+                NotificationChannel(channelId, "Screenshots", NotificationManager.IMPORTANCE_DEFAULT)
+            )
+        }
+        val view = Intent(Intent.ACTION_VIEW, Uri.parse(imageUri)).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        }
+        val tap = PendingIntent.getActivity(
+            appCtx,
+            imageUri.hashCode(),
+            view,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE,
+        )
+        val notification = NotificationCompat.Builder(appCtx, channelId)
+            .setSmallIcon(android.R.drawable.ic_menu_gallery)
+            .setContentTitle("Screenshot captured")
+            .setContentText(deviceId)
+            .setContentIntent(tap)
+            .setAutoCancel(true)
+            .build()
+        manager.notify("screenshot:$imageUri".hashCode(), notification)
+    }
 
     public fun resumeForeground() {
         foregroundGen.incrementAndGet()

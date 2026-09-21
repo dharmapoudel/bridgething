@@ -13,6 +13,7 @@ use libbridgething::{gateway::*, wire::WireError, *};
 use uuid::Uuid;
 
 use crate::{
+  api::SessionEvent,
   dispatch::{
     OtaInbound, asset::AssetDispatcher, audio::AudioDispatcher, extension::ExtensionDispatcher, geo::GeoDispatcher,
     library::LibraryDispatcher, lyrics::LyricsDispatcher, notifications::NotificationDispatcher,
@@ -323,6 +324,24 @@ impl SystemHandler for Peer {
   }
   async fn log_entry(&self, payload: LogEntry) -> Result<(), WireError> {
     self.system.log_entry(payload).await
+  }
+  async fn screenshot_captured(&self, payload: ScreenshotCaptured) -> Result<(), WireError> {
+    // Events ride the normal-priority lane while transfer fragments ride bulk, so the
+    // event can arrive before any fragment. Registering synchronously here lets the
+    // receiver park early fragments for 5s (512KB budget); only a transfer larger than
+    // that which outruns the event needs the user to retry the chord.
+    self.receiver.register(&TransferRef {
+      id: payload.transfer_id,
+      total_size: payload.byte_size,
+      sha256: Some(payload.sha256),
+    });
+    self.observer.emit(SessionEvent::ScreenshotCaptured {
+      device_id: self.device_id.clone(),
+      transfer_id: payload.transfer_id.to_string(),
+      byte_size: payload.byte_size,
+      captured_at_ms: payload.captured_at_ms,
+    });
+    Ok(())
   }
 }
 

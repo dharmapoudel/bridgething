@@ -3,13 +3,13 @@
 
 use std::{future::Future, sync::Arc};
 
+use crate::{Gateway, GatewayProtocol, HandlerError};
 use bridgething_sdk_runtime::{Connection, Reply, RequestFailure, SdkError, rt};
 use futures::{Stream, StreamExt, future::ready};
-use libbridgething::{gateway::*, wire::WireError, *};
+use libbridgething::wire::WireError;
+use libbridgething::{gateway::*, *};
 use tokio_stream::wrappers::BroadcastStream;
 use uuid::Uuid;
-
-use crate::{Gateway, GatewayProtocol, HandlerError};
 
 impl Gateway {
   /// The `Audio` surface.
@@ -689,6 +689,7 @@ pub trait SystemHandler {
   fn device_nickname_changed(&self, payload: DeviceNicknameReply)
   -> impl Future<Output = Result<(), WireError>> + Send;
   fn log_entry(&self, payload: LogEntry) -> impl Future<Output = Result<(), WireError>> + Send;
+  fn screenshot_captured(&self, payload: ScreenshotCaptured) -> impl Future<Output = Result<(), WireError>> + Send;
 }
 
 pub trait TransferHandler {
@@ -1549,6 +1550,17 @@ where
     BridgeToGatewayMsgData::System(BridgeToGatewaySystemMsg::LogEntry(payload)) => {
       if let Err(error) = <H as SystemHandler>::log_entry(handlers, payload).await {
         tracing::warn!(surface = "system", variant = "logEntry", ?error, "inbound not handled");
+      }
+      Ok(())
+    }
+    BridgeToGatewayMsgData::System(BridgeToGatewaySystemMsg::ScreenshotCaptured(payload)) => {
+      if let Err(error) = <H as SystemHandler>::screenshot_captured(handlers, payload).await {
+        tracing::warn!(
+          surface = "system",
+          variant = "screenshotCaptured",
+          ?error,
+          "inbound not handled"
+        );
       }
       Ok(())
     }

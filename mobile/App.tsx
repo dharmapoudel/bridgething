@@ -19,6 +19,7 @@ import { Wordmark } from './components/Wordmark';
 import { refreshCatalog, startWebappAutoUpdate } from './lib/catalog';
 import { startReachability } from './lib/reachability';
 import { bootstrapSession } from './lib/session';
+import { ScreenshotToast, ScreenshotViewer } from './lib/screenshots';
 import { getNativeTabs, getSetupCompleted } from './lib/storage';
 import { navTheme, PALETTE, usePalette, useScheme } from './lib/theme';
 import type {
@@ -273,6 +274,8 @@ export default function App() {
           </RootStack.Navigator>
         </NavigationContainer>
       </CrashBoundary>
+      <ScreenshotToast />
+      <ScreenshotViewer />
       <PortalHost />
     </SafeAreaProvider>
   );

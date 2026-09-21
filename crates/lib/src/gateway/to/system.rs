@@ -98,6 +98,18 @@ pub struct KeepalivePing {
 }
 
 #[serde_with::skip_serializing_none]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export, export_to = "gateway.ts")]
+pub struct ScreenshotCaptured {
+  #[ts(type = "string")]
+  pub transfer_id: Uuid,
+  pub byte_size: u32,
+  pub sha256: String,
+  pub captured_at_ms: u64,
+}
+
+#[serde_with::skip_serializing_none]
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, TS, BridgeEnum)]
 #[serde(tag = "event", content = "data", rename_all = "camelCase")]
 #[ts(export, export_to = "gateway.ts")]
@@ -131,4 +143,6 @@ pub enum BridgeToGatewaySystemMsg {
   LogEntry(LogEntry),
   #[bridge_request]
   Keepalive(KeepalivePing),
+  #[bridge_event]
+  ScreenshotCaptured(ScreenshotCaptured),
 }

@@ -112,6 +112,8 @@ public interface BridgethingSessionBackend {
 
     public suspend fun deviceSetNickname(deviceId: String, nickname: String)
 
+    public suspend fun collectScreenshot(deviceId: String, transferId: String, capturedAtMs: Double): String
+
     public suspend fun presentPairPicker(): BridgethingBtDevice?
 
     public suspend fun isNotificationAccessGranted(): Boolean
@@ -152,4 +154,6 @@ public interface BridgethingSessionBackend {
     public fun setOnCompanionUpdateProgress(callback: (Double, Double) -> Unit)
 
     public fun setOnResumed(callback: (BridgethingSessionSnapshot) -> Unit)
+
+    public fun setOnScreenshotReceived(callback: (String, String, Double) -> Unit)
 }
