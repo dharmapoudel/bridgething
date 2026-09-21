@@ -172,6 +172,12 @@ pub enum SessionEvent {
     received: u64,
     total: u64,
   },
+  ScreenshotCaptured {
+    device_id: String,
+    transfer_id: String,
+    byte_size: u32,
+    captured_at_ms: u64,
+  },
   Resumed,
 }
 
@@ -562,6 +568,30 @@ impl CompanionSession {
     Ok(WebappResourceFile {
       path: path.display().to_string(),
       mime: cached.mime,
+    })
+  }
+
+  pub async fn collect_screenshot(
+    &self,
+    device_id: String,
+    transfer_id: String,
+    captured_at_ms: u64,
+  ) -> Result<ScreenshotFile, CompanionError> {
+    let transfer_id = uuid::Uuid::parse_str(&transfer_id)
+      .map_err(|_| CompanionError::Device(format!("not a screenshot transfer id: {transfer_id}")))?;
+    let peer = self.session.peer_for(&device_id).ok_or(CompanionError::NotConnected)?;
+    let bytes = peer
+      .receiver()
+      .collect(transfer_id, std::time::Duration::from_secs(30))
+      .await
+      .map_err(|error| CompanionError::Device(error.to_string()))?;
+    let dir = self.session.state_dir().join("screenshots");
+    std::fs::create_dir_all(&dir).map_err(|error| CompanionError::Device(error.to_string()))?;
+    let path = dir.join(format!("screenshot-{captured_at_ms}.png"));
+    std::fs::write(&path, &bytes).map_err(|error| CompanionError::Device(error.to_string()))?;
+    Ok(ScreenshotFile {
+      path: path.display().to_string(),
+      byte_size: bytes.len() as u64,
     })
   }
 

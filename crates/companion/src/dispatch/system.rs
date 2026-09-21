@@ -6,6 +6,7 @@ use libbridgething::{
   gateway::{
     DeviceNicknameReply, KeepaliveAck, KeepalivePing, OtaAssetRange, OtaAssetRangeAbandon, OtaAssetRangeRejected,
     OtaAssetRangeReply,
+    ScreenshotCaptured,
   },
   wire::WireError,
 };
@@ -71,6 +72,9 @@ impl SystemHandler for SystemDispatcher {
 
   async fn log_entry(&self, payload: LogEntry) -> Result<(), WireError> {
     self.logs.on_entry(payload);
+    Ok(())
+  }
+  async fn screenshot_captured(&self, _payload: ScreenshotCaptured) -> Result<(), WireError> {
     Ok(())
   }
 }

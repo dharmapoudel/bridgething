@@ -451,6 +451,8 @@ export interface BridgethingSession extends HybridObject<{ ios: 'swift'; android
 
   deviceSetNickname(deviceId: string, nickname: string): Promise<void>;
 
+  collectScreenshot(deviceId: string, transferId: string, capturedAtMs: number): Promise<string>;
+
   presentPairPicker(): Promise<BridgethingBtDevice | null>;
 
   isNotificationAccessGranted(): Promise<boolean>;
@@ -494,4 +496,6 @@ export interface BridgethingSession extends HybridObject<{ ios: 'swift'; android
   setOnCompanionUpdateProgress(callback: (received: number, total: number) => void): void;
 
   setOnResumed(callback: (snapshot: BridgethingSessionSnapshot) => void): void;
+
+  setOnScreenshotReceived(callback: (deviceId: string, fileUri: string, capturedAtMs: number) => void): void;
 }

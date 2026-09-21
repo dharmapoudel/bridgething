@@ -308,6 +308,9 @@ impl SystemHandler for DeliveryHandlers {
     tracing::info!(target: "device", level = ?payload.level, "{}", payload.message);
     Ok(())
   }
+  async fn screenshot_captured(&self, _payload: ScreenshotCaptured) -> Result<(), WireError> {
+    Ok(())
+  }
 }
 
 impl TransferHandler for DeliveryHandlers {

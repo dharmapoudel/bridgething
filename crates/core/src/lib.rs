@@ -576,6 +576,7 @@ fn spawn_ota_event_forwarder(
         BridgeToGatewaySystemMsgEvent::OtaFinished(f) => Some(BridgeToClientSystemMsgEvent::OtaFinished(f.clone())),
         BridgeToGatewaySystemMsgEvent::DeviceNicknameChanged(_) => None,
         BridgeToGatewaySystemMsgEvent::LogEntry(_) => None,
+        BridgeToGatewaySystemMsgEvent::ScreenshotCaptured(_) => None,
       };
       match event {
         BridgeToGatewaySystemMsgEvent::OtaProgress(_) => bluetooth.gateway_man.broadcast_event_background(event).await,

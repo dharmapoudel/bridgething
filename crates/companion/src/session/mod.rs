@@ -1190,6 +1190,10 @@ impl Session {
     std::path::PathBuf::from(&self.config.cache_dir)
   }
 
+  pub fn state_dir(&self) -> std::path::PathBuf {
+    std::path::PathBuf::from(&self.config.state_dir)
+  }
+
   pub fn companion_update_dir(&self) -> std::path::PathBuf {
     std::path::PathBuf::from(&self.config.state_dir).join(COMPANION_UPDATE_DIR)
   }

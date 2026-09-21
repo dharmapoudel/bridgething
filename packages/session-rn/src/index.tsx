@@ -110,7 +110,8 @@ export type SessionEvent =
   | { type: 'otaPollChanged'; status: BridgethingOtaPollStatus }
   | { type: 'companionUpdateProgress'; received: number; total: number }
   | { type: 'resumed'; snapshot: BridgethingSessionSnapshot }
-  | { type: 'log'; origin: string; level: string; message: string };
+  | { type: 'log'; origin: string; level: string; message: string }
+  | { type: 'screenshotReceived'; deviceId: string; fileUri: string; capturedAtMs: number };
 
 export class BridgethingSession {
   private readonly native: NativeBridgethingSession;
@@ -354,6 +355,10 @@ export class BridgethingSession {
     await this.native.deviceSetNickname(deviceId, nickname);
   }
 
+  async collectScreenshot(deviceId: string, transferId: string, capturedAtMs: number): Promise<string> {
+    return this.native.collectScreenshot(deviceId, transferId, capturedAtMs);
+  }
+
   async presentPairPicker(): Promise<BridgethingBtDevice | null> {
     return this.native.presentPairPicker();
   }
@@ -460,6 +465,9 @@ export class BridgethingSession {
     });
     this.native.setOnResumed(snapshot => {
       this.dispatch({ type: 'resumed', snapshot });
+    });
+    this.native.setOnScreenshotReceived((deviceId, fileUri, capturedAtMs) => {
+      this.dispatch({ type: 'screenshotReceived', deviceId, fileUri, capturedAtMs });
     });
     this.native.setOnLog((origin, level, message) => {
       this.dispatch({ type: 'log', origin, level, message });

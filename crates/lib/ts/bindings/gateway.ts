@@ -205,7 +205,8 @@ export type BridgeToGatewaySystemMsg =
   | { event: 'logsTailReply'; data: LogsTailReply }
   | { event: 'logsSubscribeReply'; data: LogsSubscribeReply }
   | { event: 'logEntry'; data: LogEntry }
-  | { event: 'keepalive'; data: KeepalivePing };
+  | { event: 'keepalive'; data: KeepalivePing }
+  | { event: 'screenshotCaptured'; data: ScreenshotCaptured };
 
 export type BridgeToGatewayTransferMsg =
   | { event: 'ack'; data: TransferAck }
@@ -603,6 +604,8 @@ export type QueueSnapshot = { order: Array<string>; items: Array<QueueItem> };
 export type QueueUri = { uri: string; position: QueuePosition };
 
 export type RecommendationsReply = { result: RecommendationsResult };
+
+export type ScreenshotCaptured = { transferId: string; byteSize: number; sha256: string; capturedAtMs: bigint };
 
 export type SearchReply = { result: SearchResult };
 
