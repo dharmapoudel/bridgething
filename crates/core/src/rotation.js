@@ -240,9 +240,8 @@
     btn.innerHTML =
       '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" ' +
       'stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-      '<rect x="10" y="8" width="4" height="8" rx="1"/>' +
-      '<path d="M23 4v6h-6"/>' +
-      '<path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>' +
+      '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>' +
+      '<path d="M12 18h.01"/>' +
       '</svg>';
     btn.addEventListener('click', function () {
       var target = DEGREES === 0 ? 270 : 0;
@@ -297,8 +296,55 @@
     applyRotation();
   }
 
+  // --- Portrait swipe scrolling ------------------------------------------
+  // In portrait the page is CSS-rotated, so the browser maps a portrait-
+  // vertical swipe to a layout-horizontal gesture and the hub's vertical
+  // grid never scrolls. Drag it manually from the touch movement instead.
+  // The browser's mapped gesture is a horizontal no-op, so this never
+  // double-scrolls. Landscape is untouched (native scrolling works there).
+  var swipeScroll = null;
+
+  function swipeScroller(target) {
+    var el = target instanceof Element ? target : null;
+    while (el && el !== document.documentElement) {
+      if (el.scrollHeight > el.clientHeight + 1) {
+        var oy = getComputedStyle(el).overflowY;
+        if (oy === 'auto' || oy === 'scroll') return el;
+      }
+      el = el.parentElement;
+    }
+    return null;
+  }
+
+  function onSwipeTouchStart(e) {
+    swipeScroll = null;
+    if (!isPortrait() || !isHubPage()) return;
+    var t = e.touches[0];
+    if (!t) return;
+    var scroller = swipeScroller(e.target);
+    if (!scroller) return;
+    swipeScroll = { y: t.clientY, scroller: scroller };
+  }
+
+  function onSwipeTouchMove(e) {
+    if (!swipeScroll) return;
+    var t = e.touches[0];
+    if (!t) return;
+    var dy = t.clientY - swipeScroll.y;
+    swipeScroll.y = t.clientY;
+    swipeScroll.scroller.scrollTop -= dy;
+  }
+
+  function onSwipeTouchEnd() {
+    swipeScroll = null;
+  }
+
   document.addEventListener('touchstart', onTouchStart, { passive: true });
   document.addEventListener('touchend', onTouchEnd, { passive: true });
+  document.addEventListener('touchstart', onSwipeTouchStart, { passive: true });
+  document.addEventListener('touchmove', onSwipeTouchMove, { passive: true });
+  document.addEventListener('touchend', onSwipeTouchEnd, { passive: true });
+  document.addEventListener('touchcancel', onSwipeTouchEnd, { passive: true });
   document.addEventListener('mousedown', onMouseDown);
   document.addEventListener('mouseup', onMouseUp);
   document.addEventListener('DOMContentLoaded', onDomContentLoaded);
@@ -308,6 +354,10 @@
     teardown: function () {
       document.removeEventListener('touchstart', onTouchStart);
       document.removeEventListener('touchend', onTouchEnd);
+      document.removeEventListener('touchstart', onSwipeTouchStart);
+      document.removeEventListener('touchmove', onSwipeTouchMove);
+      document.removeEventListener('touchend', onSwipeTouchEnd);
+      document.removeEventListener('touchcancel', onSwipeTouchEnd);
       document.removeEventListener('mousedown', onMouseDown);
       document.removeEventListener('mouseup', onMouseUp);
       document.removeEventListener('DOMContentLoaded', onDomContentLoaded);

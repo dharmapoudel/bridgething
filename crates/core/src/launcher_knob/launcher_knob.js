@@ -11,15 +11,38 @@
   'use strict';
   if (!window.location.pathname.startsWith('/_hub/')) return;
 
-  // The knob's muted-gray outline is the only selection affordance on the
-  // home grid. Touch-pressing a tile flashes its icon white (image touch
-  // feedback); make a press a visual no-op so only the outline ever shows.
-  // Guarded so re-injection does not stack duplicate style elements.
-  if (!document.getElementById('bt-knob-noflash')) {
+  // The daemon re-registers this script with runImmediately on every rotation
+  // change; without a guard each pass stacks another set of wheel listeners
+  // and observers that fight over the highlight. Tear down the previous
+  // instance first.
+  var prev = window.__bridgethingKnob;
+  if (prev && typeof prev.teardown === 'function') prev.teardown();
+
+  var HIGHLIGHT_ATTR = 'data-knob-highlight';
+  var ENTER_DEBOUNCE_MS = 350;
+  var UNINSTALL_HOLD_MS = 1500;
+  var UNINSTALL_URL = '/_uninstall';
+  var SETTINGS_LABEL = 'Settings';
+  var NOFLASH_STYLE_ID = 'bt-knob-noflash';
+  var highlight = -1;
+  var lastEnterAt = 0;
+  var pressStart = 0;
+  var installed = false;
+  var observer = null;
+
+  function injectNoFlash() {
+    // The knob's muted-gray outline is the only selection affordance on the
+    // home grid. Touch-pressing a tile flashes its icon white (image touch
+    // feedback); make a press a visual no-op so only the outline ever shows.
+    // transition:none kills the 150ms outline-color fade Tailwind v4 puts on
+    // .transition-colors tiles, which flashed a light outline on every tick.
+    // Guarded so re-injection does not stack duplicate style elements.
+    if (document.getElementById(NOFLASH_STYLE_ID)) return;
     var noFlash = document.createElement('style');
-    noFlash.id = 'bt-knob-noflash';
+    noFlash.id = NOFLASH_STYLE_ID;
     noFlash.textContent =
       'div.grid button[type="button"],div.grid button[type="button"] *{' +
+      'transition:none !important;' +
       '-webkit-tap-highlight-color:transparent !important;' +
       '-webkit-user-drag:none !important;user-select:none !important;} ' +
       'div.grid button[type="button"]:active{' +
@@ -28,15 +51,6 @@
       'div.grid button[type="button"] img{pointer-events:none !important;}';
     (document.head || document.documentElement).appendChild(noFlash);
   }
-
-  var HIGHLIGHT_ATTR = 'data-knob-highlight';
-  var ENTER_DEBOUNCE_MS = 350;
-  var UNINSTALL_HOLD_MS = 1500;
-  var UNINSTALL_URL = '/_uninstall';
-  var SETTINGS_LABEL = 'Settings';
-  var highlight = -1;
-  var lastEnterAt = 0;
-  var pressStart = 0;
 
   function tiles() {
     // App tiles and the settings tile are buttons inside the launcher grid.
@@ -142,25 +156,64 @@
     list[highlight].click();
   }
 
-  // Tiles render asynchronously after the page loads; watch the DOM so the
-  // highlight appears once they do and resets if the grid is replaced
-  // (e.g. the launcher switches to its settings sub-view).
-  var observer = new MutationObserver(function () {
-    var list = tiles();
-    if (list.length === 0) {
-      if (highlight !== -1) {
-        clearHighlight();
-        highlight = -1;
+  function install() {
+    installed = true;
+    injectNoFlash();
+    // Tiles render asynchronously after the page loads; watch the DOM so the
+    // highlight appears once they do and resets if the grid is replaced
+    // (e.g. the launcher switches to its settings sub-view).
+    observer = new MutationObserver(function () {
+      var list = tiles();
+      if (list.length === 0) {
+        if (highlight !== -1) {
+          clearHighlight();
+          highlight = -1;
+        }
+      } else if (highlight < 0) {
+        applyHighlight(0);
+      } else if (highlight >= list.length) {
+        applyHighlight(list.length - 1);
       }
-    } else if (highlight < 0) {
-      applyHighlight(0);
-    } else if (highlight >= list.length) {
-      applyHighlight(list.length - 1);
-    }
-  });
+    });
 
-  window.addEventListener('wheel', onWheel, { passive: false, capture: true });
-  window.addEventListener('keydown', onKeyDown, { capture: true });
-  window.addEventListener('keyup', onKeyUp, { capture: true });
-  observer.observe(document.documentElement, { childList: true, subtree: true });
+    window.addEventListener('wheel', onWheel, { passive: false, capture: true });
+    window.addEventListener('keydown', onKeyDown, { capture: true });
+    window.addEventListener('keyup', onKeyUp, { capture: true });
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+    // A deferred install runs after the tiles are already parsed, so the
+    // observer never sees them appear; highlight the first tile directly.
+    if (highlight < 0) {
+      var list = tiles();
+      if (list.length > 0) applyHighlight(0);
+    }
+  }
+
+  function teardown() {
+    if (!installed) {
+      document.removeEventListener('DOMContentLoaded', install);
+      return;
+    }
+    installed = false;
+    window.removeEventListener('wheel', onWheel, { capture: true });
+    window.removeEventListener('keydown', onKeyDown, { capture: true });
+    window.removeEventListener('keyup', onKeyUp, { capture: true });
+    if (observer) {
+      observer.disconnect();
+      observer = null;
+    }
+    clearHighlight();
+    highlight = -1;
+  }
+
+  window.__bridgethingKnob = { teardown: teardown };
+
+  // Injected scripts run at document_start, before the document has a root
+  // element; touching document.documentElement there throws and kills the
+  // whole script, which left the knob dead after hub navigations (M home).
+  // Defer the install until the document exists.
+  if (document.documentElement) {
+    install();
+  } else {
+    document.addEventListener('DOMContentLoaded', install, { once: true });
+  }
 })();
