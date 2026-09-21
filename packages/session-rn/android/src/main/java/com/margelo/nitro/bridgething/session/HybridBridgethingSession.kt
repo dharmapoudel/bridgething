@@ -31,6 +31,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
         private var pendingOtaPollChanged: ((BridgethingOtaPollStatus) -> Unit)? = null
         private var pendingCompanionUpdateProgress: ((Double, Double) -> Unit)? = null
         private var pendingResumed: ((BridgethingSessionSnapshot) -> Unit)? = null
+        private var pendingScreenshotReceived: ((String, String, Double) -> Unit)? = null
 
         @JvmStatic
         public fun installBackend(b: BridgethingSessionBackend) {
@@ -54,6 +55,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
                     otaPoll = pendingOtaPollChanged,
                     companionUpdateProgress = pendingCompanionUpdateProgress,
                     resumed = pendingResumed,
+                    screenshotReceived = pendingScreenshotReceived,
                 )
                 pendingProvidersChanged = null
                 pendingPeerConnected = null
@@ -72,6 +74,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
                 pendingOtaPollChanged = null
                 pendingCompanionUpdateProgress = null
                 pendingResumed = null
+                pendingScreenshotReceived = null
                 snapshot
             }
             replay.providers?.let(b::setOnProvidersChanged)
@@ -91,6 +94,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
             replay.otaPoll?.let(b::setOnOtaPollChanged)
             replay.companionUpdateProgress?.let(b::setOnCompanionUpdateProgress)
             replay.resumed?.let(b::setOnResumed)
+            replay.screenshotReceived?.let(b::setOnScreenshotReceived)
         }
 
         private fun require(): BridgethingSessionBackend = backend
@@ -118,6 +122,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
         val otaPoll: ((BridgethingOtaPollStatus) -> Unit)?,
         val companionUpdateProgress: ((Double, Double) -> Unit)?,
         val resumed: ((BridgethingSessionSnapshot) -> Unit)?,
+        val screenshotReceived: ((String, String, Double) -> Unit)?,
     )
 
     override fun start(): Promise<Unit> = Promise.async { require().start() }
@@ -338,6 +343,10 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
         require().deviceSetNickname(deviceId, nickname)
     }
 
+    override fun collectScreenshot(deviceId: String, transferId: String, capturedAtMs: Double): Promise<String> = Promise.async {
+        require().collectScreenshot(deviceId, transferId, capturedAtMs)
+    }
+
     override fun presentPairPicker(): Promise<Variant_NullType_BridgethingBtDevice> = Promise.async {
         val device = require().presentPairPicker()
         if (device != null) Variant_NullType_BridgethingBtDevice.Second(device)
@@ -473,6 +482,10 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
 
     override fun setOnResumed(callback: (snapshot: BridgethingSessionSnapshot) -> Unit) {
         forwardOrBuffer(callback, BridgethingSessionBackend::setOnResumed) { pendingResumed = it }
+    }
+
+    override fun setOnScreenshotReceived(callback: (deviceId: String, fileUri: String, capturedAtMs: Double) -> Unit) {
+        forwardOrBuffer(callback, BridgethingSessionBackend::setOnScreenshotReceived) { pendingScreenshotReceived = it }
     }
 
     private fun unwrapString(variant: Variant_NullType_String?): String? = variant?.let {
