@@ -51,7 +51,13 @@ fn load_prefs(path: &Path) -> u16 {
     Err(_) => return 0,
   };
   if VALID_ROTATIONS.contains(&prefs.rotation) {
-    prefs.rotation
+    // 0.13.9/0.13.10 shipped portrait as 90 degrees (knob at top). Portrait is
+    // now 270 (knob at bottom), so migrate the persisted value on load.
+    if prefs.rotation == 90 {
+      270
+    } else {
+      prefs.rotation
+    }
   } else {
     0
   }
@@ -197,9 +203,10 @@ mod tests {
     assert!(mgr.set_rotation(45).await.is_err());
     assert!(mgr.set_rotation(90).await.is_ok());
     assert_eq!(mgr.rotation().await, 90);
-    // Reopening the manager restores the persisted value.
+    // Reopening the manager migrates persisted 90 to 270 (portrait direction
+    // changed; see load_prefs).
     let mgr2 = RotationManager::new(dir.clone());
-    assert_eq!(mgr2.rotation().await, 90);
+    assert_eq!(mgr2.rotation().await, 270);
     let _ = std::fs::remove_dir_all(&dir);
   }
 }

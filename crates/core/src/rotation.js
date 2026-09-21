@@ -5,13 +5,21 @@
 // 1. The daemon sends Emulation.setDeviceMetricsOverride at the fixed 800x480
 //    window size for every rotation. Blink rasterizes at the override size, so
 //    a 480x800 override left the right ~320px of the window unpainted.
-//    screen.orientation still reports the rotated orientation (portraitPrimary
-//    at 90). Note window.innerWidth stays 800; the root-pinning math below
-//    must use LAYOUTS, never window dimensions (touch zones are the opposite:
-//    viewport space, see cornerZone).
+//    screen.orientation still reports the rotated orientation
+//    (portraitSecondary at 270). Note window.innerWidth stays 800; the
+//    root-pinning math below must use LAYOUTS, never window dimensions (touch
+//    zones are the opposite: viewport space, see cornerZone).
 // 2. This script pins the page root to the rotated layout size from LAYOUTS
 //    (480x800 in portrait) and rotates it with a CSS transform so the portrait
-//    layout fills the physical 800x480 panel.
+//    layout fills the physical 800x480 panel. Portrait is 270 degrees: the
+//    knob sits on the right edge in landscape, so the device turns 90 degrees
+//    clockwise to put the knob at the bottom, and -90 degrees maps UI-up to
+//    the framebuffer's left edge, which is physical up in that hold.
+// 3. The hub launcher's tile grid geometry is hardcoded for landscape
+//    (GRID_WIDTH_PX=768 in the hub bundle, baked into the read-only image),
+//    so pinning the root alone never reflows it. In portrait on hub pages this
+//    script forces the grid to two columns with an !important rule, which
+//    beats the inline style React sets.
 //
 // Touch needs no remapping: Chromium hit-tests through the transform, so taps
 // land on the visually-rotated elements.
@@ -77,6 +85,7 @@
         body.style.width = '';
         body.style.height = '';
       }
+      removeReflow();
       return;
     }
     var layout = layoutFor(DEGREES);
@@ -88,6 +97,45 @@
       body.style.width = layout.w + 'px';
       body.style.height = layout.h + 'px';
     }
+    applyReflow();
+  }
+
+  // Hub launcher portrait reflow. The tile grid's column count is set from an
+  // inline style computed for landscape (GRID_WIDTH_PX=768 in the hub bundle),
+  // so without this the grid stays a rigid 3-wide landscape block in portrait.
+  // Scoped to hub pages so third-party webapps keep their own layouts.
+  // Declared before applyRotation runs: var assignments are not hoisted, so
+  // these must execute before the call below.
+  var REFLOW_STYLE_ID = 'bt-hub-portrait-reflow';
+  var REFLOW_CSS =
+    'div[style*="grid-template-columns"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}';
+
+  function isPortrait() {
+    return DEGREES === 90 || DEGREES === 270;
+  }
+
+  function isHubPage() {
+    try {
+      return window.location.pathname.indexOf('/_hub/') === 0;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  function removeReflow() {
+    var old = document.getElementById(REFLOW_STYLE_ID);
+    if (old && old.parentNode) old.parentNode.removeChild(old);
+  }
+
+  function applyReflow() {
+    removeReflow();
+    if (!isPortrait() || !isHubPage()) return;
+    var parent = document.head || document.documentElement;
+    if (!parent) return;
+    var el = document.createElement('style');
+    el.id = REFLOW_STYLE_ID;
+    el.textContent = REFLOW_CSS;
+    parent.appendChild(el);
   }
 
   if (document.readyState === 'loading') {
@@ -197,7 +245,7 @@
       '<path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>' +
       '</svg>';
     btn.addEventListener('click', function () {
-      var target = DEGREES === 0 ? 90 : 0;
+      var target = DEGREES === 0 ? 270 : 0;
       // The daemon applies the CDP metrics override and re-injects this script
       // with the new degrees baked in (run immediately in the live page).
       sendRotation(target);
@@ -265,6 +313,7 @@
       document.removeEventListener('DOMContentLoaded', onDomContentLoaded);
       window.removeEventListener('load', applyRotation);
       hideButton();
+      removeReflow();
       var root = document.documentElement;
       if (root) {
         root.style.transform = '';
