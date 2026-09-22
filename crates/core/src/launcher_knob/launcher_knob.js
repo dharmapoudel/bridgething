@@ -17,7 +17,9 @@
   // and observers that fight over the highlight. Tear down the previous
   // instance first.
   var prev = window.__bridgethingKnob;
-  if (prev && typeof prev.teardown === 'function') prev.teardown();
+  if (prev && typeof prev.teardown === 'function') {
+    try { prev.teardown(); } catch (e) {}
+  }
 
   var HIGHLIGHT_CLASS = 'bt-knob-selected';
   var ENTER_DEBOUNCE_MS = 350;
@@ -30,6 +32,7 @@
   var pressStart = 0;
   var installed = false;
   var observer = null;
+  var installTimer = null;
 
   function injectNoFlash() {
     // Single-border selection: the knob highlight brightens the tile's own
@@ -191,8 +194,10 @@
   }
 
   function teardown() {
+    if (installTimer) { clearInterval(installTimer); installTimer = null; }
+    window.removeEventListener('load', tryInstall);
     if (!installed) {
-      document.removeEventListener('DOMContentLoaded', install);
+      document.removeEventListener('DOMContentLoaded', tryInstall);
       return;
     }
     installed = false;
@@ -207,15 +212,26 @@
     highlight = -1;
   }
 
-  window.__bridgethingKnob = { teardown: teardown };
+  var self = { teardown: teardown };
+  window.__bridgethingKnob = self;
 
   // Injected scripts run at document_start, before the document has a root
   // element; touching document.documentElement there throws and kills the
   // whole script, which left the knob dead after hub navigations (M home).
-  // Defer the install until the document exists.
-  if (document.documentElement) {
-    install();
-  } else {
-    document.addEventListener('DOMContentLoaded', install, { once: true });
+  // Defer the install until the document exists, and retry briefly: if a
+  // re-injection raced page load and DOMContentLoaded was missed, the knob
+  // would otherwise stay dead until the next rotation change.
+  function tryInstall() {
+    if (window.__bridgethingKnob !== self || installed) return;
+    if (!document.documentElement) return;
+    try { install(); } catch (e) {}
   }
+  if (document.documentElement) {
+    tryInstall();
+  } else {
+    document.addEventListener('DOMContentLoaded', tryInstall);
+  }
+  window.addEventListener('load', tryInstall);
+  installTimer = setInterval(tryInstall, 1000);
+  setTimeout(function () { clearInterval(installTimer); }, 30000);
 })();

@@ -154,6 +154,32 @@
   }
 
   var reflowObserver = null;
+  var reflowVerifyTimer = null;
+  function verifyReflow() {
+    if (!isPortrait() || !isHubPage()) return;
+    if (!document.getElementById(REFLOW_STYLE_ID)) {
+      applyReflow();
+    }
+    // The stylesheet can stop applying without the element being removed;
+    // verify the computed layout, not just the element's presence. Runs on
+    // an interval, not per mutation: getComputedStyle forces a sync layout
+    // and per-mutation checks janked touch scrolling.
+    var grids = document.querySelectorAll('div[style*="grid-template-columns"]');
+    for (var i = 0; i < grids.length; i++) {
+      var cs = getComputedStyle(grids[i]).gridTemplateColumns.split(/\s+/).length;
+      if (cs !== 2) {
+        grids[i].style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+        grids[i].style.setProperty('width', '100%', 'important');
+        grids[i].style.setProperty('max-width', '100%', 'important');
+        var wrap = grids[i].parentElement;
+        if (wrap) {
+          wrap.style.setProperty('display', 'block', 'important');
+          wrap.style.setProperty('overflow-y', 'auto', 'important');
+          wrap.style.setProperty('overflow-x', 'hidden', 'important');
+        }
+      }
+    }
+  }
   function watchReflow() {
     if (reflowObserver) return;
     var root = document.documentElement;
@@ -163,25 +189,11 @@
       if (!document.getElementById(REFLOW_STYLE_ID)) {
         applyReflow();
       }
-      // Self-heal the actual layout, not just the style element's presence:
-      // if the grid isn't computing to 2 columns, force it inline.
-      var grids = document.querySelectorAll('div[style*="grid-template-columns"]');
-      for (var i = 0; i < grids.length; i++) {
-        var cs = getComputedStyle(grids[i]).gridTemplateColumns.split(/\s+/).length;
-        if (cs !== 2) {
-          grids[i].style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
-          grids[i].style.setProperty('width', '100%', 'important');
-          grids[i].style.setProperty('max-width', '100%', 'important');
-          var wrap = grids[i].parentElement;
-          if (wrap) {
-            wrap.style.setProperty('display', 'block', 'important');
-            wrap.style.setProperty('overflow-y', 'auto', 'important');
-            wrap.style.setProperty('overflow-x', 'hidden', 'important');
-          }
-        }
-      }
     });
     reflowObserver.observe(root, { childList: true, subtree: true });
+    if (!reflowVerifyTimer) {
+      reflowVerifyTimer = setInterval(verifyReflow, 1000);
+    }
   }
 
   if (document.readyState === 'loading') {
@@ -286,8 +298,8 @@
     btn.innerHTML =
       '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" ' +
       'stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-      '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>' +
-      '<path d="M12 18h.01"/>' +
+      '<rect x="2" y="7" width="20" height="10" rx="2" ry="2"/>' +
+      '<path d="M6 12h.01"/>' +
       '</svg>';
     btn.addEventListener('click', function () {
       var target = DEGREES === 0 ? 270 : 0;
@@ -372,17 +384,34 @@
     swipeScroll = { y: t.clientY, scroller: scroller };
   }
 
+  var swipeRaf = 0;
+  var swipePendingDy = 0;
   function onSwipeTouchMove(e) {
     if (!swipeScroll) return;
     var t = e.touches[0];
     if (!t) return;
-    var dy = t.clientY - swipeScroll.y;
+    swipePendingDy += t.clientY - swipeScroll.y;
     swipeScroll.y = t.clientY;
-    swipeScroll.scroller.scrollTop -= dy;
+    if (!swipeRaf) {
+      swipeRaf = requestAnimationFrame(function () {
+        swipeRaf = 0;
+        var dy = swipePendingDy;
+        swipePendingDy = 0;
+        // The touch may have ended mid-frame; guard the scroller.
+        if (swipeScroll && dy !== 0) {
+          swipeScroll.scroller.scrollTop -= dy;
+        }
+      });
+    }
   }
 
   function onSwipeTouchEnd() {
     swipeScroll = null;
+    swipePendingDy = 0;
+    if (swipeRaf) {
+      cancelAnimationFrame(swipeRaf);
+      swipeRaf = 0;
+    }
   }
 
   document.addEventListener('touchstart', onTouchStart, { passive: true });
@@ -413,6 +442,10 @@
       if (reflowObserver) {
         reflowObserver.disconnect();
         reflowObserver = null;
+      }
+      if (reflowVerifyTimer) {
+        clearInterval(reflowVerifyTimer);
+        reflowVerifyTimer = null;
       }
       var root = document.documentElement;
       if (root) {
