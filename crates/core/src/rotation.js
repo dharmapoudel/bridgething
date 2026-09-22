@@ -15,11 +15,13 @@
 //    knob sits on the right edge in landscape, so the device turns 90 degrees
 //    clockwise to put the knob at the bottom, and -90 degrees maps UI-up to
 //    the framebuffer's left edge, which is physical up in that hold.
-// 3. The hub launcher's tile grid geometry is hardcoded for landscape
+// 3. The hub launcher's tile grid geometry is computed for landscape
 //    (GRID_WIDTH_PX=768 in the hub bundle, baked into the read-only image),
-//    so pinning the root alone never reflows it. In portrait on hub pages this
-//    script forces the grid to two columns with an !important rule, which
-//    beats the inline style React sets.
+//    so pinning the root alone never reflows it. On hub pages in portrait this
+//    script forces the grid to two columns with an !important rule (which
+//    beats the inline style React sets) and forces its wrapper to scroll
+//    instead of flex-centering, which clipped the middle rows. A
+//    MutationObserver re-adds the rule if anything removes it.
 //
 // Touch needs no remapping: Chromium hit-tests through the transform, so taps
 // land on the visually-rotated elements.
@@ -98,17 +100,8 @@
       body.style.height = layout.h + 'px';
     }
     applyReflow();
+    watchReflow();
   }
-
-  // Hub launcher portrait reflow. The tile grid's column count is set from an
-  // inline style computed for landscape (GRID_WIDTH_PX=768 in the hub bundle),
-  // so without this the grid stays a rigid 3-wide landscape block in portrait.
-  // Scoped to hub pages so third-party webapps keep their own layouts.
-  // Declared before applyRotation runs: var assignments are not hoisted, so
-  // these must execute before the call below.
-  var REFLOW_STYLE_ID = 'bt-hub-portrait-reflow';
-  var REFLOW_CSS =
-    'div[style*="grid-template-columns"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;}';
 
   function isPortrait() {
     return DEGREES === 90 || DEGREES === 270;
@@ -116,11 +109,33 @@
 
   function isHubPage() {
     try {
-      return window.location.pathname.indexOf('/_hub/') === 0;
+      var p = window.location.pathname;
+      return p === '/_hub' || p.indexOf('/_hub/') === 0;
     } catch (e) {
       return false;
     }
   }
+
+  // Hub launcher portrait layout. The tile grid's geometry is computed for
+  // landscape (GRID_WIDTH_PX=768 in the hub bundle), so without this the grid
+  // stays a rigid landscape block in portrait. Two rules, scoped to hub pages
+  // in portrait:
+  // 1. Force two columns (beats the inline style React sets).
+  // 2. The hub centers the grid with flex when its landscape math says it
+  //    "fits", but the 2-column portrait grid has more rows than fit on
+  //    screen; flex centering then clips/squishes the middle rows. Force a
+  //    scrolling block so every tile is reachable (the swipe driver below
+  //    scrolls this element). The grid's baked-in 768px landscape width would
+  //    otherwise overflow the 480px portrait viewport and clip one side, so
+  //    pin it to the viewport width and hide horizontal overflow.
+  // Applied as a style element (covers present and future grids) and kept
+  // alive by a MutationObserver: if anything removes it, it is re-added.
+  var REFLOW_STYLE_ID = 'bt-hub-portrait-reflow';
+  var REFLOW_CSS =
+    'div[style*="grid-template-columns"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;' +
+    'width:100% !important;max-width:100% !important;}' +
+    'div:has(>div[style*="grid-template-columns"]){display:block !important;' +
+    'overflow-y:auto !important;overflow-x:hidden !important;width:100% !important;}';
 
   function removeReflow() {
     var old = document.getElementById(REFLOW_STYLE_ID);
@@ -136,6 +151,37 @@
     el.id = REFLOW_STYLE_ID;
     el.textContent = REFLOW_CSS;
     parent.appendChild(el);
+  }
+
+  var reflowObserver = null;
+  function watchReflow() {
+    if (reflowObserver) return;
+    var root = document.documentElement;
+    if (!root) return;
+    reflowObserver = new MutationObserver(function () {
+      if (!isPortrait() || !isHubPage()) return;
+      if (!document.getElementById(REFLOW_STYLE_ID)) {
+        applyReflow();
+      }
+      // Self-heal the actual layout, not just the style element's presence:
+      // if the grid isn't computing to 2 columns, force it inline.
+      var grids = document.querySelectorAll('div[style*="grid-template-columns"]');
+      for (var i = 0; i < grids.length; i++) {
+        var cs = getComputedStyle(grids[i]).gridTemplateColumns.split(/\s+/).length;
+        if (cs !== 2) {
+          grids[i].style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+          grids[i].style.setProperty('width', '100%', 'important');
+          grids[i].style.setProperty('max-width', '100%', 'important');
+          var wrap = grids[i].parentElement;
+          if (wrap) {
+            wrap.style.setProperty('display', 'block', 'important');
+            wrap.style.setProperty('overflow-y', 'auto', 'important');
+            wrap.style.setProperty('overflow-x', 'hidden', 'important');
+          }
+        }
+      }
+    });
+    reflowObserver.observe(root, { childList: true, subtree: true });
   }
 
   if (document.readyState === 'loading') {
@@ -364,6 +410,10 @@
       window.removeEventListener('load', applyRotation);
       hideButton();
       removeReflow();
+      if (reflowObserver) {
+        reflowObserver.disconnect();
+        reflowObserver = null;
+      }
       var root = document.documentElement;
       if (root) {
         root.style.transform = '';

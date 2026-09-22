@@ -9,7 +9,8 @@
  */
 (function () {
   'use strict';
-  if (!window.location.pathname.startsWith('/_hub/')) return;
+  var _p = window.location.pathname;
+  if (_p !== '/_hub' && _p.indexOf('/_hub/') !== 0) return;
 
   // The daemon re-registers this script with runImmediately on every rotation
   // change; without a guard each pass stacks another set of wheel listeners
@@ -18,7 +19,7 @@
   var prev = window.__bridgethingKnob;
   if (prev && typeof prev.teardown === 'function') prev.teardown();
 
-  var HIGHLIGHT_ATTR = 'data-knob-highlight';
+  var HIGHLIGHT_CLASS = 'bt-knob-selected';
   var ENTER_DEBOUNCE_MS = 350;
   var UNINSTALL_HOLD_MS = 1500;
   var UNINSTALL_URL = '/_uninstall';
@@ -31,23 +32,26 @@
   var observer = null;
 
   function injectNoFlash() {
-    // The knob's muted-gray outline is the only selection affordance on the
-    // home grid. Touch-pressing a tile flashes its icon white (image touch
-    // feedback); make a press a visual no-op so only the outline ever shows.
-    // transition:none kills the 150ms outline-color fade Tailwind v4 puts on
-    // .transition-colors tiles, which flashed a light outline on every tick.
-    // Guarded so re-injection does not stack duplicate style elements.
+    // Single-border selection: the knob highlight brightens the tile's own
+    // border instead of drawing an outline on top of it (which rendered as a
+    // double border). A short border-color transition lets the highlight
+    // glide between tiles; all other transitions stay off so a press never
+    // flashes the tile white. Guarded so re-injection does not stack
+    // duplicate style elements.
     if (document.getElementById(NOFLASH_STYLE_ID)) return;
     var noFlash = document.createElement('style');
     noFlash.id = NOFLASH_STYLE_ID;
     noFlash.textContent =
       'div.grid button[type="button"],div.grid button[type="button"] *{' +
-      'transition:none !important;' +
       '-webkit-tap-highlight-color:transparent !important;' +
       '-webkit-user-drag:none !important;user-select:none !important;} ' +
+      'div.grid button[type="button"]{' +
+      'transition:border-color 120ms ease-out !important;} ' +
       'div.grid button[type="button"]:active{' +
       'background-color:var(--color-screen) !important;' +
       'border-color:var(--color-rule) !important;} ' +
+      'div.grid button[type="button"].bt-knob-selected{' +
+      'border-color:var(--color-edge) !important;} ' +
       'div.grid button[type="button"] img{pointer-events:none !important;}';
     (document.head || document.documentElement).appendChild(noFlash);
   }
@@ -64,11 +68,9 @@
 
   function clearHighlight() {
     Array.prototype.forEach.call(
-      document.querySelectorAll('[' + HIGHLIGHT_ATTR + ']'),
+      document.querySelectorAll('.' + HIGHLIGHT_CLASS),
       function (el) {
-        el.removeAttribute(HIGHLIGHT_ATTR);
-        el.style.outline = '';
-        el.style.outlineOffset = '';
+        el.classList.remove(HIGHLIGHT_CLASS);
       }
     );
   }
@@ -82,20 +84,19 @@
     }
     highlight = Math.max(0, Math.min(list.length - 1, index));
     var el = list[highlight];
-    el.setAttribute(HIGHLIGHT_ATTR, 'true');
-    el.style.outline = '2px solid #404243';
-    el.style.outlineOffset = '2px';
+    el.classList.add(HIGHLIGHT_CLASS);
     if (el.scrollIntoView) el.scrollIntoView({ block: 'nearest' });
   }
 
   function onWheel(e) {
     var list = tiles();
     if (list.length === 0) return;
-    // Knob rotation arrives as horizontal wheel events; ignore vertical ones
-    // so touchpad-style vertical scrolling keeps working.
-    if (Math.abs(e.deltaX) <= Math.abs(e.deltaY)) return;
+    // The knob is a 1D rotary device and the only wheel source on the kiosk
+    // (no touchpad to preserve); honor the dominant axis so no tick is lost.
+    var ax = Math.abs(e.deltaX), ay = Math.abs(e.deltaY);
+    if (ax === 0 && ay === 0) return;
     e.preventDefault();
-    var dir = e.deltaX > 0 ? 1 : -1;
+    var dir = (ax >= ay ? e.deltaX : e.deltaY) > 0 ? 1 : -1;
     var next = highlight < 0 ? (dir > 0 ? 0 : list.length - 1)
       // Wrap around both ends; the + list.length keeps the JS %
       // non-negative. list is non-empty here (early return above).
@@ -114,8 +115,8 @@
     var name = tileLabel(tile);
     // The settings tile is daemon chrome, not a webapp; nothing to remove.
     if (!name || name === SETTINGS_LABEL) return;
-    tile.style.outline = '2px solid #e5484d';
-    tile.style.outlineOffset = '2px';
+    tile.classList.add(HIGHLIGHT_CLASS);
+    tile.style.borderColor = '#e5484d';
     fetch(UNINSTALL_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
@@ -123,6 +124,7 @@
     }).catch(function () {
       // The hub grid refreshes on the daemon's uninstalled broadcast; on a
       // failed request just restore the highlight so the tile looks normal.
+      tile.style.borderColor = '';
       applyHighlight(highlight);
     });
   }
