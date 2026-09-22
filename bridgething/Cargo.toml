@@ -1,0 +1,60 @@
+[workspace]
+resolver = "3"
+members = [
+  "crates/*",
+  "crates/delivery/core",
+  "crates/delivery/napi",
+  "crates/delivery/wasm",
+  "tools/codegen",
+  "desktop/src-tauri",
+]
+default-members = [
+  "crates/*",
+  "crates/delivery/core",
+  "crates/delivery/napi",
+  "tools/codegen",
+  "desktop/src-tauri",
+]
+exclude = ["crates/delivery"]
+
+[workspace.package]
+edition = "2024"
+rust-version = "1.94"
+version = "0.13.13"
+license = "MIT"
+authors = ["Joey Eamigh"]
+homepage = "https://bridgething.com"
+
+[workspace.dependencies]
+bridgething-iap2 = { version = "*", path = "crates/iap2" }
+bridgething-mfi = { version = "*", path = "crates/mfi" }
+bridgething-swupdate-sys = { version = "*", path = "crates/swupdate-sys" }
+bridgething-gateway = { version = "*", path = "crates/gateway-rs" }
+bridgething-client = { version = "*", path = "crates/client-rs" }
+bridgething-dsp = { version = "*", path = "crates/dsp" }
+bridgething-wakeword = { version = "*", path = "crates/wakeword" }
+
+serde = { version = "1.0.228" }
+serde_json = { version = "1.0.149" }
+uuid = { version = "1.23.1" }
+serde_with = { version = "3.17.0" }
+derive_more = { version = "2.1.1" }
+bluer = { version = "0.17.4" }
+futures = { version = "0.3.32" }
+tokio = { version = "1.52.1" }
+tokio-tungstenite = { version = "0.30.0" }
+tokio-util = { version = "0.7.18" }
+thiserror = { version = "2.0.18" }
+tracing = { version = "0.1.44" }
+tracing-subscriber = { version = "0.3.23" }
+flate2 = { version = "1.1.9" }
+async-trait = { version = "0.1.89" }
+rmp = { version = "0.8.15" }
+rmp-serde = { version = "1.3.1" }
+
+[profile.dev.package.sha2]
+opt-level = 3
+
+[profile.release]
+lto = true
+strip = "symbols"
