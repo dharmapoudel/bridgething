@@ -142,7 +142,7 @@
     'grid-auto-flow:row !important;' +
     'width:100% !important;max-width:100% !important;}' +
     'div:has(>div.grid.w-full){display:block !important;' +
-    'overflow-y:auto !important;overflow-x:hidden !important;width:100% !important;}';
+    'overflow-x:auto !important;overflow-y:hidden !important;width:100% !important;}';
 
   function removeReflow() {
     var old = document.getElementById(REFLOW_STYLE_ID);
@@ -207,8 +207,8 @@
       var wrap = grids[i].parentElement;
       if (wrap) {
         wrap.style.setProperty('display', 'block', 'important');
-        wrap.style.setProperty('overflow-y', 'auto', 'important');
-        wrap.style.setProperty('overflow-x', 'hidden', 'important');
+        wrap.style.setProperty('overflow-x', 'auto', 'important');
+        wrap.style.setProperty('overflow-y', 'hidden', 'important');
       }
     }
   }
@@ -398,10 +398,18 @@
 
   function swipeScroller(target) {
     var el = target instanceof Element ? target : null;
+    var portrait = isPortrait();
     while (el && el !== document.documentElement) {
-      if (el.scrollHeight > el.clientHeight + 1) {
-        var oy = getComputedStyle(el).overflowY;
-        if (oy === 'auto' || oy === 'scroll') return el;
+      if (portrait) {
+        if (el.scrollWidth > el.clientWidth + 1) {
+          var ox = getComputedStyle(el).overflowX;
+          if (ox === 'auto' || ox === 'scroll') return el;
+        }
+      } else {
+        if (el.scrollHeight > el.clientHeight + 1) {
+          var oy = getComputedStyle(el).overflowY;
+          if (oy === 'auto' || oy === 'scroll') return el;
+        }
       }
       el = el.parentElement;
     }
@@ -427,7 +435,15 @@
     var dy = t.clientY - swipeScroll.y;
     swipeScroll.y = t.clientY;
     if (dy !== 0) {
-      swipeScroll.scroller.scrollTop -= dy;
+      // In portrait the page is CSS-rotated 270deg, so the physical vertical
+      // swipe maps to the page's horizontal axis: drive scrollLeft, not
+      // scrollTop. Physical up (dy negative) moves page content right, which
+      // is scrollLeft decreasing.
+      if (isPortrait()) {
+        swipeScroll.scroller.scrollLeft += dy;
+      } else {
+        swipeScroll.scroller.scrollTop -= dy;
+      }
     }
   }
 
