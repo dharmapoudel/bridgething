@@ -139,6 +139,7 @@
   var REFLOW_STYLE_ID = 'bt-hub-portrait-reflow';
   var REFLOW_CSS =
     'div[style*="grid-template-columns"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;' +
+    'grid-auto-flow:row !important;' +
     'width:100% !important;max-width:100% !important;}' +
     'div:has(>div[style*="grid-template-columns"]){display:block !important;' +
     'overflow-y:auto !important;overflow-x:hidden !important;width:100% !important;}';
@@ -200,6 +201,7 @@
       var cs = getComputedStyle(grids[i]).gridTemplateColumns.split(/\s+/).length;
       if (cs !== 2) {
         grids[i].style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+        grids[i].style.setProperty('grid-auto-flow', 'row', 'important');
         grids[i].style.setProperty('width', '100%', 'important');
         grids[i].style.setProperty('max-width', '100%', 'important');
         var wrap = grids[i].parentElement;
