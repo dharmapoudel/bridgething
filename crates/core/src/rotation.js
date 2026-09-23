@@ -101,8 +101,12 @@
       body.style.height = layout.h + 'px';
     }
     applyReflow();
-    removeLandscapeScroll();
+    applyLandscapeScroll();
     watchReflow();
+    // Run the verifier immediately, not just on the 1s interval: on the
+    // first rotation into portrait the grid may already exist, and waiting
+    // a full second leaves the layout wrong if the user rotates back quickly.
+    verifyReflow();
   }
 
   function isPortrait() {
@@ -413,34 +417,21 @@
     swipeScroll = { y: t.clientY, scroller: scroller };
   }
 
-  var swipeRaf = 0;
-  var swipePendingDy = 0;
   function onSwipeTouchMove(e) {
     if (!swipeScroll) return;
     var t = e.touches[0];
     if (!t) return;
-    swipePendingDy += t.clientY - swipeScroll.y;
+    // Direct 1:1 scrolling, no rAF batching: the batching added perceptible
+    // lag on the device, making the swipe feel unresponsive.
+    var dy = t.clientY - swipeScroll.y;
     swipeScroll.y = t.clientY;
-    if (!swipeRaf) {
-      swipeRaf = requestAnimationFrame(function () {
-        swipeRaf = 0;
-        var dy = swipePendingDy;
-        swipePendingDy = 0;
-        // The touch may have ended mid-frame; guard the scroller.
-        if (swipeScroll && dy !== 0) {
-          swipeScroll.scroller.scrollTop -= dy;
-        }
-      });
+    if (dy !== 0) {
+      swipeScroll.scroller.scrollTop -= dy;
     }
   }
 
   function onSwipeTouchEnd() {
     swipeScroll = null;
-    swipePendingDy = 0;
-    if (swipeRaf) {
-      cancelAnimationFrame(swipeRaf);
-      swipeRaf = 0;
-    }
   }
 
   document.addEventListener('touchstart', onTouchStart, { passive: true });
