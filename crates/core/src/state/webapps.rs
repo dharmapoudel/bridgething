@@ -21,7 +21,7 @@ const ICON_MAX_BYTES: u64 = 64 * 1024;
 pub const SETTINGS_MAX_BYTES: u64 = 1024 * 1024;
 pub const OVERLAY_MAX_BYTES: u64 = 512 * 1024;
 const EXTRACTED_SIZE_CAP_BYTES: u64 = 1024 * 1024 * 1024;
-const RESERVED_BUILTIN_IDS: &[Uuid] = &[STOCK_WEBAPP_ID, HUB_WEBAPP_ID, BROWSER_WEBAPP_ID];
+const RESERVED_BUILTIN_IDS: &[Uuid] = &[HUB_WEBAPP_ID, BROWSER_WEBAPP_ID];
 const DEV_SHADOW_NAMESPACE: Uuid = Uuid::from_u128(0x019759e0_dec0_5ade_8000_b71d6e7de5af);
 /// Tombstoned (user-uninstalled) builtin webapps, persisted as a JSON array of
 /// uuid strings next to the installed root. Builtins live in the read-only

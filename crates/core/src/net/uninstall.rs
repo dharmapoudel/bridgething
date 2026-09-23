@@ -5,7 +5,7 @@
 //! removable model the gateway WebappUninstall request uses: installed bundles
 //! are deleted, non-reserved builtins are tombstoned in
 //! uninstalled_builtins.json so they stay hidden across reboots. Reserved
-//! builtins (hub, browser, stock) are refused. Only the on-device kiosk
+//! builtins (hub, browser) are refused. Only the on-device kiosk
 //! (loopback) may call this; the injected launcher knob script posts here on
 //! a long knob press.
 
