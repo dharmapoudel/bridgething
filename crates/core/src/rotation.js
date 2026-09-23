@@ -103,10 +103,9 @@
     applyReflow();
     applyLandscapeScroll();
     watchReflow();
-    // Run the verifier immediately, not just on the 1s interval: on the
-    // first rotation into portrait the grid may already exist, and waiting
-    // a full second leaves the layout wrong if the user rotates back quickly.
-    verifyReflow();
+    // Run immediately, not just on mutation/interval: on the first rotation
+    // into portrait the grid may already exist.
+    forcePortraitGrid();
   }
 
   function isPortrait() {
@@ -124,25 +123,55 @@
 
   // Hub launcher portrait layout. The tile grid's geometry is computed for
   // landscape (GRID_WIDTH_PX=768 in the hub bundle), so without this the grid
-  // stays a rigid landscape block in portrait. Two rules, scoped to hub pages
-  // in portrait:
-  // 1. Force two columns (beats the inline style React sets).
-  // 2. The hub centers the grid with flex when its landscape math says it
-  //    "fits", but the 2-column portrait grid has more rows than fit on
-  //    screen; flex centering then clips/squishes the middle rows. Force a
-  //    scrolling block so every tile is reachable (the swipe driver below
-  //    scrolls this element). The grid's baked-in 768px landscape width would
-  //    otherwise overflow the 480px portrait viewport and clip one side, so
-  //    pin it to the viewport width and hide horizontal overflow.
-  // Applied as a style element (covers present and future grids) and kept
-  // alive by a MutationObserver: if anything removes it, it is re-added.
+  // stays a rigid landscape block in portrait. Forces two columns via
+  // !important inline styles (which beat React's inline styles) and forces
+  // the wrapper to scroll instead of flex-centering, which clipped the
+  // middle rows. A MutationObserver re-applies the fix whenever the grid
+  // appears or React re-renders it.
+  function forcePortraitGrid() {
+    if (!isPortrait() || !isHubPage()) return;
+    var grids = document.querySelectorAll('div.grid.w-full');
+    for (var i = 0; i < grids.length; i++) {
+      var g = grids[i];
+      g.style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+      g.style.setProperty('grid-auto-flow', 'row', 'important');
+      g.style.setProperty('width', '100%', 'important');
+      g.style.setProperty('max-width', '100%', 'important');
+      var wrap = g.parentElement;
+      if (wrap) {
+        wrap.style.setProperty('display', 'block', 'important');
+        wrap.style.setProperty('overflow-x', 'auto', 'important');
+        wrap.style.setProperty('overflow-y', 'hidden', 'important');
+        wrap.style.setProperty('width', '100%', 'important');
+      }
+    }
+  }
+
+  var reflowObserver = null;
+  var reflowInterval = null;
+  function watchReflow() {
+    if (reflowObserver) return;
+    var root = document.documentElement;
+    if (!root) return;
+    // Watch for the grid appearing or React re-rendering it. Apply the fix
+    // on every mutation (not just a 1s interval) so there's no window where
+    // the landscape layout is visible.
+    reflowObserver = new MutationObserver(function () {
+      if (!isPortrait() || !isHubPage()) return;
+      forcePortraitGrid();
+    });
+    reflowObserver.observe(root, { childList: true, subtree: true, attributes: true, attributeFilter: ['style', 'class'] });
+    // Also run on an interval as a backstop.
+    reflowInterval = setInterval(forcePortraitGrid, 1000);
+  }
+
+  // Legacy: the stylesheet-based reflow is kept for compatibility but the
+  // MutationObserver + inline styles above is the primary mechanism.
   var REFLOW_STYLE_ID = 'bt-hub-portrait-reflow';
   var REFLOW_CSS =
     'div.grid.w-full{grid-template-columns:repeat(2,minmax(0,1fr)) !important;' +
     'grid-auto-flow:row !important;' +
-    'width:100% !important;max-width:100% !important;}' +
-    'div:has(>div.grid.w-full){display:block !important;' +
-    'overflow-x:auto !important;overflow-y:hidden !important;width:100% !important;}';
+    'width:100% !important;max-width:100% !important;}';
 
   function removeReflow() {
     var old = document.getElementById(REFLOW_STYLE_ID);
@@ -158,6 +187,8 @@
     el.id = REFLOW_STYLE_ID;
     el.textContent = REFLOW_CSS;
     parent.appendChild(el);
+    // Apply immediately via DOM, don't wait for the observer.
+    forcePortraitGrid();
   }
 
   // Landscape hub scrolling. The reflow above is portrait-only (it forces
@@ -183,49 +214,6 @@
     el.id = LANDSCAPE_SCROLL_ID;
     el.textContent = LANDSCAPE_SCROLL_CSS;
     parent.appendChild(el);
-  }
-
-  var reflowObserver = null;
-  var reflowVerifyTimer = null;
-  function verifyReflow() {
-    if (!isPortrait() || !isHubPage()) return;
-    if (!document.getElementById(REFLOW_STYLE_ID)) {
-      applyReflow();
-    }
-    // The stylesheet can stop applying without the element being removed;
-    // verify the computed layout, not just the element's presence. Runs on
-    // an interval, not per mutation: getComputedStyle forces a sync layout
-    // and per-mutation checks janked touch scrolling.
-    // Always force the 2-column layout in portrait; the computed check
-    // missed cases on reboot where the grid rendered after the check.
-    var grids = document.querySelectorAll('div.grid.w-full');
-    for (var i = 0; i < grids.length; i++) {
-      grids[i].style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
-      grids[i].style.setProperty('grid-auto-flow', 'row', 'important');
-      grids[i].style.setProperty('width', '100%', 'important');
-      grids[i].style.setProperty('max-width', '100%', 'important');
-      var wrap = grids[i].parentElement;
-      if (wrap) {
-        wrap.style.setProperty('display', 'block', 'important');
-        wrap.style.setProperty('overflow-x', 'auto', 'important');
-        wrap.style.setProperty('overflow-y', 'hidden', 'important');
-      }
-    }
-  }
-  function watchReflow() {
-    if (reflowObserver) return;
-    var root = document.documentElement;
-    if (!root) return;
-    reflowObserver = new MutationObserver(function () {
-      if (!isPortrait() || !isHubPage()) return;
-      if (!document.getElementById(REFLOW_STYLE_ID)) {
-        applyReflow();
-      }
-    });
-    reflowObserver.observe(root, { childList: true, subtree: true });
-    if (!reflowVerifyTimer) {
-      reflowVerifyTimer = setInterval(verifyReflow, 1000);
-    }
   }
 
   if (document.readyState === 'loading') {
@@ -398,18 +386,23 @@
 
   function swipeScroller(target) {
     var el = target instanceof Element ? target : null;
-    var portrait = isPortrait();
     while (el && el !== document.documentElement) {
-      if (portrait) {
-        if (el.scrollWidth > el.clientWidth + 1) {
-          var ox = getComputedStyle(el).overflowX;
-          if (ox === 'auto' || ox === 'scroll') return el;
+      var cs = getComputedStyle(el);
+      var canX = el.scrollWidth > el.clientWidth + 1 &&
+        (cs.overflowX === 'auto' || cs.overflowX === 'scroll');
+      var canY = el.scrollHeight > el.clientHeight + 1 &&
+        (cs.overflowY === 'auto' || cs.overflowY === 'scroll');
+      if (canX || canY) {
+        // In portrait the page is CSS-rotated, so physical vertical maps to
+        // page horizontal: prefer the X scroller. In landscape prefer Y.
+        // Fall back to whichever axis is actually scrollable.
+        var axis;
+        if (isPortrait()) {
+          axis = canX ? 'x' : 'y';
+        } else {
+          axis = canY ? 'y' : 'x';
         }
-      } else {
-        if (el.scrollHeight > el.clientHeight + 1) {
-          var oy = getComputedStyle(el).overflowY;
-          if (oy === 'auto' || oy === 'scroll') return el;
-        }
+        return { el: el, axis: axis };
       }
       el = el.parentElement;
     }
@@ -423,7 +416,7 @@
     if (!t) return;
     var scroller = swipeScroller(e.target);
     if (!scroller) return;
-    swipeScroll = { y: t.clientY, scroller: scroller };
+    swipeScroll = { y: t.clientY, scroller: scroller.el, axis: scroller.axis };
   }
 
   function onSwipeTouchMove(e) {
@@ -435,11 +428,9 @@
     var dy = t.clientY - swipeScroll.y;
     swipeScroll.y = t.clientY;
     if (dy !== 0) {
-      // In portrait the page is CSS-rotated 270deg, so the physical vertical
-      // swipe maps to the page's horizontal axis: drive scrollLeft, not
-      // scrollTop. Physical up (dy negative) moves page content right, which
-      // is scrollLeft decreasing.
-      if (isPortrait()) {
+      // Portrait X: physical up (dy negative) moves page content right,
+      // which is scrollLeft decreasing.
+      if (swipeScroll.axis === 'x') {
         swipeScroll.scroller.scrollLeft += dy;
       } else {
         swipeScroll.scroller.scrollTop -= dy;
@@ -481,9 +472,9 @@
         reflowObserver.disconnect();
         reflowObserver = null;
       }
-      if (reflowVerifyTimer) {
-        clearInterval(reflowVerifyTimer);
-        reflowVerifyTimer = null;
+      if (reflowInterval) {
+        clearInterval(reflowInterval);
+        reflowInterval = null;
       }
       var root = document.documentElement;
       if (root) {
