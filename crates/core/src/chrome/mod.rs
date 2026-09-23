@@ -491,6 +491,16 @@ impl ChromeWorker {
           })?;
           installed.push(added.identifier);
         }
+        // runImmediately is unreliable on an already-loaded page; evaluate
+        // explicitly so the current page gets the scripts too. Both injected
+        // scripts tear down any previous instance before installing, so a
+        // double run on a fresh page is harmless.
+        if run_immediately {
+          for script in &scripts {
+            let src = (*script.source).clone();
+            let _ = tab.evaluate(&src, false);
+          }
+        }
         Ok(installed)
       })
       .await

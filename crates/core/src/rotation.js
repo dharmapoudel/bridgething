@@ -88,6 +88,7 @@
         body.style.height = '';
       }
       removeReflow();
+      applyLandscapeScroll();
       return;
     }
     var layout = layoutFor(DEGREES);
@@ -100,6 +101,7 @@
       body.style.height = layout.h + 'px';
     }
     applyReflow();
+    removeLandscapeScroll();
     watchReflow();
   }
 
@@ -150,6 +152,31 @@
     var el = document.createElement('style');
     el.id = REFLOW_STYLE_ID;
     el.textContent = REFLOW_CSS;
+    parent.appendChild(el);
+  }
+
+  // Landscape hub scrolling. The reflow above is portrait-only (it forces
+  // two columns); in landscape the grid keeps its 4 columns but still needs
+  // a scroll container for the swipe driver below to find. At 0 degrees
+  // there is no CSS transform, so no column forcing is needed.
+  var LANDSCAPE_SCROLL_ID = 'bt-hub-landscape-scroll';
+  var LANDSCAPE_SCROLL_CSS =
+    'div:has(>div[style*="grid-template-columns"]){display:block !important;' +
+    'overflow-y:auto !important;overflow-x:hidden !important;}';
+
+  function removeLandscapeScroll() {
+    var old = document.getElementById(LANDSCAPE_SCROLL_ID);
+    if (old && old.parentNode) old.parentNode.removeChild(old);
+  }
+
+  function applyLandscapeScroll() {
+    removeLandscapeScroll();
+    if (isPortrait() || !isHubPage()) return;
+    var parent = document.head || document.documentElement;
+    if (!parent) return;
+    var el = document.createElement('style');
+    el.id = LANDSCAPE_SCROLL_ID;
+    el.textContent = LANDSCAPE_SCROLL_CSS;
     parent.appendChild(el);
   }
 
@@ -297,9 +324,10 @@
     btn.setAttribute('style', css);
     btn.innerHTML =
       '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" ' +
-      'stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">' +
-      '<rect x="2" y="7" width="20" height="10" rx="2" ry="2"/>' +
-      '<path d="M6 12h.01"/>' +
+      'stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
+      'style="transform:rotate(90deg)">' +
+      '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>' +
+      '<path d="M12 18h.01"/>' +
       '</svg>';
     btn.addEventListener('click', function () {
       var target = DEGREES === 0 ? 270 : 0;
@@ -359,7 +387,8 @@
   // vertical swipe to a layout-horizontal gesture and the hub's vertical
   // grid never scrolls. Drag it manually from the touch movement instead.
   // The browser's mapped gesture is a horizontal no-op, so this never
-  // double-scrolls. Landscape is untouched (native scrolling works there).
+  // double-scrolls. Landscape uses the same driver: at 0 degrees there is
+  // no transform, so viewport Y maps directly to scrollTop with no inversion.
   var swipeScroll = null;
 
   function swipeScroller(target) {
@@ -376,7 +405,7 @@
 
   function onSwipeTouchStart(e) {
     swipeScroll = null;
-    if (!isPortrait() || !isHubPage()) return;
+    if (!isHubPage()) return;
     var t = e.touches[0];
     if (!t) return;
     var scroller = swipeScroller(e.target);
@@ -439,6 +468,7 @@
       window.removeEventListener('load', applyRotation);
       hideButton();
       removeReflow();
+      removeLandscapeScroll();
       if (reflowObserver) {
         reflowObserver.disconnect();
         reflowObserver = null;
