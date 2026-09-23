@@ -138,10 +138,10 @@
   // alive by a MutationObserver: if anything removes it, it is re-added.
   var REFLOW_STYLE_ID = 'bt-hub-portrait-reflow';
   var REFLOW_CSS =
-    'div[style*="grid-template-columns"]{grid-template-columns:repeat(2,minmax(0,1fr)) !important;' +
+    'div.grid.w-full{grid-template-columns:repeat(2,minmax(0,1fr)) !important;' +
     'grid-auto-flow:row !important;' +
     'width:100% !important;max-width:100% !important;}' +
-    'div:has(>div[style*="grid-template-columns"]){display:block !important;' +
+    'div:has(>div.grid.w-full){display:block !important;' +
     'overflow-y:auto !important;overflow-x:hidden !important;width:100% !important;}';
 
   function removeReflow() {
@@ -166,7 +166,7 @@
   // there is no CSS transform, so no column forcing is needed.
   var LANDSCAPE_SCROLL_ID = 'bt-hub-landscape-scroll';
   var LANDSCAPE_SCROLL_CSS =
-    'div:has(>div[style*="grid-template-columns"]){display:block !important;' +
+    'div:has(>div.grid.w-full){display:block !important;' +
     'overflow-y:auto !important;overflow-x:hidden !important;}';
 
   function removeLandscapeScroll() {
@@ -196,20 +196,19 @@
     // verify the computed layout, not just the element's presence. Runs on
     // an interval, not per mutation: getComputedStyle forces a sync layout
     // and per-mutation checks janked touch scrolling.
-    var grids = document.querySelectorAll('div[style*="grid-template-columns"]');
+    // Always force the 2-column layout in portrait; the computed check
+    // missed cases on reboot where the grid rendered after the check.
+    var grids = document.querySelectorAll('div.grid.w-full');
     for (var i = 0; i < grids.length; i++) {
-      var cs = getComputedStyle(grids[i]).gridTemplateColumns.split(/\s+/).length;
-      if (cs !== 2) {
-        grids[i].style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
-        grids[i].style.setProperty('grid-auto-flow', 'row', 'important');
-        grids[i].style.setProperty('width', '100%', 'important');
-        grids[i].style.setProperty('max-width', '100%', 'important');
-        var wrap = grids[i].parentElement;
-        if (wrap) {
-          wrap.style.setProperty('display', 'block', 'important');
-          wrap.style.setProperty('overflow-y', 'auto', 'important');
-          wrap.style.setProperty('overflow-x', 'hidden', 'important');
-        }
+      grids[i].style.setProperty('grid-template-columns', 'repeat(2,minmax(0,1fr))', 'important');
+      grids[i].style.setProperty('grid-auto-flow', 'row', 'important');
+      grids[i].style.setProperty('width', '100%', 'important');
+      grids[i].style.setProperty('max-width', '100%', 'important');
+      var wrap = grids[i].parentElement;
+      if (wrap) {
+        wrap.style.setProperty('display', 'block', 'important');
+        wrap.style.setProperty('overflow-y', 'auto', 'important');
+        wrap.style.setProperty('overflow-x', 'hidden', 'important');
       }
     }
   }
