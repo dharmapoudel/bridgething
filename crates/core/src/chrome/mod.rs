@@ -531,7 +531,12 @@ impl ChromeWorker {
   }
 
   async fn reconcile(&mut self) {
-    if self.settled && self.connected.load(std::sync::atomic::Ordering::SeqCst) {
+    // Do not settle until injections have succeeded: if apply_injections
+    // failed (no tab yet at boot), injection_ids stays empty and the early
+    // return below would stop all retries, leaving the hub with no knob
+    // or rotation scripts until the next rotation change or navigation.
+    let injections_pending = !self.injections.is_empty() && self.injection_ids.is_empty();
+    if self.settled && self.connected.load(std::sync::atomic::Ordering::SeqCst) && !injections_pending {
       return;
     }
 
@@ -553,7 +558,13 @@ impl ChromeWorker {
       self.apply_rotation().await;
     }
 
-    self.settled = !recovered && self.connected.load(std::sync::atomic::Ordering::SeqCst);
+    // Settled only when injections have landed: otherwise reconcile keeps
+    // retrying instead of giving up after the first failed attempt.
+    let injections_ok = self.injections.is_empty() || !self.injection_ids.is_empty();
+    self.settled = !recovered
+      && self.connected.load(std::sync::atomic::Ordering::SeqCst)
+      && injections_ok
+      && self.rotation_applied;
   }
 
   async fn recover_stranded_tab(&mut self) -> bool {

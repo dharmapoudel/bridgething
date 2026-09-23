@@ -54,7 +54,7 @@
       'background-color:var(--color-screen) !important;' +
       'border-color:var(--color-rule) !important;} ' +
       'div.grid button[type="button"].bt-knob-selected{' +
-      'border-color:var(--color-edge) !important;} ' +
+      'border-color:color-mix(in srgb, var(--color-edge) 45%, transparent) !important;} ' +
       'div.grid button[type="button"] img{pointer-events:none !important;}';
     (document.head || document.documentElement).appendChild(noFlash);
   }
