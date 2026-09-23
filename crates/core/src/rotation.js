@@ -315,10 +315,15 @@
       'display:flex;align-items:center;justify-content:center;cursor:pointer;';
     for (var k in anchor) css += k + ':' + anchor[k] + ';';
     btn.setAttribute('style', css);
+    // The button switches TO the other orientation: in landscape show an
+    // upright phone (switch to portrait), in portrait show a sideways phone
+    // (switch to landscape). Never apply the portrait reflow or icon tweaks
+    // to the landscape layout.
+    var phoneTransform = (DEGREES === 0) ? '' : 'rotate(90deg)';
     btn.innerHTML =
       '<svg width="30" height="30" viewBox="0 0 24 24" fill="none" ' +
       'stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" ' +
-      'style="transform:rotate(90deg) scaleY(-1)">' +
+      'style="transform:' + phoneTransform + '">' +
       '<rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>' +
       '<path d="M12 18h.01"/>' +
       '</svg>';
