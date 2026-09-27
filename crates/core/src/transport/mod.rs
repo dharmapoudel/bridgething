@@ -200,6 +200,13 @@ impl TransportController {
       self.send_player(companion_msg).await;
       return;
     }
+    // A companion is connected but another app (e.g. Finamp) owns the iPhone's
+    // audio session: sending HID pulses would toggle the wrong app, so drop.
+    // The HID fallback is only for when no companion is connected at all.
+    if self.authority.primary().is_some() {
+      tracing::debug!("transport {verb}: companion connected but not playback-authoritative; dropping (no HID)");
+      return;
+    }
     tracing::debug!("transport {verb}: routing to iAP2 HID");
     self.send_iap2(HidCommand::Pulse(hid_mask)).await;
   }
