@@ -4,6 +4,7 @@ import android.content.Context
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.bluetooth.BluetoothManager
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Build
@@ -22,6 +23,8 @@ import com.margelo.nitro.bridgething.session.BridgethingAncsSetupKind
 import com.margelo.nitro.bridgething.session.BridgethingAncsSetupResult
 import com.margelo.nitro.bridgething.session.BridgethingBtBondState
 import com.margelo.nitro.bridgething.session.BridgethingBtDevice
+import com.margelo.nitro.bridgething.session.BridgethingPairPickKind
+import com.margelo.nitro.bridgething.session.BridgethingPairPickResult
 import com.margelo.nitro.bridgething.session.BridgethingCapabilityFlags
 import com.margelo.nitro.bridgething.session.BridgethingCompanionDebug
 import com.margelo.nitro.bridgething.session.BridgethingConfigEntry
@@ -87,6 +90,7 @@ public class HybridBridgethingSessionImpl(
         public var spotifyConfig: SpotifyProviderConfig? = null
 
         private const val PREFS_NAME = "bridgething.session"
+        private const val TAG = "bridgething.session"
         private const val VOICE_MODEL_KEY = "caps.voiceModel"
         private const val REQUEST_DIALER_ROLE = 0xBA02
         private const val AUTO_RESUME_PREFIX = "autoresume."
@@ -663,17 +667,41 @@ public class HybridBridgethingSessionImpl(
         android.os.Process.killProcess(android.os.Process.myPid())
     }
 
-    override suspend fun presentPairPicker(): BridgethingBtDevice? {
-        val picked = CompanionDevicePicker.pick(context.applicationContext) ?: return null
+    override suspend fun presentPairPicker(): BridgethingPairPickResult {
+        val pick = CompanionDevicePicker.pick(context.applicationContext)
+        val picked = pick.device
+        if (pick.kind != BridgethingPairPickKind.PICKED || picked == null) return pick
         CompanionDevicePicker.startObservingPresence(context)
         BridgethingConnectionService.start(context)
 
-        val bonded = CompanionDevicePicker.awaitBond(context.applicationContext, picked.address)
-        return BridgethingBtDevice(
-            address = picked.address,
-            name = picked.name,
-            bondState = if (bonded) BridgethingBtBondState.BONDED else BridgethingBtBondState.NONE,
-            isCarThing = picked.isCarThing,
+        val appCtx = context.applicationContext
+        if (picked.bondState == BridgethingBtBondState.BONDED) {
+            // Already bonded (e.g. the bonded fast path in pick()): no bond-state
+            // broadcast will fire, so kick the link off directly instead of waiting
+            // on BondWatcher.
+            val device = runCatching {
+                (appCtx.getSystemService(android.content.Context.BLUETOOTH_SERVICE) as? BluetoothManager)
+                    ?.adapter?.getRemoteDevice(picked.address)
+            }.getOrNull()
+            if (device != null) {
+                CoroutineScope(Dispatchers.IO).launch {
+                    CompanionHolder.connectBonded(appCtx, device)
+                }
+            } else {
+                android.util.Log.w(TAG, "presentPairPicker: getRemoteDevice failed for " + picked.address)
+            }
+            return pick
+        }
+
+        val bonded = CompanionDevicePicker.awaitBond(appCtx, picked.address)
+        return BridgethingPairPickResult(
+            kind = BridgethingPairPickKind.PICKED,
+            device = BridgethingBtDevice(
+                address = picked.address,
+                name = picked.name,
+                bondState = if (bonded) BridgethingBtBondState.BONDED else BridgethingBtBondState.NONE,
+                isCarThing = picked.isCarThing,
+            ),
         )
     }
 

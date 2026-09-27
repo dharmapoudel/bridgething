@@ -69,7 +69,7 @@ describe('pair outcome copy', () => {
 describe('pair picker recovery', () => {
   test('a dismissed ios picker offers a way out of the bonded dead end', async () => {
     const r = rig({ platform: 'ios' });
-    r.native.__returns.set('presentPairPicker', null);
+    r.native.__returns.set('presentPairPicker', { kind: 'cancelled' });
 
     const result = await r.session.presentPairWithGuidance();
 
@@ -82,7 +82,7 @@ describe('pair picker recovery', () => {
 
   test('a picked device carries no recovery', async () => {
     const r = rig({ platform: 'ios' });
-    r.native.__returns.set('presentPairPicker', { id: 'dev', name: 'thing' });
+    r.native.__returns.set('presentPairPicker', { kind: 'picked', device: { id: 'dev', name: 'thing' } });
 
     expect(await r.session.presentPairWithGuidance()).toEqual({
       picked: true,
