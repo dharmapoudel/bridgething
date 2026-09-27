@@ -13,7 +13,7 @@ use libbridgething::{
 use uuid::Uuid;
 
 use super::{HandlerResult, MsgHandle, webapp::navigate_url_for_active};
-use crate::{chrome::ChromeCommand, state::TelephonyManager};
+use crate::{chrome::ChromeCommand, state::TelephonyManager, transport::TransportOrigin};
 
 type Routed = Result<(VoiceDispatchTarget, Option<Uuid>), (VoiceDispatchErrorCode, String)>;
 
@@ -113,25 +113,25 @@ impl VoiceHandler {
     match resolved.intent.as_str() {
       "PLAY" if slots.has_catalog_slots() => self.play_catalog(slots).await,
       "PLAY" => {
-        self.handle.transport.play().await;
+        self.handle.transport.play(TransportOrigin::Voice).await;
         Ok((VoiceDispatchTarget::Playback, None))
       }
       "PAUSE" => {
-        self.handle.transport.pause().await;
+        self.handle.transport.pause(TransportOrigin::Voice).await;
         Ok((VoiceDispatchTarget::Playback, None))
       }
       "NEXT" => {
         for _ in 0..skip_count(slots)? {
-          self.handle.transport.next().await;
+          self.handle.transport.next(TransportOrigin::Voice).await;
         }
         Ok((VoiceDispatchTarget::Playback, None))
       }
       "PREVIOUS" if slots.scope == Some(NluScope::Restart) => {
-        self.handle.transport.seek_to(0).await;
+        self.handle.transport.seek_to(0, TransportOrigin::Voice).await;
         Ok((VoiceDispatchTarget::Playback, None))
       }
       "PREVIOUS" => {
-        self.handle.transport.prev(false).await;
+        self.handle.transport.prev(false, TransportOrigin::Voice).await;
         Ok((VoiceDispatchTarget::Playback, None))
       }
       "SET_SHUFFLE" => {
@@ -150,7 +150,7 @@ impl VoiceHandler {
         let seconds = slots.seconds.ok_or_else(|| bad("SEEK_RELATIVE without `seconds`"))?;
         let current = self.handle.state.player.position_ms() as i64;
         let target = (current + seconds as i64 * 1000).max(0) as u32;
-        self.handle.transport.seek_to(target).await;
+        self.handle.transport.seek_to(target, TransportOrigin::Voice).await;
         Ok((VoiceDispatchTarget::Playback, None))
       }
       "SET_PLAYBACK_SPEED" => {

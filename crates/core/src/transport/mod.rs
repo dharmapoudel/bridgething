@@ -26,6 +26,20 @@ pub(crate) mod hid_bit {
   pub const REPEAT: u8 = 0x80;
 }
 
+/// Where a player transport command came from. The webapp (Finch) always
+/// addresses the companion's player; firmware-originated commands (voice)
+/// address "whatever is playing on the phone" and keep the iAP2 HID fallback.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum TransportOrigin {
+  /// Webapp client (ClientToBridgePlayerMsg): always route to the companion,
+  /// never HID-pulse - pulsing would toggle the phone's foreground audio
+  /// app (e.g. Finamp) instead of Finch.
+  Client,
+  /// Voice / other firmware-originated intents: keep the HID fallback so a
+  /// spoken "pause" still pauses whatever is playing on the phone.
+  Voice,
+}
+
 #[derive(Debug, Clone)]
 pub struct TransportController {
   authority: AuthorityRegistry,
@@ -44,37 +58,60 @@ impl TransportController {
     }
   }
 
-  pub async fn play(&self) {
+  pub async fn play(&self, origin: TransportOrigin) {
     if let Err(err) = self.player.apply_transport_intent(true).await {
       tracing::warn!(?err, "transport play: failed to broadcast optimistic intent");
     }
     self
-      .dispatch_player("play", BridgeToGatewayPlayerMsgCommand::Resume, hid_bit::PLAY_PAUSE)
+      .dispatch_player(
+        "play",
+        BridgeToGatewayPlayerMsgCommand::Resume,
+        hid_bit::PLAY_PAUSE,
+        origin,
+      )
       .await;
   }
 
-  pub async fn pause(&self) {
+  pub async fn pause(&self, origin: TransportOrigin) {
     if let Err(err) = self.player.apply_transport_intent(false).await {
       tracing::warn!(?err, "transport pause: failed to broadcast optimistic intent");
     }
     self
-      .dispatch_player("pause", BridgeToGatewayPlayerMsgCommand::Pause, hid_bit::PLAY_PAUSE)
+      .dispatch_player(
+        "pause",
+        BridgeToGatewayPlayerMsgCommand::Pause,
+        hid_bit::PLAY_PAUSE,
+        origin,
+      )
       .await;
   }
 
-  pub async fn next(&self) {
+  pub async fn next(&self, origin: TransportOrigin) {
     self
-      .dispatch_player("next", BridgeToGatewayPlayerMsgCommand::SkipNext, hid_bit::NEXT)
+      .dispatch_player(
+        "next",
+        BridgeToGatewayPlayerMsgCommand::SkipNext,
+        hid_bit::NEXT,
+        origin,
+      )
       .await;
   }
 
-  pub async fn prev(&self, allow_seeking: bool) {
-    if allow_seeking && self.companion_owns_playback() && self.player.position_ms() > PREV_RESTART_THRESHOLD_MS {
-      self.seek_to(0).await;
+  pub async fn prev(&self, allow_seeking: bool, origin: TransportOrigin) {
+    if allow_seeking
+      && (origin == TransportOrigin::Client || self.companion_owns_playback())
+      && self.player.position_ms() > PREV_RESTART_THRESHOLD_MS
+    {
+      self.seek_to(0, origin).await;
       return;
     }
     self
-      .dispatch_player("prev", BridgeToGatewayPlayerMsgCommand::SkipPrev, hid_bit::PREV)
+      .dispatch_player(
+        "prev",
+        BridgeToGatewayPlayerMsgCommand::SkipPrev,
+        hid_bit::PREV,
+        origin,
+      )
       .await;
   }
 
@@ -144,8 +181,10 @@ impl TransportController {
     }
   }
 
-  pub async fn seek_to(&self, position_ms: u32) {
-    if self.companion_owns_playback() {
+  pub async fn seek_to(&self, position_ms: u32, origin: TransportOrigin) {
+    // Client seeks always address the companion; otherwise we would retarget
+    // the phone's foreground app's Now Playing position instead of Finch's.
+    if origin == TransportOrigin::Client || self.companion_owns_playback() {
       if let Err(err) = self.player.apply_seek_intent(position_ms).await {
         tracing::warn!(?err, "transport seek_to: failed to broadcast optimistic intent");
       }
@@ -169,8 +208,10 @@ impl TransportController {
       .await;
   }
 
-  pub async fn skip_to_index(&self, index: u32) {
-    if self.companion_owns_playback() {
+  pub async fn skip_to_index(&self, index: u32, origin: TransportOrigin) {
+    // Client skips always address the companion's queue, never the phone's
+    // foreground app.
+    if origin == TransportOrigin::Client || self.companion_owns_playback() {
       self
         .send_player(BridgeToGatewayPlayerMsgCommand::SkipToIndex(GatewaySkipToIndex {
           index,
@@ -194,17 +235,19 @@ impl TransportController {
     self.authority.is_authoritative(CompanionAuthorityScope::Volume)
   }
 
-  async fn dispatch_player(&self, verb: &str, companion_msg: BridgeToGatewayPlayerMsgCommand, hid_mask: u8) {
-    if self.companion_owns_playback() {
+  async fn dispatch_player(
+    &self,
+    verb: &str,
+    companion_msg: BridgeToGatewayPlayerMsgCommand,
+    hid_mask: u8,
+    origin: TransportOrigin,
+  ) {
+    // Webapp-originated commands always address the companion's player:
+    // HID-pulsing here would toggle the phone's foreground audio app
+    // (e.g. Finamp) instead of Finch.
+    if origin == TransportOrigin::Client || self.companion_owns_playback() {
       tracing::debug!("transport {verb}: routing to companion (player)");
       self.send_player(companion_msg).await;
-      return;
-    }
-    // A companion is connected but another app (e.g. Finamp) owns the iPhone's
-    // audio session: sending HID pulses would toggle the wrong app, so drop.
-    // The HID fallback is only for when no companion is connected at all.
-    if self.authority.primary().is_some() {
-      tracing::debug!("transport {verb}: companion connected but not playback-authoritative; dropping (no HID)");
       return;
     }
     tracing::debug!("transport {verb}: routing to iAP2 HID");
