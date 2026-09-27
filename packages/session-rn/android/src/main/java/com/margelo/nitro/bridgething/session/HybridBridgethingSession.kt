@@ -347,10 +347,8 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
         require().collectScreenshot(deviceId, transferId, capturedAtMs)
     }
 
-    override fun presentPairPicker(): Promise<Variant_NullType_BridgethingBtDevice> = Promise.async {
-        val device = require().presentPairPicker()
-        if (device != null) Variant_NullType_BridgethingBtDevice.Second(device)
-        else Variant_NullType_BridgethingBtDevice.First(NullType.NULL)
+    override fun presentPairPicker(): Promise<BridgethingPairPickResult> = Promise.async {
+        require().presentPairPicker()
     }
 
     override fun isNotificationAccessGranted(): Promise<Boolean> = Promise.async {
