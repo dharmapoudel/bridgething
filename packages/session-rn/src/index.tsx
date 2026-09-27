@@ -18,6 +18,7 @@ import type {
   BridgethingOtaProgress,
   BridgethingOtaRun,
   BridgethingPairPickResult,
+  BridgethingProviderCredentials,
   BridgethingProviderInfo,
   BridgethingResourceOrigin,
   BridgethingResumeTarget,
@@ -71,6 +72,8 @@ export type {
   BridgethingPairPickKind,
   BridgethingPairPickResult,
   BridgethingPeerLinkStatus,
+  BridgethingProviderCredentials,
+  BridgethingProviderCredentialsKind,
   BridgethingProviderInfo,
   BridgethingRepeatMode,
   BridgethingResourceOrigin,
@@ -79,6 +82,7 @@ export type {
   BridgethingServiceHealthKind,
   BridgethingSessionPeer,
   BridgethingSessionSnapshot,
+  BridgethingSignInMethod,
   BridgethingVoiceDebug,
   BridgethingVoiceModelState,
   BridgethingVoiceModelStatus,
@@ -167,6 +171,10 @@ export class BridgethingSession {
 
   async cancelAuth(id: string): Promise<void> {
     await this.native.cancelAuth(id);
+  }
+
+  async completeProviderAuth(id: string, credentials: BridgethingProviderCredentials): Promise<void> {
+    await this.native.completeProviderAuth(id, credentials);
   }
 
   async setProviderPriority(ids: string[]): Promise<void> {
