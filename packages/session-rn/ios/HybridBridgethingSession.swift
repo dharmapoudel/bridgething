@@ -76,7 +76,7 @@ public protocol BridgethingSessionBackend: AnyObject, Sendable {
 
     func deviceSetNickname(deviceId: String, nickname: String) async throws
 
-    func presentPairPicker() async throws -> BridgethingBtDevice?
+    func presentPairPicker() async throws -> BridgethingPairPickResult
 
     func isNotificationAccessGranted() async -> Bool
     func requestNotificationAccess() async throws
@@ -567,10 +567,9 @@ public final class HybridBridgethingSession: HybridBridgethingSessionSpec, @unch
 
     // MARK: - Pair picker
 
-    public func presentPairPicker() throws -> Promise<Variant_NullType_BridgethingBtDevice> {
+    public func presentPairPicker() throws -> Promise<BridgethingPairPickResult> {
         Promise.async {
-            let device = try await Self.backend().presentPairPicker()
-            return device.map { .second($0) } ?? .first(NullType.null)
+            try await Self.backend().presentPairPicker()
         }
     }
 

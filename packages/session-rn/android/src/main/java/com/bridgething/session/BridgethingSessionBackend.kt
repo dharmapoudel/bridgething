@@ -18,6 +18,7 @@ import com.margelo.nitro.bridgething.session.BridgethingOtaAvailable
 import com.margelo.nitro.bridgething.session.BridgethingOtaPollStatus
 import com.margelo.nitro.bridgething.session.BridgethingOtaProgress
 import com.margelo.nitro.bridgething.session.BridgethingOtaRun
+import com.margelo.nitro.bridgething.session.BridgethingPairPickResult
 import com.margelo.nitro.bridgething.session.BridgethingOtaManifest
 import com.margelo.nitro.bridgething.session.BridgethingOtaPollConfig
 import com.margelo.nitro.bridgething.session.BridgethingProviderInfo
@@ -114,7 +115,7 @@ public interface BridgethingSessionBackend {
 
     public suspend fun collectScreenshot(deviceId: String, transferId: String, capturedAtMs: Double): String
 
-    public suspend fun presentPairPicker(): BridgethingBtDevice?
+    public suspend fun presentPairPicker(): BridgethingPairPickResult
 
     public suspend fun isNotificationAccessGranted(): Boolean
     public suspend fun requestNotificationAccess()
