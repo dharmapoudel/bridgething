@@ -290,8 +290,9 @@ export function describePairPickerDismissed(): PairNotice | null {
 }
 
 export async function presentPairWithGuidance(): Promise<PairPickerResult> {
-  const picked = await getSession().presentPairPicker();
-  if (picked != null) return { picked: true, notice: null };
+  const pick = await getSession().presentPairPicker();
+  if (pick.kind === 'picked' && pick.device != null)
+    return { picked: true, notice: null };
   return { picked: false, notice: describePairPickerDismissed() };
 }
 
@@ -299,6 +300,8 @@ export type PairOutcome =
   | { kind: 'connected' }
   | { kind: 'cancelled' }
   | { kind: 'permissionDenied' }
+  | { kind: 'bluetoothOff' }
+  | { kind: 'notFound' }
   | { kind: 'pairingFailed' }
   | { kind: 'timeout' }
   | { kind: 'notificationsFailed'; message?: string }
@@ -311,8 +314,11 @@ export async function runPairFlow(): Promise<PairOutcome> {
       if (scan !== 'granted') return { kind: 'permissionDenied' };
       const bt = await requestBluetoothConnect();
       if (bt !== 'granted') return { kind: 'permissionDenied' };
-      const picked = await getSession().presentPairPicker();
-      if (picked == null) return { kind: 'cancelled' };
+      const pick = await getSession().presentPairPicker();
+      if (pick.kind === 'bluetoothOff') return { kind: 'bluetoothOff' };
+      if (pick.kind === 'notFound') return { kind: 'notFound' };
+      const picked = pick.device;
+      if (pick.kind !== 'picked' || picked == null) return { kind: 'cancelled' };
       if (picked.bondState !== 'bonded') return { kind: 'pairingFailed' };
       return (await waitForPeer(45000))
         ? { kind: 'connected' }
@@ -349,6 +355,18 @@ export function describePairOutcome(outcome: PairOutcome): PairNotice | null {
         body: 'bridgething reaches your car thing over bluetooth. allow it in settings, then pair again.',
         action: { kind: 'openSettings', label: 'open settings' },
       };
+    case 'bluetoothOff':
+      return {
+        tone: 'warn',
+        title: 'bluetooth is off',
+        body: 'bluetooth is off on your phone. turn it on, then pair again.',
+      };
+    case 'notFound':
+      return {
+        tone: 'warn',
+        title: 'no car thing found',
+        body: 'no car thing showed up. make sure it is powered on and nearby, then try again.',
+      };
     case 'pairingFailed':
       return {
         tone: 'err',
@@ -359,7 +377,7 @@ export function describePairOutcome(outcome: PairOutcome): PairNotice | null {
       return {
         tone: 'warn',
         title: 'not connected yet',
-        body: 'pairing finished but your car thing has not connected. make sure it is powered on and nearby, then try again.',
+        body: 'pairing finished but your car thing has not connected. make sure it is powered on and nearby, then try again. if it still will not connect, forget it under settings > bluetooth and pair again.',
       };
     case 'notificationsFailed':
       return {

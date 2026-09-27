@@ -2,7 +2,6 @@ import type {
   BridgethingActiveWebapp,
   BridgethingAncsAuthStatus,
   BridgethingAncsSetupResult,
-  BridgethingBtDevice,
   BridgethingCapabilityFlags,
   BridgethingCompanionDebug,
   BridgethingConfigEntry,
@@ -18,6 +17,7 @@ import type {
   BridgethingOtaPollStatus,
   BridgethingOtaProgress,
   BridgethingOtaRun,
+  BridgethingPairPickResult,
   BridgethingProviderInfo,
   BridgethingResourceOrigin,
   BridgethingResumeTarget,
@@ -68,6 +68,8 @@ export type {
   BridgethingOtaRun,
   BridgethingOtaStep,
   BridgethingOtaStepKind,
+  BridgethingPairPickKind,
+  BridgethingPairPickResult,
   BridgethingPeerLinkStatus,
   BridgethingProviderInfo,
   BridgethingRepeatMode,
@@ -359,7 +361,7 @@ export class BridgethingSession {
     return this.native.collectScreenshot(deviceId, transferId, capturedAtMs);
   }
 
-  async presentPairPicker(): Promise<BridgethingBtDevice | null> {
+  async presentPairPicker(): Promise<BridgethingPairPickResult> {
     return this.native.presentPairPicker();
   }
 

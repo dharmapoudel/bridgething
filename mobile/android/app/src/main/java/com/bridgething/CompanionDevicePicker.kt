@@ -2,7 +2,9 @@ package com.bridgething
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.bluetooth.BluetoothAdapter
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
 import android.companion.AssociationRequest
 import android.companion.BluetoothDeviceFilter
 import android.companion.CompanionDeviceManager
@@ -10,8 +12,11 @@ import android.content.Context
 import android.content.IntentSender
 import com.margelo.nitro.bridgething.session.BridgethingBtBondState
 import com.margelo.nitro.bridgething.session.BridgethingBtDevice
+import com.margelo.nitro.bridgething.session.BridgethingPairPickKind
+import com.margelo.nitro.bridgething.session.BridgethingPairPickResult
 import java.util.regex.Pattern
 import kotlinx.coroutines.CompletableDeferred
+import kotlinx.coroutines.withTimeoutOrNull
 
 public object CompanionDevicePicker {
     private const val REQUEST_CDM_PICK = 0xBA01
@@ -20,7 +25,29 @@ public object CompanionDevicePicker {
         Pattern.compile("(Car Thing|bridgething)", Pattern.CASE_INSENSITIVE)
 
     @SuppressLint("MissingPermission")
-    public suspend fun pick(context: Context): BridgethingBtDevice? {
+    private const val PICK_TIMEOUT_MS = 60_000L
+
+    @SuppressLint("MissingPermission")
+    public suspend fun pick(context: Context): BridgethingPairPickResult {
+        val appCtx = context.applicationContext
+        val adapter = runCatching {
+            (appCtx.getSystemService(Context.BLUETOOTH_SERVICE) as? BluetoothManager)?.adapter
+        }.getOrNull()
+        if (adapter == null || !adapter.isEnabled) {
+            android.util.Log.i(TAG, "pick: bluetooth unavailable or disabled")
+            return BridgethingPairPickResult(BridgethingPairPickKind.BLUETOOTHOFF, null)
+        }
+        // Fast path: the Car Thing is already bonded in system settings (e.g. from an
+        // earlier attempt). The CDM chooser only lists unpaired devices, so without
+        // this shortcut the picker would scan forever and never show it.
+        // NB: associate() always needs a tap in the system chooser, so no CDM
+        // association is created here; presentPairPicker kicks the link off directly
+        // for the already-bonded device instead.
+        bondedCarThing(adapter)?.let { device ->
+            android.util.Log.i(TAG, "pick: using already-bonded car thing " + device.address)
+            return BridgethingPairPickResult(BridgethingPairPickKind.PICKED, device)
+        }
+
         val activity = BridgethingActivityRegistry.currentActivity
             ?: error("CompanionDevicePicker needs a foreground activity")
         // NB: fetch the manager from the Activity, not the application context:
@@ -30,10 +57,10 @@ public object CompanionDevicePicker {
             .getSystemService(Context.COMPANION_DEVICE_SERVICE) as? CompanionDeviceManager
             ?: error("CompanionDeviceManager unavailable on this device")
 
-        val deferred = CompletableDeferred<BridgethingBtDevice?>()
+        val result = CompletableDeferred<BridgethingPairPickResult>()
         BridgethingActivityRegistry.expectResult(REQUEST_CDM_PICK) { resultCode, data ->
             if (resultCode != Activity.RESULT_OK || data == null) {
-                deferred.complete(null)
+                result.complete(BridgethingPairPickResult(BridgethingPairPickKind.CANCELLED, null))
                 return@expectResult
             }
             val device: BluetoothDevice? =
@@ -48,7 +75,9 @@ public object CompanionDevicePicker {
                     runCatching { it.createBond() }
                 }
             }
-            deferred.complete(device?.let(::toWireDevice))
+            result.complete(
+                BridgethingPairPickResult(BridgethingPairPickKind.PICKED, device?.let(::toWireDevice))
+            )
         }
 
         val builder = AssociationRequest.Builder()
@@ -72,19 +101,37 @@ public object CompanionDevicePicker {
                     )
                 } catch (e: IntentSender.SendIntentException) {
                     BridgethingActivityRegistry.deliverResult(REQUEST_CDM_PICK, Activity.RESULT_CANCELED, null)
-                    deferred.complete(null)
-                    android.util.Log.w(TAG, "CDM intent sender failed: ${e.message}")
+                    result.complete(BridgethingPairPickResult(BridgethingPairPickKind.CANCELLED, null))
+                    android.util.Log.w(TAG, "CDM intent sender failed: " + e.message)
                 }
             }
 
             override fun onFailure(error: CharSequence?) {
                 BridgethingActivityRegistry.deliverResult(REQUEST_CDM_PICK, Activity.RESULT_CANCELED, null)
-                deferred.complete(null)
-                if (!error.isNullOrEmpty()) android.util.Log.i(TAG, "CDM picker failure: $error")
+                result.complete(BridgethingPairPickResult(BridgethingPairPickKind.CANCELLED, null))
+                if (!error.isNullOrEmpty()) android.util.Log.i(TAG, "CDM picker failure: " + error)
             }
         }, null)
 
-        return deferred.await()
+        // Never hang the UI forever: if the system never surfaces a device (not
+        // discoverable / not in pairing mode), report notFound so the UI can say so.
+        return withTimeoutOrNull(PICK_TIMEOUT_MS) { result.await() }
+            ?: BridgethingPairPickResult(BridgethingPairPickKind.NOTFOUND, null).also {
+                android.util.Log.i(TAG, "pick: timed out waiting for a device")
+            }
+    }
+
+    private fun bondedCarThing(adapter: BluetoothAdapter): BridgethingBtDevice? {
+        val bonded = try {
+            adapter.bondedDevices
+        } catch (_: SecurityException) {
+            null
+        } ?: return null
+        val match = bonded.firstOrNull { device ->
+            val name = try { device.name } catch (_: SecurityException) { null }
+            name != null && carThingNameRegex.matcher(name).find()
+        } ?: return null
+        return toWireDevice(match)
     }
 
     public fun associations(context: Context): Set<String> {

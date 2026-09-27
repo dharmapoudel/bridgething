@@ -276,6 +276,13 @@ export type BridgethingBtDevice = {
   isCarThing: boolean;
 };
 
+export type BridgethingPairPickKind = 'picked' | 'cancelled' | 'bluetoothOff' | 'notFound';
+
+export type BridgethingPairPickResult = {
+  kind: BridgethingPairPickKind;
+  device?: BridgethingBtDevice;
+};
+
 export type BridgethingDeviceMeta = {
   daemonVersion: string;
   libbridgethingVersion: string;
@@ -453,7 +460,7 @@ export interface BridgethingSession extends HybridObject<{ ios: 'swift'; android
 
   collectScreenshot(deviceId: string, transferId: string, capturedAtMs: number): Promise<string>;
 
-  presentPairPicker(): Promise<BridgethingBtDevice | null>;
+  presentPairPicker(): Promise<BridgethingPairPickResult>;
 
   isNotificationAccessGranted(): Promise<boolean>;
   requestNotificationAccess(): Promise<void>;

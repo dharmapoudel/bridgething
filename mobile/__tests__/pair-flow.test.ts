@@ -16,7 +16,7 @@ function alreadyPaired(r: Rig): void {
 describe('pairing on ios', () => {
   test('a device that connects and takes notification pairing is paired', async () => {
     const r = rig({ platform: 'ios' });
-    answer(r, 'presentPairPicker', { id: DEVICE, name: 'Car Thing' });
+    answer(r, 'presentPairPicker', { kind: 'picked', device: { id: DEVICE, name: 'Car Thing' } });
     answer(r, 'enableAncsNotifications', { kind: 'authorized' });
     alreadyPaired(r);
 
@@ -25,14 +25,14 @@ describe('pairing on ios', () => {
 
   test('dismissing the picker is a cancellation, not a failure', async () => {
     const r = rig({ platform: 'ios' });
-    answer(r, 'presentPairPicker', null);
+    answer(r, 'presentPairPicker', { kind: 'cancelled' });
 
     expect(await r.session.runPairFlow()).toEqual({ kind: 'cancelled' });
   });
 
   test('notification pairing failing does not report the pairing as failed', async () => {
     const r = rig({ platform: 'ios' });
-    answer(r, 'presentPairPicker', { id: DEVICE, name: 'Car Thing' });
+    answer(r, 'presentPairPicker', { kind: 'picked', device: { id: DEVICE, name: 'Car Thing' } });
     answer(r, 'enableAncsNotifications', { kind: 'failed', message: 'nope' });
     alreadyPaired(r);
 
@@ -56,7 +56,7 @@ describe('pairing on ios', () => {
 describe('pairing on android', () => {
   test('a bonded device that connects is paired', async () => {
     const r = rig({ platform: 'android' });
-    answer(r, 'presentPairPicker', { id: DEVICE, bondState: 'bonded' });
+    answer(r, 'presentPairPicker', { kind: 'picked', device: { id: DEVICE, bondState: 'bonded' } });
     alreadyPaired(r);
 
     expect(await r.session.runPairFlow()).toEqual({ kind: 'connected' });
@@ -64,15 +64,38 @@ describe('pairing on android', () => {
 
   test('a device that never finishes bonding is a pairing failure', async () => {
     const r = rig({ platform: 'android' });
-    answer(r, 'presentPairPicker', { id: DEVICE, bondState: 'bonding' });
+    answer(r, 'presentPairPicker', {
+      kind: 'picked',
+      device: { id: DEVICE, bondState: 'bonding' },
+    });
 
     expect(await r.session.runPairFlow()).toEqual({ kind: 'pairingFailed' });
+  });
+
+  test('bluetooth off fails fast with a clear notice', async () => {
+    const r = rig({ platform: 'android' });
+    answer(r, 'presentPairPicker', { kind: 'bluetoothOff' });
+
+    expect(await r.session.runPairFlow()).toEqual({ kind: 'bluetoothOff' });
+    expect(
+      r.session.describePairOutcome({ kind: 'bluetoothOff' })?.title,
+    ).toBe('bluetooth is off');
+  });
+
+  test('no device found is reported instead of hanging', async () => {
+    const r = rig({ platform: 'android' });
+    answer(r, 'presentPairPicker', { kind: 'notFound' });
+
+    expect(await r.session.runPairFlow()).toEqual({ kind: 'notFound' });
+    expect(r.session.describePairOutcome({ kind: 'notFound' })?.title).toBe(
+      'no car thing found',
+    );
   });
 
   test('refusing bluetooth stops before the picker is presented', async () => {
     const r = rig({ platform: 'android' });
     denyBluetooth(r);
-    answer(r, 'presentPairPicker', { id: DEVICE, bondState: 'bonded' });
+    answer(r, 'presentPairPicker', { kind: 'picked', device: { id: DEVICE, bondState: 'bonded' } });
 
     expect(await r.session.runPairFlow()).toEqual({ kind: 'permissionDenied' });
     expect(r.native.__calls).not.toContain('presentPairPicker');
@@ -80,7 +103,7 @@ describe('pairing on android', () => {
 
   test('android does not attempt notification pairing', async () => {
     const r = rig({ platform: 'android' });
-    answer(r, 'presentPairPicker', { id: DEVICE, bondState: 'bonded' });
+    answer(r, 'presentPairPicker', { kind: 'picked', device: { id: DEVICE, bondState: 'bonded' } });
     answer(r, 'enableAncsNotifications', () => {
       throw new Error('ancs must not be reached on android');
     });
