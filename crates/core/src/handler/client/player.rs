@@ -9,6 +9,7 @@ use libbridgething::{
 };
 
 use super::{HandlerResult, MsgHandle};
+use crate::transport::TransportOrigin;
 use crate::{bluetooth::Address, capabilities::is_valid_scheme};
 
 pub struct PlayerHandler {
@@ -62,32 +63,32 @@ impl ClientToBridgePlayerMsgDispatch for PlayerHandler {
   }
 
   async fn pause(&self) -> HandlerResult {
-    self.handle.transport.pause().await;
+    self.handle.transport.pause(TransportOrigin::Client).await;
     Ok(())
   }
 
   async fn resume(&self) -> HandlerResult {
-    self.handle.transport.play().await;
+    self.handle.transport.play(TransportOrigin::Client).await;
     Ok(())
   }
 
   async fn skip_next(&self) -> HandlerResult {
-    self.handle.transport.next().await;
+    self.handle.transport.next(TransportOrigin::Client).await;
     Ok(())
   }
 
   async fn skip_prev(&self, params: SkipPrev) -> HandlerResult {
-    self.handle.transport.prev(params.allow_seeking).await;
+    self.handle.transport.prev(params.allow_seeking, TransportOrigin::Client).await;
     Ok(())
   }
 
   async fn skip_to_index(&self, params: SkipToIndex) -> HandlerResult {
-    self.handle.transport.skip_to_index(params.index).await;
+    self.handle.transport.skip_to_index(params.index, TransportOrigin::Client).await;
     Ok(())
   }
 
   async fn seek_to(&self, params: SeekTo) -> HandlerResult {
-    self.handle.transport.seek_to(params.position_ms).await;
+    self.handle.transport.seek_to(params.position_ms, TransportOrigin::Client).await;
     Ok(())
   }
 
