@@ -1,6 +1,7 @@
 mod bus;
 mod connection;
 mod connman;
+mod clear_caches;
 mod uninstall;
 
 use std::{collections::HashMap, net::SocketAddr, path::PathBuf, sync::Arc};
@@ -141,6 +142,7 @@ impl Server {
     let modern_state = ModernRouterState { state, tx };
     let modern_app = Router::new()
       .route("/_uninstall", axum::routing::post(uninstall::uninstall_tile))
+      .route("/_clear_caches", axum::routing::post(clear_caches::clear_caches))
       .fallback(axum::routing::any(modern_handler))
       .with_state(modern_state);
 
