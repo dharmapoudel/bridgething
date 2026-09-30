@@ -31,7 +31,7 @@ pub struct ClearCachesReply {
 /// every boot), so journald never rotates old boot journals and
 /// /var/log/journal grows without bound. Keep the current boot's dir;
 /// journald holds it open.
-pub(crate) async fn sweep_stale_journals() -> u64 {
+async fn sweep_stale_journals() -> u64 {
   if !paths::is_on_device() {
     return 0;
   }

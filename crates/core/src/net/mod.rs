@@ -2,7 +2,6 @@ mod bus;
 mod connection;
 mod connman;
 mod clear_caches;
-pub(crate) use clear_caches::sweep_stale_journals;
 mod uninstall;
 
 use std::{collections::HashMap, net::SocketAddr, path::PathBuf, sync::Arc};
