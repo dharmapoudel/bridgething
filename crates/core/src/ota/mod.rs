@@ -246,6 +246,7 @@ impl OtaActor {
   async fn run(mut self) {
     tracing::info!("ota orchestrator started");
     staging::sweep_orphans().await;
+    crate::net::sweep_stale_journals().await;
     wakeword_swap::sweep_orphans().await;
     daemon_swap::record_running_version().await;
     loop {
