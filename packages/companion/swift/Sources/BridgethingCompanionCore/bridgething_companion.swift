@@ -18209,6 +18209,60 @@ public func FfiConverterTypeProviderInfo_lower(_ value: ProviderInfo) -> RustBuf
 }
 
 
+public struct ScreenshotFile: Equatable, Hashable {
+    public var path: String
+    public var byteSize: UInt64
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(path: String, byteSize: UInt64) {
+        self.path = path
+        self.byteSize = byteSize
+    }
+
+    
+
+    
+}
+
+#if compiler(>=6)
+extension ScreenshotFile: Sendable {}
+#endif
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeScreenshotFile: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ScreenshotFile {
+        return
+            try ScreenshotFile(
+                path: FfiConverterString.read(from: &buf), 
+                byteSize: FfiConverterUInt64.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: ScreenshotFile, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.path, into: &buf)
+        FfiConverterUInt64.write(value.byteSize, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeScreenshotFile_lift(_ buf: RustBuffer) throws -> ScreenshotFile {
+    return try FfiConverterTypeScreenshotFile.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeScreenshotFile_lower(_ value: ScreenshotFile) -> RustBuffer {
+    return FfiConverterTypeScreenshotFile.lower(value)
+}
+
+
 public struct ServiceHealth: Equatable, Hashable {
     public var kind: ServiceHealthKind
     public var retryAfterSeconds: UInt32?

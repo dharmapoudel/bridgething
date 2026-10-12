@@ -32,6 +32,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
         private var pendingCompanionUpdateProgress: ((Double, Double) -> Unit)? = null
         private var pendingResumed: ((BridgethingSessionSnapshot) -> Unit)? = null
         private var pendingScreenshotReceived: ((String, String, Double) -> Unit)? = null
+        private var pendingScreenshotReceived: ((String, String, Double) -> Unit)? = null
 
         @JvmStatic
         public fun installBackend(b: BridgethingSessionBackend) {
@@ -56,6 +57,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
                     companionUpdateProgress = pendingCompanionUpdateProgress,
                     resumed = pendingResumed,
                     screenshotReceived = pendingScreenshotReceived,
+                    screenshotReceived = pendingScreenshotReceived,
                 )
                 pendingProvidersChanged = null
                 pendingPeerConnected = null
@@ -74,6 +76,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
                 pendingOtaPollChanged = null
                 pendingCompanionUpdateProgress = null
                 pendingResumed = null
+                pendingScreenshotReceived = null
                 pendingScreenshotReceived = null
                 snapshot
             }
@@ -94,6 +97,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
             replay.otaPoll?.let(b::setOnOtaPollChanged)
             replay.companionUpdateProgress?.let(b::setOnCompanionUpdateProgress)
             replay.resumed?.let(b::setOnResumed)
+            replay.screenshotReceived?.let(b::setOnScreenshotReceived)
             replay.screenshotReceived?.let(b::setOnScreenshotReceived)
         }
 
@@ -122,6 +126,7 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
         val otaPoll: ((BridgethingOtaPollStatus) -> Unit)?,
         val companionUpdateProgress: ((Double, Double) -> Unit)?,
         val resumed: ((BridgethingSessionSnapshot) -> Unit)?,
+        val screenshotReceived: ((String, String, Double) -> Unit)?,
         val screenshotReceived: ((String, String, Double) -> Unit)?,
     )
 
@@ -485,6 +490,10 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
 
     override fun setOnResumed(callback: (snapshot: BridgethingSessionSnapshot) -> Unit) {
         forwardOrBuffer(callback, BridgethingSessionBackend::setOnResumed) { pendingResumed = it }
+    }
+
+    override fun setOnScreenshotReceived(callback: (deviceId: String, fileUri: String, capturedAtMs: Double) -> Unit) {
+        forwardOrBuffer(callback, BridgethingSessionBackend::setOnScreenshotReceived) { pendingScreenshotReceived = it }
     }
 
     override fun setOnScreenshotReceived(callback: (deviceId: String, fileUri: String, capturedAtMs: Double) -> Unit) {

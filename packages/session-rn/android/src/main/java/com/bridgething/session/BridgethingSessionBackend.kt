@@ -116,9 +116,11 @@ public interface BridgethingSessionBackend {
 
     public suspend fun deviceSetNickname(deviceId: String, nickname: String)
 
+    public suspend fun collectScreenshot(deviceId: String, transferId: String, capturedAtMs: Double): String
+
     public suspend fun setLauncherGesture(deviceId: String, gesture: BridgethingLauncherGesture)
 
-    public suspend fun presentPairPicker(): BridgethingBtDevice?
+    public suspend fun presentPairPicker(): BridgethingPairPickResult
 
     public suspend fun isNotificationAccessGranted(): Boolean
     public suspend fun requestNotificationAccess()

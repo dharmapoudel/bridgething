@@ -657,13 +657,18 @@ public final class HybridBridgethingSessionImpl: BridgethingSessionBackend, @unc
         try await requireSession().setLauncherGesture(deviceId: deviceId, gesture: toLauncherGesture(gesture))
     }
 
-    public func presentPairPicker() async throws -> BridgethingBtDevice? {
-        guard let result = await requireCompanionOrNil()?.presentPairPicker() else { return nil }
-        return BridgethingBtDevice(
-            address: result.id,
-            name: result.name,
-            bondState: .bonded,
-            isCarThing: true
+    public func presentPairPicker() async throws -> BridgethingPairPickResult {
+        guard let result = await requireCompanionOrNil()?.presentPairPicker() else {
+            return BridgethingPairPickResult(kind: .cancelled, device: nil)
+        }
+        return BridgethingPairPickResult(
+            kind: .picked,
+            device: BridgethingBtDevice(
+                address: result.id,
+                name: result.name,
+                bondState: .bonded,
+                isCarThing: true
+            )
         )
     }
 

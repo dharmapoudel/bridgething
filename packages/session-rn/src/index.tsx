@@ -18,6 +18,7 @@ import type {
   BridgethingOtaPollStatus,
   BridgethingOtaProgress,
   BridgethingOtaRun,
+  BridgethingPairPickResult,
   BridgethingProviderCredentials,
   BridgethingProviderInfo,
   BridgethingResourceOrigin,
@@ -370,7 +371,11 @@ export class BridgethingSession {
     await this.native.setLauncherGesture(deviceId, gesture);
   }
 
-  async presentPairPicker(): Promise<BridgethingBtDevice | null> {
+  async collectScreenshot(deviceId: string, transferId: string, capturedAtMs: number): Promise<string> {
+    return this.native.collectScreenshot(deviceId, transferId, capturedAtMs);
+  }
+
+  async presentPairPicker(): Promise<BridgethingPairPickResult> {
     return this.native.presentPairPicker();
   }
 

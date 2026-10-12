@@ -79,7 +79,7 @@ public protocol BridgethingSessionBackend: AnyObject, Sendable {
 
     func setLauncherGesture(deviceId: String, gesture: BridgethingLauncherGesture) async throws
 
-    func presentPairPicker() async throws -> BridgethingBtDevice?
+    func presentPairPicker() async throws -> BridgethingPairPickResult
 
     func isNotificationAccessGranted() async -> Bool
     func requestNotificationAccess() async throws

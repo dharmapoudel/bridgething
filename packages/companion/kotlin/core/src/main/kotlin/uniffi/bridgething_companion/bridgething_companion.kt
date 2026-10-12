@@ -936,67 +936,6 @@ internal interface UniffiCallbackInterfaceStreamBackendMethod5 : com.sun.jna.Cal
 internal interface UniffiCallbackInterfaceStreamBackendMethod6 : com.sun.jna.Callback {
     fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,)
 }
-
-internal interface UniffiCallbackInterfaceStreamBackendMethod0 : com.sun.jna.Callback {
-    fun callback(
-        `uniffiHandle`: Long,
-        `uniffiOutReturn`: RustBuffer,
-        uniffiCallStatus: UniffiRustCallStatus,
-    )
-}
-
-internal interface UniffiCallbackInterfaceStreamBackendMethod1 : com.sun.jna.Callback {
-    fun callback(
-        `uniffiHandle`: Long,
-        `source`: RustBuffer.ByValue,
-        `sink`: Long,
-        `uniffiOutReturn`: Pointer,
-        uniffiCallStatus: UniffiRustCallStatus,
-    )
-}
-
-internal interface UniffiCallbackInterfaceStreamBackendMethod2 : com.sun.jna.Callback {
-    fun callback(
-        `uniffiHandle`: Long,
-        `presentation`: RustBuffer.ByValue,
-        `uniffiOutReturn`: Pointer,
-        uniffiCallStatus: UniffiRustCallStatus,
-    )
-}
-
-internal interface UniffiCallbackInterfaceStreamBackendMethod3 : com.sun.jna.Callback {
-    fun callback(
-        `uniffiHandle`: Long,
-        `uniffiOutReturn`: Pointer,
-        uniffiCallStatus: UniffiRustCallStatus,
-    )
-}
-
-internal interface UniffiCallbackInterfaceStreamBackendMethod4 : com.sun.jna.Callback {
-    fun callback(
-        `uniffiHandle`: Long,
-        `uniffiOutReturn`: Pointer,
-        uniffiCallStatus: UniffiRustCallStatus,
-    )
-}
-
-internal interface UniffiCallbackInterfaceStreamBackendMethod5 : com.sun.jna.Callback {
-    fun callback(
-        `uniffiHandle`: Long,
-        `positionMs`: Int,
-        `uniffiOutReturn`: Pointer,
-        uniffiCallStatus: UniffiRustCallStatus,
-    )
-}
-
-internal interface UniffiCallbackInterfaceStreamBackendMethod6 : com.sun.jna.Callback {
-    fun callback(
-        `uniffiHandle`: Long,
-        `uniffiOutReturn`: Pointer,
-        uniffiCallStatus: UniffiRustCallStatus,
-    )
-}
-
 internal interface UniffiCallbackInterfaceDeviceWakerMethod0 : com.sun.jna.Callback {
     fun callback(`uniffiHandle`: Long,`reason`: RustBuffer.ByValue,`allowPlayTap`: Byte,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,)
 }
@@ -1609,6 +1548,7 @@ internal open class UniffiVTableCallbackInterfaceSpeechRecognizer(
         `transcribe` = other.`transcribe`
     }
 
+}
 @Structure.FieldOrder("uniffiFree", "uniffiClone", "appBundle", "play", "present", "pause", "resume", "seekTo", "stop")
 internal open class UniffiVTableCallbackInterfaceStreamBackend(
     @JvmField internal var `uniffiFree`: UniffiCallbackInterfaceFree? = null,
@@ -1631,20 +1571,9 @@ internal open class UniffiVTableCallbackInterfaceStreamBackend(
         `resume`: UniffiCallbackInterfaceStreamBackendMethod4? = null,
         `seekTo`: UniffiCallbackInterfaceStreamBackendMethod5? = null,
         `stop`: UniffiCallbackInterfaceStreamBackendMethod6? = null,
-    ) : UniffiVTableCallbackInterfaceStreamBackend(
-            `uniffiFree`,
-            `uniffiClone`,
-            `appBundle`,
-            `play`,
-            `present`,
-            `pause`,
-            `resume`,
-            `seekTo`,
-            `stop`,
-        ),
-        Structure.ByValue
+    ): UniffiVTableCallbackInterfaceStreamBackend(`uniffiFree`,`uniffiClone`,`appBundle`,`play`,`present`,`pause`,`resume`,`seekTo`,`stop`,), Structure.ByValue
 
-    internal fun uniffiSetValue(other: UniffiVTableCallbackInterfaceStreamBackend) {
+   internal fun uniffiSetValue(other: UniffiVTableCallbackInterfaceStreamBackend) {
         `uniffiFree` = other.`uniffiFree`
         `uniffiClone` = other.`uniffiClone`
         `appBundle` = other.`appBundle`
@@ -1655,8 +1584,8 @@ internal open class UniffiVTableCallbackInterfaceStreamBackend(
         `seekTo` = other.`seekTo`
         `stop` = other.`stop`
     }
-}
 
+}
 @Structure.FieldOrder("uniffiFree", "uniffiClone", "wakeDevice")
 internal open class UniffiVTableCallbackInterfaceDeviceWaker(
     @JvmField internal var `uniffiFree`: UniffiCallbackInterfaceFree? = null,
@@ -1699,500 +1628,504 @@ internal object IntegrityCheckingUniffiLib {
         uniffiCheckContractApiVersion(this)
         uniffiCheckApiChecksums(this)
     }
-
-    external fun uniffi_bridgething_companion_checksum_func_parse_lrc(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_nlu_fast_path_match(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_nlu_intent_catalog(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_nlu_rejection_evaluate(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_ota_artifact_urls(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_ota_builtin_webapp_url(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_ota_cancelled_reason(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_ota_composite_version_string(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_ota_daemon_patch_url(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_ota_patch_source_matches(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_ota_run_progress(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_parse_ota_composite_version(): Int
-
-    external fun uniffi_bridgething_companion_checksum_func_parse_ota_discover_manifest(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_apply_ota_update(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_available_providers(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_cancel_auth(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_check_for_ota_update(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_companion_debug(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_complete_provider_auth(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_connect_network(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_connect_provider(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_current_webapp(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_default_resume_target(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_delete_webapp_config_field(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_delete_webapp_doc(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_device_log_snapshot(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_device_set_nickname(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_disconnect_network(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_disconnect_provider(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_dismiss_ota_run(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_download_companion_update(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_download_voice_model(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_fetch_ota_manifest(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_get_webapp_doc(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_install_webapp(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_install_webapp_from_url(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_list_webapp_config(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_list_webapp_doc(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_list_webapps(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_log_inbox(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_ota_run_progress(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_resumed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_capability_flags(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_device_auto_resume(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_device_log_streaming(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_device_resume_target(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_launcher_gesture(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_ota_poll_config(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_provider_priority(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_webapp_config_field(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_webapp_doc(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_webapp_slot(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_snapshot(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_switch_webapp(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_time_changed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_uninstall_webapp(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_voice_model_paths(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_webapp_resource(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_companionsession_webapp_slots(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_sessioneventsink_on_event(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_webappbundlesink_installed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_annotate_webapp(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_available(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_dismiss(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_ingest(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_interrupt(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_note_meta(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_open_run_kind(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_poll_status(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_otarunstore_runs(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amactionsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amactionsink_ok(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amauthsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amauthsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amcatalogsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amcatalogsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amfavoritessink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amfavoritessink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amflagsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amflagsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amitemsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amitemsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_ampagesink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_ampagesink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amplayerinbox_on_changed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amsearchsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amsearchsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amshelvessink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amshelvessink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amsnapshotsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_amsnapshotsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_snapshot(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_auth_status(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_request_authorization(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_can_play_catalog_content(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_is_other_audio_playing(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_play_context(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_queue_insert(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_command(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_library(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_recommendations(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_resolve(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_search(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_is_favorite(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_add_favorite(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_audiobackend_speak(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_audiobackend_cancel(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_audiobackend_cancel_all(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_audiobackend_play_earcon(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_earconsink_on_finished(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_speaksink_on_finished(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_speaksink_on_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumebackend_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumebackend_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumebackend_snapshot(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumebackend_set_volume(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumebackend_set_mute(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumebackend_volume_up(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumebackend_volume_down(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumebackend_mute_toggle(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_volumeinbox_on_changed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_connectivityinbox_on_changed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_connectivitymonitor_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_connectivitymonitor_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhost_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhost_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhost_deliver(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhost_device_connected(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhost_device_disconnected(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhost_device_active(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhost_config_changed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhostinbox_running_changed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_extensionhostinbox_send_to_device(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoinbox_on_authorization_change(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoinbox_on_error(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoinbox_on_position(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_can_provide_location(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_configure(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_request_authorization(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_start_updating(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_stop_updating(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_request_once(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_geoprovider_cancel_once(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_hostenvironment_clock(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_imagescaler_downsample_jpeg(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_bytes(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_connected(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_disconnected(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_link_failed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_send_failed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_write_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linktransport_max_batch_bytes(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linktransport_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linktransport_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linktransport_send(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linktransport_disconnect(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_linktransport_reconnect(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_loginbox_push(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logsink_on_line(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_archives(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_clear(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_delete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_export_to(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_flush(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_read(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_record(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_retained_bytes(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_logstore_write(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediaartsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_is_access_granted(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_snapshot_all(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_control(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_art(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediasessioninbox_on_sessions_changed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_mediasnapshotsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_modelartifactvalidator_validate(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_transferpolicy_allows_large_transfer(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_httpdownloadsink_on_chunk(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_httpdownloadsink_on_failed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_httpdownloadsink_on_finished(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_httpdownloadsink_on_response(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_httpsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_httpsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_httptransport_execute(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_httptransport_download(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_wsinbox_on_binary(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_wsinbox_on_closed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_wsinbox_on_open(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_wsinbox_on_text(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_wstransport_connect(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_wstransport_send(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_wstransport_disconnect(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_nlumodelrunner_prewarm(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_nlumodelrunner_predict(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_actionsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_actionsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_notificationbackend_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_notificationbackend_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_notificationbackend_invoke_positive(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_notificationbackend_invoke_negative(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_notificationinbox_on_posted(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_notificationinbox_on_removed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phonebackend_start(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phonebackend_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phonebackend_command(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phonebackend_state_get(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_call_ended(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_call_started(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_call_updated(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_communications(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_state(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phonestatesink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_phonestatesink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_secretstore_get(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_secretstore_set(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_secretstore_remove(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_secretstore_get_blob(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_preparesink_on_failed(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_preparesink_on_progress(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_preparesink_on_ready(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_speechrecognizer_prepare(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_speechrecognizer_transcribe(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_transcriptionsink_complete(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_transcriptionsink_fail(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streambackend_app_bundle(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streambackend_play(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streambackend_present(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streambackend_pause(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streambackend_resume(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streambackend_seek_to(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streambackend_stop(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streamsink_on_metadata(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streamsink_on_status(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_streamsink_on_timing(): Int
-
-    external fun uniffi_bridgething_companion_checksum_method_devicewaker_wake_device(): Int
-
-    external fun uniffi_bridgething_companion_checksum_constructor_companionsession_create(): Int
-
-    external fun uniffi_bridgething_companion_checksum_constructor_otarunstore_new(): Int
-
-    external fun uniffi_bridgething_companion_checksum_constructor_logstore_install(): Int
-
-    external fun ffi_bridgething_companion_uniffi_contract_version(): Int
+    external fun uniffi_bridgething_companion_checksum_func_parse_lrc(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_nlu_fast_path_match(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_nlu_intent_catalog(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_nlu_rejection_evaluate(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_ota_artifact_urls(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_ota_builtin_webapp_url(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_ota_cancelled_reason(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_ota_composite_version_string(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_ota_daemon_patch_url(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_ota_patch_source_matches(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_ota_run_progress(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_parse_ota_composite_version(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_func_parse_ota_discover_manifest(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_apply_ota_update(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_available_providers(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_cancel_auth(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_check_for_ota_update(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_collect_screenshot(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_companion_debug(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_complete_provider_auth(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_connect_network(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_connect_provider(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_current_webapp(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_default_resume_target(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_delete_webapp_config_field(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_delete_webapp_doc(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_device_log_snapshot(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_device_set_nickname(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_disconnect_network(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_disconnect_provider(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_dismiss_ota_run(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_download_companion_update(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_download_voice_model(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_fetch_ota_manifest(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_get_webapp_doc(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_install_webapp(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_install_webapp_from_url(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_list_webapp_config(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_list_webapp_doc(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_list_webapps(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_log_inbox(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_ota_run_progress(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_resumed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_capability_flags(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_device_auto_resume(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_device_log_streaming(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_device_resume_target(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_launcher_gesture(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_ota_poll_config(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_provider_priority(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_webapp_config_field(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_webapp_doc(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_set_webapp_slot(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_snapshot(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_switch_webapp(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_time_changed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_uninstall_webapp(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_voice_model_paths(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_webapp_resource(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_companionsession_webapp_slots(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_sessioneventsink_on_event(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_webappbundlesink_installed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_annotate_webapp(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_available(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_dismiss(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_ingest(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_interrupt(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_note_meta(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_open_run_kind(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_poll_status(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_otarunstore_runs(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amactionsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amactionsink_ok(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amauthsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amauthsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amcatalogsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amcatalogsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amfavoritessink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amfavoritessink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amflagsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amflagsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amitemsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amitemsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_ampagesink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_ampagesink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amplayerinbox_on_changed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amsearchsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amsearchsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amshelvessink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amshelvessink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amsnapshotsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_amsnapshotsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_snapshot(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_auth_status(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_request_authorization(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_can_play_catalog_content(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_is_other_audio_playing(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_play_context(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_queue_insert(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_command(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_library(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_recommendations(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_resolve(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_search(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_is_favorite(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_applemusicbackend_add_favorite(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_audiobackend_speak(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_audiobackend_cancel(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_audiobackend_cancel_all(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_audiobackend_play_earcon(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_earconsink_on_finished(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_speaksink_on_finished(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_speaksink_on_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumebackend_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumebackend_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumebackend_snapshot(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumebackend_set_volume(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumebackend_set_mute(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumebackend_volume_up(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumebackend_volume_down(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumebackend_mute_toggle(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_volumeinbox_on_changed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_connectivityinbox_on_changed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_connectivitymonitor_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_connectivitymonitor_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhost_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhost_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhost_deliver(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhost_device_connected(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhost_device_disconnected(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhost_device_active(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhost_config_changed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhostinbox_running_changed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_extensionhostinbox_send_to_device(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoinbox_on_authorization_change(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoinbox_on_error(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoinbox_on_position(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_can_provide_location(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_configure(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_request_authorization(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_start_updating(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_stop_updating(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_request_once(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_geoprovider_cancel_once(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_hostenvironment_clock(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_imagescaler_downsample_jpeg(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_bytes(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_connected(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_disconnected(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_link_failed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_send_failed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linkinbox_on_write_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linktransport_max_batch_bytes(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linktransport_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linktransport_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linktransport_send(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linktransport_disconnect(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_linktransport_reconnect(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_loginbox_push(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logsink_on_line(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_archives(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_clear(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_delete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_export_to(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_flush(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_read(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_record(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_retained_bytes(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_logstore_write(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediaartsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_is_access_granted(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_snapshot_all(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_control(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediasessionbackend_art(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediasessioninbox_on_sessions_changed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_mediasnapshotsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_modelartifactvalidator_validate(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_transferpolicy_allows_large_transfer(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_httpdownloadsink_on_chunk(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_httpdownloadsink_on_failed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_httpdownloadsink_on_finished(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_httpdownloadsink_on_response(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_httpsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_httpsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_httptransport_execute(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_httptransport_download(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_wsinbox_on_binary(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_wsinbox_on_closed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_wsinbox_on_open(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_wsinbox_on_text(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_wstransport_connect(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_wstransport_send(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_wstransport_disconnect(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_nlumodelrunner_prewarm(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_nlumodelrunner_predict(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_actionsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_actionsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_notificationbackend_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_notificationbackend_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_notificationbackend_invoke_positive(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_notificationbackend_invoke_negative(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_notificationinbox_on_posted(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_notificationinbox_on_removed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phonebackend_start(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phonebackend_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phonebackend_command(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phonebackend_state_get(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_call_ended(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_call_started(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_call_updated(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_communications(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phoneinbox_on_state(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phonestatesink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_phonestatesink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_secretstore_get(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_secretstore_set(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_secretstore_remove(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_secretstore_get_blob(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_preparesink_on_failed(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_preparesink_on_progress(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_preparesink_on_ready(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_speechrecognizer_prepare(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_speechrecognizer_transcribe(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_transcriptionsink_complete(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_transcriptionsink_fail(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streambackend_app_bundle(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streambackend_play(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streambackend_present(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streambackend_pause(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streambackend_resume(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streambackend_seek_to(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streambackend_stop(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streamsink_on_metadata(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streamsink_on_status(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_streamsink_on_timing(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_method_devicewaker_wake_device(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_constructor_companionsession_create(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_constructor_otarunstore_new(
+    ): Int
+    external fun uniffi_bridgething_companion_checksum_constructor_logstore_install(
+    ): Int
+    external fun ffi_bridgething_companion_uniffi_contract_version(
+    ): Int
+
+        
 }
 
 internal object UniffiLib {
@@ -2249,11 +2182,7 @@ internal object UniffiLib {
     ): Long
     external fun uniffi_bridgething_companion_fn_method_companionsession_companion_debug(`ptr`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_method_companionsession_complete_provider_auth(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `credentials`: RustBuffer.ByValue,
+    external fun uniffi_bridgething_companion_fn_method_companionsession_complete_provider_auth(`ptr`: Long,`id`: RustBuffer.ByValue,`credentials`: RustBuffer.ByValue,
     ): Long
     external fun uniffi_bridgething_companion_fn_method_companionsession_connect_network(`ptr`: Long,`url`: RustBuffer.ByValue,`device`: RustBuffer.ByValue,
     ): Long
@@ -2283,23 +2212,11 @@ internal object UniffiLib {
     ): Long
     external fun uniffi_bridgething_companion_fn_method_companionsession_fetch_ota_manifest(`ptr`: Long,`rootUrl`: RustBuffer.ByValue,
     ): Long
-
-    external fun uniffi_bridgething_companion_fn_method_companionsession_install_webapp(
-        `ptr`: Long,
-        `deviceId`: RustBuffer.ByValue,
-        `archivePath`: RustBuffer.ByValue,
-        `provenance`: RustBuffer.ByValue,
-        `webappId`: RustBuffer.ByValue,
-        `webappName`: RustBuffer.ByValue,
+    external fun uniffi_bridgething_companion_fn_method_companionsession_get_webapp_doc(`ptr`: Long,`deviceId`: RustBuffer.ByValue,`id`: RustBuffer.ByValue,`key`: RustBuffer.ByValue,
     ): Long
-
-    external fun uniffi_bridgething_companion_fn_method_companionsession_install_webapp_from_url(
-        `ptr`: Long,
-        `deviceId`: RustBuffer.ByValue,
-        `request`: RustBuffer.ByValue,
-        `sink`: RustBuffer.ByValue,
+    external fun uniffi_bridgething_companion_fn_method_companionsession_install_webapp(`ptr`: Long,`deviceId`: RustBuffer.ByValue,`archivePath`: RustBuffer.ByValue,`provenance`: RustBuffer.ByValue,`webappId`: RustBuffer.ByValue,`webappName`: RustBuffer.ByValue,
     ): Long
-    external fun uniffi_bridgething_companion_fn_method_companionsession_install_webapp_from_url(`ptr`: Long,`deviceId`: RustBuffer.ByValue,`url`: RustBuffer.ByValue,`expected`: RustBuffer.ByValue,`provenance`: RustBuffer.ByValue,`sink`: RustBuffer.ByValue,
+    external fun uniffi_bridgething_companion_fn_method_companionsession_install_webapp_from_url(`ptr`: Long,`deviceId`: RustBuffer.ByValue,`request`: RustBuffer.ByValue,`sink`: RustBuffer.ByValue,
     ): Long
     external fun uniffi_bridgething_companion_fn_method_companionsession_list_webapp_config(`ptr`: Long,`deviceId`: RustBuffer.ByValue,`id`: RustBuffer.ByValue,
     ): Long
@@ -2319,16 +2236,9 @@ internal object UniffiLib {
     ): Long
     external fun uniffi_bridgething_companion_fn_method_companionsession_set_device_log_streaming(`ptr`: Long,`enabled`: Byte,
     ): Long
-
-    external fun uniffi_bridgething_companion_fn_method_companionsession_set_launcher_gesture(
-        `ptr`: Long,
-        `deviceId`: RustBuffer.ByValue,
-        `gesture`: RustBuffer.ByValue,
+    external fun uniffi_bridgething_companion_fn_method_companionsession_set_device_resume_target(`ptr`: Long,`deviceId`: RustBuffer.ByValue,`target`: RustBuffer.ByValue,
     ): Long
-
-    external fun uniffi_bridgething_companion_fn_method_companionsession_set_ota_poll_config(
-        `ptr`: Long,
-        `config`: RustBuffer.ByValue,
+    external fun uniffi_bridgething_companion_fn_method_companionsession_set_launcher_gesture(`ptr`: Long,`deviceId`: RustBuffer.ByValue,`gesture`: RustBuffer.ByValue,
     ): Long
     external fun uniffi_bridgething_companion_fn_method_companionsession_set_ota_poll_config(`ptr`: Long,`config`: RustBuffer.ByValue,
     ): Long
@@ -2800,632 +2710,7 @@ internal object UniffiLib {
     ): Long
     external fun uniffi_bridgething_companion_fn_free_httpdownloadsink(`handle`: Long,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_httpdownloadsink_on_chunk(
-        `ptr`: Long,
-        `chunk`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Byte
-
-    external fun uniffi_bridgething_companion_fn_method_httpdownloadsink_on_failed(
-        `ptr`: Long,
-        `reason`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_httpdownloadsink_on_finished(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_httpdownloadsink_on_response(
-        `ptr`: Long,
-        `status`: Short,
-        `headers`: RustBuffer.ByValue,
-        `contentLength`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Byte
-
-    external fun uniffi_bridgething_companion_fn_clone_httpsink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_httpsink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_httpsink_complete(
-        `ptr`: Long,
-        `response`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_httpsink_fail(
-        `ptr`: Long,
-        `reason`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_httptransport(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_httptransport(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_httptransport(
-        `vtable`: UniffiVTableCallbackInterfaceHttpTransport,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_httptransport_execute(
-        `ptr`: Long,
-        `request`: RustBuffer.ByValue,
-        `sink`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_httptransport_download(
-        `ptr`: Long,
-        `request`: RustBuffer.ByValue,
-        `sink`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_wsinbox(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_wsinbox(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_wsinbox_on_binary(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `bytes`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_wsinbox_on_closed(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `code`: RustBuffer.ByValue,
-        `reason`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_wsinbox_on_open(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `acceptedProtocol`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_wsinbox_on_text(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `text`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_wstransport(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_wstransport(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_wstransport(`vtable`: UniffiVTableCallbackInterfaceWsTransport): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_wstransport_connect(
-        `ptr`: Long,
-        `connect`: RustBuffer.ByValue,
-        `inbox`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_wstransport_send(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `frame`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_wstransport_disconnect(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `code`: RustBuffer.ByValue,
-        `reason`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_nlumodelrunner(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_nlumodelrunner(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_nlumodelrunner(
-        `vtable`: UniffiVTableCallbackInterfaceNluModelRunner,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_nlumodelrunner_prewarm(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_nlumodelrunner_predict(
-        `ptr`: Long,
-        `inputIds`: RustBuffer.ByValue,
-        `attentionMask`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_clone_actionsink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_actionsink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_actionsink_complete(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_actionsink_fail(
-        `ptr`: Long,
-        `error`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_notificationbackend(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_notificationbackend(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_notificationbackend(
-        `vtable`: UniffiVTableCallbackInterfaceNotificationBackend,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_notificationbackend_start(
-        `ptr`: Long,
-        `inbox`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_notificationbackend_stop(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_notificationbackend_invoke_positive(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `sink`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_notificationbackend_invoke_negative(
-        `ptr`: Long,
-        `id`: RustBuffer.ByValue,
-        `sink`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_notificationinbox(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_notificationinbox(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_notificationinbox_on_posted(
-        `ptr`: Long,
-        `notification`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_notificationinbox_on_removed(
-        `ptr`: Long,
-        `removed`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_phonebackend(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_phonebackend(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_phonebackend(
-        `vtable`: UniffiVTableCallbackInterfacePhoneBackend,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phonebackend_start(
-        `ptr`: Long,
-        `inbox`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phonebackend_stop(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phonebackend_command(
-        `ptr`: Long,
-        `cmd`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phonebackend_state_get(
-        `ptr`: Long,
-        `sink`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_phoneinbox(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_phoneinbox(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phoneinbox_on_call_ended(
-        `ptr`: Long,
-        `ended`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phoneinbox_on_call_started(
-        `ptr`: Long,
-        `call`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phoneinbox_on_call_updated(
-        `ptr`: Long,
-        `call`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phoneinbox_on_communications(
-        `ptr`: Long,
-        `state`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phoneinbox_on_state(
-        `ptr`: Long,
-        `state`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_phonestatesink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_phonestatesink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phonestatesink_complete(
-        `ptr`: Long,
-        `state`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_phonestatesink_fail(
-        `ptr`: Long,
-        `reason`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_secretstore(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_secretstore(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_secretstore(`vtable`: UniffiVTableCallbackInterfaceSecretStore): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_secretstore_get(
-        `ptr`: Long,
-        `key`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_method_secretstore_set(
-        `ptr`: Long,
-        `key`: RustBuffer.ByValue,
-        `value`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_secretstore_remove(
-        `ptr`: Long,
-        `key`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_secretstore_get_blob(
-        `ptr`: Long,
-        `key`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_clone_preparesink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_preparesink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_preparesink_on_failed(
-        `ptr`: Long,
-        `reason`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_preparesink_on_progress(
-        `ptr`: Long,
-        `received`: Long,
-        `total`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_preparesink_on_ready(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_speechrecognizer(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_speechrecognizer(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_speechrecognizer(
-        `vtable`: UniffiVTableCallbackInterfaceSpeechRecognizer,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_speechrecognizer_prepare(
-        `ptr`: Long,
-        `sink`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_speechrecognizer_transcribe(
-        `ptr`: Long,
-        `pcm`: RustBuffer.ByValue,
-        `sampleRateHz`: Int,
-        `sink`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_transcriptionsink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_transcriptionsink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_transcriptionsink_complete(
-        `ptr`: Long,
-        `transcription`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_transcriptionsink_fail(
-        `ptr`: Long,
-        `reason`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_streambackend(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_streambackend(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_streambackend(
-        `vtable`: UniffiVTableCallbackInterfaceStreamBackend,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streambackend_app_bundle(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_method_streambackend_play(
-        `ptr`: Long,
-        `source`: RustBuffer.ByValue,
-        `sink`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streambackend_present(
-        `ptr`: Long,
-        `presentation`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streambackend_pause(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streambackend_resume(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streambackend_seek_to(
-        `ptr`: Long,
-        `positionMs`: Int,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streambackend_stop(
-        `ptr`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_streamsink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_streamsink(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streamsink_on_metadata(
-        `ptr`: Long,
-        `metadata`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streamsink_on_status(
-        `ptr`: Long,
-        `status`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_streamsink_on_timing(
-        `ptr`: Long,
-        `timing`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_clone_devicewaker(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Long
-
-    external fun uniffi_bridgething_companion_fn_free_devicewaker(
-        `handle`: Long,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_init_callback_vtable_devicewaker(`vtable`: UniffiVTableCallbackInterfaceDeviceWaker): Unit
-
-    external fun uniffi_bridgething_companion_fn_method_devicewaker_wake_device(
-        `ptr`: Long,
-        `reason`: RustBuffer.ByValue,
-        `allowPlayTap`: Byte,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): Unit
-
-    external fun uniffi_bridgething_companion_fn_func_parse_lrc(
-        `text`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_nlu_fast_path_match(
-        `transcript`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_nlu_intent_catalog(uniffi_out_err: UniffiRustCallStatus): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_nlu_rejection_evaluate(
-        `intentLogits`: RustBuffer.ByValue,
-        `inDomainLogit`: Double,
-        `policy`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_ota_artifact_urls(
-        `rootUrl`: RustBuffer.ByValue,
-        `channel`: RustBuffer.ByValue,
-        `daemonVersion`: RustBuffer.ByValue,
-        `imageVersion`: RustBuffer.ByValue,
-        `imageVariant`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_ota_builtin_webapp_url(
-        `rootUrl`: RustBuffer.ByValue,
-        `channel`: RustBuffer.ByValue,
-        `name`: RustBuffer.ByValue,
-        `version`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_ota_cancelled_reason(uniffi_out_err: UniffiRustCallStatus): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_ota_composite_version_string(
-        `version`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_ota_daemon_patch_url(
-        `rootUrl`: RustBuffer.ByValue,
-        `channel`: RustBuffer.ByValue,
-        `toVersion`: RustBuffer.ByValue,
-        `fromVersion`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
-    ): RustBuffer.ByValue
-
-    external fun uniffi_bridgething_companion_fn_func_ota_patch_source_matches(
-        `declared`: RustBuffer.ByValue,
-        `running`: RustBuffer.ByValue,
-        uniffi_out_err: UniffiRustCallStatus,
+    external fun uniffi_bridgething_companion_fn_method_httpdownloadsink_on_chunk(`ptr`: Long,`chunk`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Byte
     external fun uniffi_bridgething_companion_fn_method_httpdownloadsink_on_failed(`ptr`: Long,`reason`: RustBuffer.ByValue,uniffi_out_err: UniffiRustCallStatus, 
     ): Unit
@@ -8779,7 +8064,7 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
     internal object `start`: UniffiCallbackInterfaceAppleMusicBackendMethod0 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypeAmPlayerInbox.lift(`inbox`),
                 )
@@ -8788,29 +8073,21 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `stop` : UniffiCallbackInterfaceAppleMusicBackendMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `stop`: UniffiCallbackInterfaceAppleMusicBackendMethod1 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stop`() }
+            val makeCall = { ->
+                uniffiObj.`stop`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `snapshot` : UniffiCallbackInterfaceAppleMusicBackendMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `snapshot`: UniffiCallbackInterfaceAppleMusicBackendMethod2 {
+        override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`snapshot`(
                     FfiConverterTypeAmSnapshotSink.lift(`sink`),
                 )
@@ -8819,16 +8096,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `authStatus` : UniffiCallbackInterfaceAppleMusicBackendMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `authStatus`: UniffiCallbackInterfaceAppleMusicBackendMethod3 {
+        override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`authStatus`(
                     FfiConverterTypeAmAuthSink.lift(`sink`),
                 )
@@ -8837,16 +8108,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `requestAuthorization` : UniffiCallbackInterfaceAppleMusicBackendMethod4 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `requestAuthorization`: UniffiCallbackInterfaceAppleMusicBackendMethod4 {
+        override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`requestAuthorization`(
                     FfiConverterTypeAmAuthSink.lift(`sink`),
                 )
@@ -8855,16 +8120,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `canPlayCatalogContent` : UniffiCallbackInterfaceAppleMusicBackendMethod5 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `canPlayCatalogContent`: UniffiCallbackInterfaceAppleMusicBackendMethod5 {
+        override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`canPlayCatalogContent`(
                     FfiConverterTypeAmCatalogSink.lift(`sink`),
                 )
@@ -8873,16 +8132,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `isOtherAudioPlaying` : UniffiCallbackInterfaceAppleMusicBackendMethod6 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `isOtherAudioPlaying`: UniffiCallbackInterfaceAppleMusicBackendMethod6 {
+        override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`isOtherAudioPlaying`(
                     FfiConverterTypeAmFlagSink.lift(`sink`),
                 )
@@ -8891,18 +8144,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `playContext` : UniffiCallbackInterfaceAppleMusicBackendMethod7 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `contextUri`: RustBuffer.ByValue,
-            `startAtUri`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `playContext`: UniffiCallbackInterfaceAppleMusicBackendMethod7 {
+        override fun callback(`uniffiHandle`: Long,`contextUri`: RustBuffer.ByValue,`startAtUri`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`playContext`(
                     FfiConverterString.lift(`contextUri`),
                     FfiConverterOptionalString.lift(`startAtUri`),
@@ -8913,18 +8158,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `queueInsert` : UniffiCallbackInterfaceAppleMusicBackendMethod8 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uri`: RustBuffer.ByValue,
-            `next`: Byte,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `queueInsert`: UniffiCallbackInterfaceAppleMusicBackendMethod8 {
+        override fun callback(`uniffiHandle`: Long,`uri`: RustBuffer.ByValue,`next`: Byte,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`queueInsert`(
                     FfiConverterString.lift(`uri`),
                     FfiConverterBoolean.lift(`next`),
@@ -8935,17 +8172,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `command` : UniffiCallbackInterfaceAppleMusicBackendMethod9 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `cmd`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `command`: UniffiCallbackInterfaceAppleMusicBackendMethod9 {
+        override fun callback(`uniffiHandle`: Long,`cmd`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`command`(
                     FfiConverterTypeAmPlayerCommand.lift(`cmd`),
                     FfiConverterTypeAmActionSink.lift(`sink`),
@@ -8955,19 +8185,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `library` : UniffiCallbackInterfaceAppleMusicBackendMethod10 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `scope`: RustBuffer.ByValue,
-            `limit`: Int,
-            `offset`: Int,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `library`: UniffiCallbackInterfaceAppleMusicBackendMethod10 {
+        override fun callback(`uniffiHandle`: Long,`scope`: RustBuffer.ByValue,`limit`: Int,`offset`: Int,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`library`(
                     FfiConverterTypeAmLibraryScope.lift(`scope`),
                     FfiConverterUInt.lift(`limit`),
@@ -8979,16 +8200,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `recommendations` : UniffiCallbackInterfaceAppleMusicBackendMethod11 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `recommendations`: UniffiCallbackInterfaceAppleMusicBackendMethod11 {
+        override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`recommendations`(
                     FfiConverterTypeAmShelvesSink.lift(`sink`),
                 )
@@ -8997,17 +8212,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `resolve` : UniffiCallbackInterfaceAppleMusicBackendMethod12 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uri`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `resolve`: UniffiCallbackInterfaceAppleMusicBackendMethod12 {
+        override fun callback(`uniffiHandle`: Long,`uri`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`resolve`(
                     FfiConverterString.lift(`uri`),
                     FfiConverterTypeAmItemSink.lift(`sink`),
@@ -9017,18 +8225,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `search` : UniffiCallbackInterfaceAppleMusicBackendMethod13 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `query`: RustBuffer.ByValue,
-            `limit`: Int,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `search`: UniffiCallbackInterfaceAppleMusicBackendMethod13 {
+        override fun callback(`uniffiHandle`: Long,`query`: RustBuffer.ByValue,`limit`: Int,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`search`(
                     FfiConverterString.lift(`query`),
                     FfiConverterUInt.lift(`limit`),
@@ -9039,17 +8239,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `isFavorite` : UniffiCallbackInterfaceAppleMusicBackendMethod14 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uris`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `isFavorite`: UniffiCallbackInterfaceAppleMusicBackendMethod14 {
+        override fun callback(`uniffiHandle`: Long,`uris`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`isFavorite`(
                     FfiConverterSequenceString.lift(`uris`),
                     FfiConverterTypeAmFavoritesSink.lift(`sink`),
@@ -9059,17 +8252,10 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `addFavorite` : UniffiCallbackInterfaceAppleMusicBackendMethod15 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uri`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `addFavorite`: UniffiCallbackInterfaceAppleMusicBackendMethod15 {
+        override fun callback(`uniffiHandle`: Long,`uri`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAppleMusicBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`addFavorite`(
                     FfiConverterString.lift(`uri`),
                     FfiConverterTypeAmActionSink.lift(`sink`),
@@ -9080,7 +8266,7 @@ internal object uniffiCallbackInterfaceAppleMusicBackend {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeAppleMusicBackend.handleMap.remove(handle)
         }
@@ -9444,7 +8630,7 @@ internal object uniffiCallbackInterfaceAudioBackend {
     internal object `speak`: UniffiCallbackInterfaceAudioBackendMethod0 {
         override fun callback(`uniffiHandle`: Long,`id`: RustBuffer.ByValue,`text`: RustBuffer.ByValue,`voice`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAudioBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`speak`(
                     FfiConverterString.lift(`id`),
                     FfiConverterString.lift(`text`),
@@ -9456,16 +8642,10 @@ internal object uniffiCallbackInterfaceAudioBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `cancel` : UniffiCallbackInterfaceAudioBackendMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `id`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `cancel`: UniffiCallbackInterfaceAudioBackendMethod1 {
+        override fun callback(`uniffiHandle`: Long,`id`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAudioBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`cancel`(
                     FfiConverterString.lift(`id`),
                 )
@@ -9474,30 +8654,21 @@ internal object uniffiCallbackInterfaceAudioBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `cancelAll` : UniffiCallbackInterfaceAudioBackendMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `cancelAll`: UniffiCallbackInterfaceAudioBackendMethod2 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAudioBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`cancelAll`() }
+            val makeCall = { ->
+                uniffiObj.`cancelAll`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `playEarcon` : UniffiCallbackInterfaceAudioBackendMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `name`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `playEarcon`: UniffiCallbackInterfaceAudioBackendMethod3 {
+        override fun callback(`uniffiHandle`: Long,`name`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeAudioBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`playEarcon`(
                     FfiConverterString.lift(`name`),
                     FfiConverterTypeEarconSink.lift(`sink`),
@@ -9508,7 +8679,7 @@ internal object uniffiCallbackInterfaceAudioBackend {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeAudioBackend.handleMap.remove(handle)
         }
@@ -9683,17 +8854,11 @@ public interface CompanionSessionInterface {
     suspend fun `collectScreenshot`(`deviceId`: kotlin.String, `transferId`: kotlin.String, `capturedAtMs`: kotlin.ULong): ScreenshotFile
     
     fun `companionDebug`(): CompanionDebug
-
-    suspend fun `completeProviderAuth`(
-        `id`: kotlin.String,
-        `credentials`: ProviderCredentials,
-    )
-
-    suspend fun `connectNetwork`(
-        `url`: kotlin.String,
-        `device`: LinkDevice,
-    )
-
+    
+    suspend fun `completeProviderAuth`(`id`: kotlin.String, `credentials`: ProviderCredentials)
+    
+    suspend fun `connectNetwork`(`url`: kotlin.String, `device`: LinkDevice)
+    
     suspend fun `connectProvider`(`id`: kotlin.String)
     
     suspend fun `currentWebapp`(`deviceId`: kotlin.String): ActiveWebapp?
@@ -9719,37 +8884,17 @@ public interface CompanionSessionInterface {
     suspend fun `downloadVoiceModel`()
     
     suspend fun `fetchOtaManifest`(`rootUrl`: kotlin.String): OtaDiscoverManifest
-
-    suspend fun `getWebappDoc`(
-        `deviceId`: kotlin.String,
-        `id`: kotlin.String,
-        `key`: kotlin.String,
-    ): kotlin.String?
-
-    suspend fun `installWebapp`(
-        `deviceId`: kotlin.String,
-        `archivePath`: kotlin.String,
-        `provenance`: kotlin.String?,
-        `webappId`: kotlin.String? = null,
-        `webappName`: kotlin.String? = null,
-    ): WebappInfo
-
-    suspend fun `installWebappFromUrl`(
-        `deviceId`: kotlin.String,
-        `request`: WebappInstallRequest,
-        `sink`: WebappBundleSink? = null,
-    ): WebappInfo
-
-    suspend fun `listWebappConfig`(
-        `deviceId`: kotlin.String,
-        `id`: kotlin.String,
-    ): List<ConfigEntry>
-
-    suspend fun `listWebappDoc`(
-        `deviceId`: kotlin.String,
-        `id`: kotlin.String,
-    ): List<DocEntry>
-
+    
+    suspend fun `getWebappDoc`(`deviceId`: kotlin.String, `id`: kotlin.String, `key`: kotlin.String): kotlin.String?
+    
+    suspend fun `installWebapp`(`deviceId`: kotlin.String, `archivePath`: kotlin.String, `provenance`: kotlin.String?, `webappId`: kotlin.String? = null, `webappName`: kotlin.String? = null): WebappInfo
+    
+    suspend fun `installWebappFromUrl`(`deviceId`: kotlin.String, `request`: WebappInstallRequest, `sink`: WebappBundleSink? = null): WebappInfo
+    
+    suspend fun `listWebappConfig`(`deviceId`: kotlin.String, `id`: kotlin.String): List<ConfigEntry>
+    
+    suspend fun `listWebappDoc`(`deviceId`: kotlin.String, `id`: kotlin.String): List<DocEntry>
+    
     suspend fun `listWebapps`(`deviceId`: kotlin.String): List<WebappInfo>
     
     fun `logInbox`(): LogInbox
@@ -9763,17 +8908,11 @@ public interface CompanionSessionInterface {
     suspend fun `setDeviceAutoResume`(`deviceId`: kotlin.String, `enabled`: kotlin.Boolean)
     
     suspend fun `setDeviceLogStreaming`(`enabled`: kotlin.Boolean)
-
-    suspend fun `setDeviceResumeTarget`(
-        `deviceId`: kotlin.String,
-        `target`: ResumeTarget,
-    )
-
-    suspend fun `setLauncherGesture`(
-        `deviceId`: kotlin.String,
-        `gesture`: LauncherGesture,
-    )
-
+    
+    suspend fun `setDeviceResumeTarget`(`deviceId`: kotlin.String, `target`: ResumeTarget)
+    
+    suspend fun `setLauncherGesture`(`deviceId`: kotlin.String, `gesture`: LauncherGesture)
+    
     suspend fun `setOtaPollConfig`(`config`: OtaPollConfig?)
     
     suspend fun `setProviderPriority`(`ids`: List<kotlin.String>)
@@ -9998,15 +9137,51 @@ open class CompanionSession: Disposable, AutoCloseable, CompanionSessionInterfac
     
     @Throws(CompanionException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `completeProviderAuth`(
-        `id`: kotlin.String,
-        `credentials`: ProviderCredentials,
-    ) = uniffiRustCallAsync(
+    override suspend fun `collectScreenshot`(`deviceId`: kotlin.String, `transferId`: kotlin.String, `capturedAtMs`: kotlin.ULong) : ScreenshotFile {
+        return uniffiRustCallAsync(
+        callWithHandle { uniffiHandle ->
+            UniffiLib.uniffi_bridgething_companion_fn_method_companionsession_collect_screenshot(
+                uniffiHandle,
+                
+        FfiConverterString.lower(`deviceId`),
+        FfiConverterString.lower(`transferId`),
+        FfiConverterULong.lower(`capturedAtMs`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.ffi_bridgething_companion_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeScreenshotFile.lift(it) },
+        // Error FFI converter
+        CompanionException.ErrorHandler,
+    )
+    }
+
+    override fun `companionDebug`(): CompanionDebug {
+            return FfiConverterTypeCompanionDebug.lift(
+    callWithHandle {
+    uniffiRustCall() { _status ->
+    UniffiLib.uniffi_bridgething_companion_fn_method_companionsession_companion_debug(
+        it,
+        _status)
+}
+    }
+    )
+    }
+    
+
+    
+    @Throws(CompanionException::class)
+    @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
+    override suspend fun `completeProviderAuth`(`id`: kotlin.String, `credentials`: ProviderCredentials) {
+        return uniffiRustCallAsync(
         callWithHandle { uniffiHandle ->
             UniffiLib.uniffi_bridgething_companion_fn_method_companionsession_complete_provider_auth(
                 uniffiHandle,
-                FfiConverterString.lower(`id`),
-                FfiConverterTypeProviderCredentials.lower(`credentials`),
+                
+        FfiConverterString.lower(`id`),
+        FfiConverterTypeProviderCredentials.lower(`credentials`),
             )
         },
         { future, callback, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_poll_void(future, callback, continuation) },
@@ -10350,70 +9525,52 @@ open class CompanionSession: Disposable, AutoCloseable, CompanionSessionInterfac
     
     @Throws(CompanionException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `installWebapp`(
-        `deviceId`: kotlin.String,
-        `archivePath`: kotlin.String,
-        `provenance`: kotlin.String?,
-        `webappId`: kotlin.String?,
-        `webappName`: kotlin.String?,
-    ): WebappInfo =
-        uniffiRustCallAsync(
-            callWithHandle { uniffiHandle ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_companionsession_install_webapp(
-                    uniffiHandle,
-                    FfiConverterString.lower(`deviceId`),
-                    FfiConverterString.lower(`archivePath`),
-                    FfiConverterOptionalString.lower(`provenance`),
-                    FfiConverterOptionalString.lower(`webappId`),
-                    FfiConverterOptionalString.lower(`webappName`),
-                )
-            },
-            {
-                future,
-                callback,
-                continuation,
-                ->
-                UniffiLib.ffi_bridgething_companion_rust_future_poll_rust_buffer(future, callback, continuation)
-            },
-            { future, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_complete_rust_buffer(future, continuation) },
-            { future -> UniffiLib.ffi_bridgething_companion_rust_future_free_rust_buffer(future) },
-            // lift function
-            { FfiConverterTypeWebappInfo.lift(it) },
-            // Error FFI converter
-            CompanionException.ErrorHandler,
-        )
+    override suspend fun `installWebapp`(`deviceId`: kotlin.String, `archivePath`: kotlin.String, `provenance`: kotlin.String?, `webappId`: kotlin.String?, `webappName`: kotlin.String?) : WebappInfo {
+        return uniffiRustCallAsync(
+        callWithHandle { uniffiHandle ->
+            UniffiLib.uniffi_bridgething_companion_fn_method_companionsession_install_webapp(
+                uniffiHandle,
+                
+        FfiConverterString.lower(`deviceId`),
+        FfiConverterString.lower(`archivePath`),
+        FfiConverterOptionalString.lower(`provenance`),
+        FfiConverterOptionalString.lower(`webappId`),
+        FfiConverterOptionalString.lower(`webappName`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.ffi_bridgething_companion_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeWebappInfo.lift(it) },
+        // Error FFI converter
+        CompanionException.ErrorHandler,
+    )
+    }
 
     
     @Throws(CompanionException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `installWebappFromUrl`(
-        `deviceId`: kotlin.String,
-        `request`: WebappInstallRequest,
-        `sink`: WebappBundleSink?,
-    ): WebappInfo =
-        uniffiRustCallAsync(
-            callWithHandle { uniffiHandle ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_companionsession_install_webapp_from_url(
-                    uniffiHandle,
-                    FfiConverterString.lower(`deviceId`),
-                    FfiConverterTypeWebappInstallRequest.lower(`request`),
-                    FfiConverterOptionalTypeWebappBundleSink.lower(`sink`),
-                )
-            },
-            {
-                future,
-                callback,
-                continuation,
-                ->
-                UniffiLib.ffi_bridgething_companion_rust_future_poll_rust_buffer(future, callback, continuation)
-            },
-            { future, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_complete_rust_buffer(future, continuation) },
-            { future -> UniffiLib.ffi_bridgething_companion_rust_future_free_rust_buffer(future) },
-            // lift function
-            { FfiConverterTypeWebappInfo.lift(it) },
-            // Error FFI converter
-            CompanionException.ErrorHandler,
-        )
+    override suspend fun `installWebappFromUrl`(`deviceId`: kotlin.String, `request`: WebappInstallRequest, `sink`: WebappBundleSink?) : WebappInfo {
+        return uniffiRustCallAsync(
+        callWithHandle { uniffiHandle ->
+            UniffiLib.uniffi_bridgething_companion_fn_method_companionsession_install_webapp_from_url(
+                uniffiHandle,
+                
+        FfiConverterString.lower(`deviceId`),
+        FfiConverterTypeWebappInstallRequest.lower(`request`),
+        FfiConverterOptionalTypeWebappBundleSink.lower(`sink`),
+            )
+        },
+        { future, callback, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_poll_rust_buffer(future, callback, continuation) },
+        { future, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_complete_rust_buffer(future, continuation) },
+        { future -> UniffiLib.ffi_bridgething_companion_rust_future_free_rust_buffer(future) },
+        // lift function
+        { FfiConverterTypeWebappInfo.lift(it) },
+        // Error FFI converter
+        CompanionException.ErrorHandler,
+    )
+    }
 
     
     @Throws(CompanionException::class)
@@ -10622,17 +9779,17 @@ open class CompanionSession: Disposable, AutoCloseable, CompanionSessionInterfac
     )
     }
 
+    
     @Throws(CompanionException::class)
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
-    override suspend fun `setLauncherGesture`(
-        `deviceId`: kotlin.String,
-        `gesture`: LauncherGesture,
-    ) = uniffiRustCallAsync(
+    override suspend fun `setLauncherGesture`(`deviceId`: kotlin.String, `gesture`: LauncherGesture) {
+        return uniffiRustCallAsync(
         callWithHandle { uniffiHandle ->
             UniffiLib.uniffi_bridgething_companion_fn_method_companionsession_set_launcher_gesture(
                 uniffiHandle,
-                FfiConverterString.lower(`deviceId`),
-                FfiConverterTypeLauncherGesture.lower(`gesture`),
+                
+        FfiConverterString.lower(`deviceId`),
+        FfiConverterTypeLauncherGesture.lower(`gesture`),
             )
         },
         { future, callback, continuation -> UniffiLib.ffi_bridgething_companion_rust_future_poll_void(future, callback, continuation) },
@@ -10640,10 +9797,13 @@ open class CompanionSession: Disposable, AutoCloseable, CompanionSessionInterfac
         { future -> UniffiLib.ffi_bridgething_companion_rust_future_free_void(future) },
         // lift function
         { Unit },
+        
         // Error FFI converter
         CompanionException.ErrorHandler,
     )
+    }
 
+    
     @Suppress("ASSIGNED_BUT_NEVER_ACCESSED_VARIABLE")
     override suspend fun `setOtaPollConfig`(`config`: OtaPollConfig?) {
         return uniffiRustCallAsync(
@@ -11512,9 +10672,20 @@ internal object uniffiCallbackInterfaceConnectivityMonitor {
     internal object `start`: UniffiCallbackInterfaceConnectivityMonitorMethod0 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeConnectivityMonitor.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypeConnectivityInbox.lift(`inbox`),
+                )
+            }
+            val writeReturn = { _: Unit -> Unit }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+    internal object `stop`: UniffiCallbackInterfaceConnectivityMonitorMethod1 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeConnectivityMonitor.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`stop`(
                 )
             }
             val writeReturn = { _: Unit -> Unit }
@@ -11825,7 +10996,7 @@ internal object uniffiCallbackInterfaceDeviceWaker {
     internal object `wakeDevice`: UniffiCallbackInterfaceDeviceWakerMethod0 {
         override fun callback(`uniffiHandle`: Long,`reason`: RustBuffer.ByValue,`allowPlayTap`: Byte,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeDeviceWaker.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`wakeDevice`(
                     FfiConverterTypeWakeReason.lift(`reason`),
                     FfiConverterBoolean.lift(`allowPlayTap`),
@@ -12491,7 +11662,7 @@ internal object uniffiCallbackInterfaceExtensionHost {
     internal object `start`: UniffiCallbackInterfaceExtensionHostMethod0 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeExtensionHost.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypeExtensionHostInbox.lift(`inbox`),
                 )
@@ -12500,31 +11671,21 @@ internal object uniffiCallbackInterfaceExtensionHost {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `stop` : UniffiCallbackInterfaceExtensionHostMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `stop`: UniffiCallbackInterfaceExtensionHostMethod1 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeExtensionHost.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stop`() }
+            val makeCall = { ->
+                uniffiObj.`stop`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `deliver` : UniffiCallbackInterfaceExtensionHostMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `device`: RustBuffer.ByValue,
-            `webapp`: RustBuffer.ByValue,
-            `message`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `deliver`: UniffiCallbackInterfaceExtensionHostMethod2 {
+        override fun callback(`uniffiHandle`: Long,`device`: RustBuffer.ByValue,`webapp`: RustBuffer.ByValue,`message`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeExtensionHost.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`deliver`(
                     FfiConverterString.lift(`device`),
                     FfiConverterString.lift(`webapp`),
@@ -12535,19 +11696,10 @@ internal object uniffiCallbackInterfaceExtensionHost {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `deviceConnected` : UniffiCallbackInterfaceExtensionHostMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `device`: RustBuffer.ByValue,
-            `name`: RustBuffer.ByValue,
-            `config`: RustBuffer.ByValue,
-            `webapps`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `deviceConnected`: UniffiCallbackInterfaceExtensionHostMethod3 {
+        override fun callback(`uniffiHandle`: Long,`device`: RustBuffer.ByValue,`name`: RustBuffer.ByValue,`config`: RustBuffer.ByValue,`webapps`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeExtensionHost.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`deviceConnected`(
                     FfiConverterString.lift(`device`),
                     FfiConverterString.lift(`name`),
@@ -12559,16 +11711,10 @@ internal object uniffiCallbackInterfaceExtensionHost {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `deviceDisconnected` : UniffiCallbackInterfaceExtensionHostMethod4 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `device`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `deviceDisconnected`: UniffiCallbackInterfaceExtensionHostMethod4 {
+        override fun callback(`uniffiHandle`: Long,`device`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeExtensionHost.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`deviceDisconnected`(
                     FfiConverterString.lift(`device`),
                 )
@@ -12577,18 +11723,10 @@ internal object uniffiCallbackInterfaceExtensionHost {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `deviceActive` : UniffiCallbackInterfaceExtensionHostMethod5 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `device`: RustBuffer.ByValue,
-            `webapp`: RustBuffer.ByValue,
-            `active`: Byte,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `deviceActive`: UniffiCallbackInterfaceExtensionHostMethod5 {
+        override fun callback(`uniffiHandle`: Long,`device`: RustBuffer.ByValue,`webapp`: RustBuffer.ByValue,`active`: Byte,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeExtensionHost.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`deviceActive`(
                     FfiConverterString.lift(`device`),
                     FfiConverterString.lift(`webapp`),
@@ -12599,19 +11737,10 @@ internal object uniffiCallbackInterfaceExtensionHost {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `configChanged` : UniffiCallbackInterfaceExtensionHostMethod6 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `device`: RustBuffer.ByValue,
-            `webapp`: RustBuffer.ByValue,
-            `key`: RustBuffer.ByValue,
-            `value`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `configChanged`: UniffiCallbackInterfaceExtensionHostMethod6 {
+        override fun callback(`uniffiHandle`: Long,`device`: RustBuffer.ByValue,`webapp`: RustBuffer.ByValue,`key`: RustBuffer.ByValue,`value`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeExtensionHost.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`configChanged`(
                     FfiConverterString.lift(`device`),
                     FfiConverterString.lift(`webapp`),
@@ -12624,7 +11753,7 @@ internal object uniffiCallbackInterfaceExtensionHost {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeExtensionHost.handleMap.remove(handle)
         }
@@ -13613,7 +12742,7 @@ internal object uniffiCallbackInterfaceGeoProvider {
     internal object `start`: UniffiCallbackInterfaceGeoProviderMethod1 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypeGeoInbox.lift(`inbox`),
                 )
@@ -13622,29 +12751,21 @@ internal object uniffiCallbackInterfaceGeoProvider {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `stop` : UniffiCallbackInterfaceGeoProviderMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `stop`: UniffiCallbackInterfaceGeoProviderMethod2 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stop`() }
+            val makeCall = { ->
+                uniffiObj.`stop`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `configure` : UniffiCallbackInterfaceGeoProviderMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `accuracy`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `configure`: UniffiCallbackInterfaceGeoProviderMethod3 {
+        override fun callback(`uniffiHandle`: Long,`accuracy`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`configure`(
                     FfiConverterTypeGeoAccuracy.lift(`accuracy`),
                 )
@@ -13653,73 +12774,63 @@ internal object uniffiCallbackInterfaceGeoProvider {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `requestAuthorization` : UniffiCallbackInterfaceGeoProviderMethod4 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `requestAuthorization`: UniffiCallbackInterfaceGeoProviderMethod4 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`requestAuthorization`() }
+            val makeCall = { ->
+                uniffiObj.`requestAuthorization`(
+                )
+            }
+            val writeReturn = { _: Unit -> Unit }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+    internal object `startUpdating`: UniffiCallbackInterfaceGeoProviderMethod5 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`startUpdating`(
+                )
+            }
+            val writeReturn = { _: Unit -> Unit }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+    internal object `stopUpdating`: UniffiCallbackInterfaceGeoProviderMethod6 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`stopUpdating`(
+                )
+            }
+            val writeReturn = { _: Unit -> Unit }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+    internal object `requestOnce`: UniffiCallbackInterfaceGeoProviderMethod7 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`requestOnce`(
+                )
+            }
+            val writeReturn = { _: Unit -> Unit }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+    internal object `cancelOnce`: UniffiCallbackInterfaceGeoProviderMethod8 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`cancelOnce`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
 
-    internal object `startUpdating` : UniffiCallbackInterfaceGeoProviderMethod5 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`startUpdating`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `stopUpdating` : UniffiCallbackInterfaceGeoProviderMethod6 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stopUpdating`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `requestOnce` : UniffiCallbackInterfaceGeoProviderMethod7 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`requestOnce`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `cancelOnce` : UniffiCallbackInterfaceGeoProviderMethod8 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeGeoProvider.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`cancelOnce`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeGeoProvider.handleMap.remove(handle)
         }
@@ -14197,18 +13308,15 @@ public object FfiConverterTypeHostEnvironment: FfiConverter<HostEnvironment, Lon
 
 
 public interface HttpDownloadSinkInterface {
+    
     fun `onChunk`(`chunk`: kotlin.ByteArray): kotlin.Boolean
-
+    
     fun `onFailed`(`reason`: kotlin.String)
     
     fun `onFinished`()
-
-    fun `onResponse`(
-        `status`: kotlin.UShort,
-        `headers`: List<HttpHeader>,
-        `contentLength`: kotlin.ULong?,
-    ): kotlin.Boolean
-
+    
+    fun `onResponse`(`status`: kotlin.UShort, `headers`: List<HttpHeader>, `contentLength`: kotlin.ULong?): kotlin.Boolean
+    
     companion object
 }
 
@@ -14313,58 +13421,19 @@ open class HttpDownloadSink: Disposable, AutoCloseable, HttpDownloadSinkInterfac
         }
     }
 
-    override fun `onChunk`(`chunk`: kotlin.ByteArray): kotlin.Boolean =
-        FfiConverterBoolean.lift(
-            callWithHandle {
-                uniffiRustCall { _status ->
-                    UniffiLib.uniffi_bridgething_companion_fn_method_httpdownloadsink_on_chunk(
-                        it,
-                        FfiConverterByteArray.lower(`chunk`),
-                        _status,
-                    )
-                }
-            },
-        )
-
-    override fun `onFailed`(`reason`: kotlin.String) =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_httpdownloadsink_on_failed(
-                    it,
-                    FfiConverterString.lower(`reason`),
-                    _status,
-                )
-            }
-        }
-
-    override fun `onFinished`() =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_httpdownloadsink_on_finished(
-                    it,
-                    _status,
-                )
-            }
-        }
-
-    override fun `onResponse`(
-        `status`: kotlin.UShort,
-        `headers`: List<HttpHeader>,
-        `contentLength`: kotlin.ULong?,
-    ): kotlin.Boolean =
-        FfiConverterBoolean.lift(
-            callWithHandle {
-                uniffiRustCall { _status ->
-                    UniffiLib.uniffi_bridgething_companion_fn_method_httpdownloadsink_on_response(
-                        it,
-                        FfiConverterUShort.lower(`status`),
-                        FfiConverterSequenceTypeHttpHeader.lower(`headers`),
-                        FfiConverterOptionalULong.lower(`contentLength`),
-                        _status,
-                    )
-                }
-            },
-        )
+    override fun `onChunk`(`chunk`: kotlin.ByteArray): kotlin.Boolean {
+            return FfiConverterBoolean.lift(
+    callWithHandle {
+    uniffiRustCall() { _status ->
+    UniffiLib.uniffi_bridgething_companion_fn_method_httpdownloadsink_on_chunk(
+        it,
+        
+        FfiConverterByteArray.lower(`chunk`),_status)
+}
+    }
+    )
+    }
+    
 
     override fun `onFailed`(`reason`: kotlin.String)
         = 
@@ -14970,7 +14039,7 @@ internal object uniffiCallbackInterfaceHttpTransport {
     internal object `execute`: UniffiCallbackInterfaceHttpTransportMethod0 {
         override fun callback(`uniffiHandle`: Long,`request`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeHttpTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`execute`(
                     FfiConverterTypeHttpRequest.lift(`request`),
                     FfiConverterTypeHttpSink.lift(`sink`),
@@ -14980,17 +14049,10 @@ internal object uniffiCallbackInterfaceHttpTransport {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `download` : UniffiCallbackInterfaceHttpTransportMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `request`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `download`: UniffiCallbackInterfaceHttpTransportMethod1 {
+        override fun callback(`uniffiHandle`: Long,`request`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeHttpTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`download`(
                     FfiConverterTypeHttpRequest.lift(`request`),
                     FfiConverterTypeHttpDownloadSink.lift(`sink`),
@@ -15001,7 +14063,7 @@ internal object uniffiCallbackInterfaceHttpTransport {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeHttpTransport.handleMap.remove(handle)
         }
@@ -15306,7 +14368,7 @@ internal object uniffiCallbackInterfaceImageScaler {
     internal object `downsampleJpeg`: UniffiCallbackInterfaceImageScalerMethod0 {
         override fun callback(`uniffiHandle`: Long,`bytes`: RustBuffer.ByValue,`maxEdge`: Int,`quality`: Float,`uniffiOutReturn`: RustBuffer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeImageScaler.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`downsampleJpeg`(
                     FfiConverterByteArray.lift(`bytes`),
                     FfiConverterUInt.lift(`maxEdge`),
@@ -16038,7 +15100,7 @@ internal object uniffiCallbackInterfaceLinkTransport {
     internal object `start`: UniffiCallbackInterfaceLinkTransportMethod1 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeLinkTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypeLinkInbox.lift(`inbox`),
                 )
@@ -16047,30 +15109,21 @@ internal object uniffiCallbackInterfaceLinkTransport {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `stop` : UniffiCallbackInterfaceLinkTransportMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `stop`: UniffiCallbackInterfaceLinkTransportMethod2 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeLinkTransport.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stop`() }
+            val makeCall = { ->
+                uniffiObj.`stop`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `send` : UniffiCallbackInterfaceLinkTransportMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `deviceId`: RustBuffer.ByValue,
-            `batch`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `send`: UniffiCallbackInterfaceLinkTransportMethod3 {
+        override fun callback(`uniffiHandle`: Long,`deviceId`: RustBuffer.ByValue,`batch`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeLinkTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`send`(
                     FfiConverterString.lift(`deviceId`),
                     FfiConverterByteArray.lift(`batch`),
@@ -16080,16 +15133,10 @@ internal object uniffiCallbackInterfaceLinkTransport {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `disconnect` : UniffiCallbackInterfaceLinkTransportMethod4 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `deviceId`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `disconnect`: UniffiCallbackInterfaceLinkTransportMethod4 {
+        override fun callback(`uniffiHandle`: Long,`deviceId`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeLinkTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`disconnect`(
                     FfiConverterString.lift(`deviceId`),
                 )
@@ -16098,16 +15145,10 @@ internal object uniffiCallbackInterfaceLinkTransport {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `reconnect` : UniffiCallbackInterfaceLinkTransportMethod5 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `deviceId`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `reconnect`: UniffiCallbackInterfaceLinkTransportMethod5 {
+        override fun callback(`uniffiHandle`: Long,`deviceId`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeLinkTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`reconnect`(
                     FfiConverterString.lift(`deviceId`),
                 )
@@ -16117,7 +15158,7 @@ internal object uniffiCallbackInterfaceLinkTransport {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeLinkTransport.handleMap.remove(handle)
         }
@@ -16682,7 +15723,7 @@ internal object uniffiCallbackInterfaceLogSink {
     internal object `onLine`: UniffiCallbackInterfaceLogSinkMethod0 {
         override fun callback(`uniffiHandle`: Long,`level`: RustBuffer.ByValue,`target`: RustBuffer.ByValue,`message`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeLogSink.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`onLine`(
                     FfiConverterTypeLogLevel.lift(`level`),
                     FfiConverterString.lift(`target`),
@@ -17728,7 +16769,7 @@ internal object uniffiCallbackInterfaceMediaSessionBackend {
     internal object `start`: UniffiCallbackInterfaceMediaSessionBackendMethod1 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeMediaSessionBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypeMediaSessionInbox.lift(`inbox`),
                 )
@@ -17737,29 +16778,21 @@ internal object uniffiCallbackInterfaceMediaSessionBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `stop` : UniffiCallbackInterfaceMediaSessionBackendMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `stop`: UniffiCallbackInterfaceMediaSessionBackendMethod2 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeMediaSessionBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stop`() }
+            val makeCall = { ->
+                uniffiObj.`stop`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `snapshotAll` : UniffiCallbackInterfaceMediaSessionBackendMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `snapshotAll`: UniffiCallbackInterfaceMediaSessionBackendMethod3 {
+        override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeMediaSessionBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`snapshotAll`(
                     FfiConverterTypeMediaSnapshotSink.lift(`sink`),
                 )
@@ -17768,17 +16801,10 @@ internal object uniffiCallbackInterfaceMediaSessionBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `control` : UniffiCallbackInterfaceMediaSessionBackendMethod4 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `package`: RustBuffer.ByValue,
-            `cmd`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `control`: UniffiCallbackInterfaceMediaSessionBackendMethod4 {
+        override fun callback(`uniffiHandle`: Long,`package`: RustBuffer.ByValue,`cmd`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeMediaSessionBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`control`(
                     FfiConverterString.lift(`package`),
                     FfiConverterTypeMediaControl.lift(`cmd`),
@@ -17788,18 +16814,10 @@ internal object uniffiCallbackInterfaceMediaSessionBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `art` : UniffiCallbackInterfaceMediaSessionBackendMethod5 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `package`: RustBuffer.ByValue,
-            `token`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `art`: UniffiCallbackInterfaceMediaSessionBackendMethod5 {
+        override fun callback(`uniffiHandle`: Long,`package`: RustBuffer.ByValue,`token`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeMediaSessionBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`art`(
                     FfiConverterString.lift(`package`),
                     FfiConverterString.lift(`token`),
@@ -17811,7 +16829,7 @@ internal object uniffiCallbackInterfaceMediaSessionBackend {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeMediaSessionBackend.handleMap.remove(handle)
         }
@@ -18628,7 +17646,7 @@ internal object uniffiCallbackInterfaceModelArtifactValidator {
     internal object `validate`: UniffiCallbackInterfaceModelArtifactValidatorMethod0 {
         override fun callback(`uniffiHandle`: Long,`kind`: RustBuffer.ByValue,`path`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeModelArtifactValidator.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`validate`(
                     FfiConverterTypeModelArtifactKind.lift(`kind`),
                     FfiConverterString.lift(`path`),
@@ -18973,7 +17991,7 @@ internal object uniffiCallbackInterfaceNluModelRunner {
     internal object `predict`: UniffiCallbackInterfaceNluModelRunnerMethod1 {
         override fun callback(`uniffiHandle`: Long,`inputIds`: RustBuffer.ByValue,`attentionMask`: RustBuffer.ByValue,`uniffiOutReturn`: RustBuffer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeNluModelRunner.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`predict`(
                     FfiConverterSequenceInt.lift(`inputIds`),
                     FfiConverterSequenceInt.lift(`attentionMask`),
@@ -19337,7 +18355,7 @@ internal object uniffiCallbackInterfaceNotificationBackend {
     internal object `start`: UniffiCallbackInterfaceNotificationBackendMethod0 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeNotificationBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypeNotificationInbox.lift(`inbox`),
                 )
@@ -19346,30 +18364,21 @@ internal object uniffiCallbackInterfaceNotificationBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `stop` : UniffiCallbackInterfaceNotificationBackendMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `stop`: UniffiCallbackInterfaceNotificationBackendMethod1 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeNotificationBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stop`() }
+            val makeCall = { ->
+                uniffiObj.`stop`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `invokePositive` : UniffiCallbackInterfaceNotificationBackendMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `id`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `invokePositive`: UniffiCallbackInterfaceNotificationBackendMethod2 {
+        override fun callback(`uniffiHandle`: Long,`id`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeNotificationBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`invokePositive`(
                     FfiConverterString.lift(`id`),
                     FfiConverterTypeActionSink.lift(`sink`),
@@ -19379,17 +18388,10 @@ internal object uniffiCallbackInterfaceNotificationBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `invokeNegative` : UniffiCallbackInterfaceNotificationBackendMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `id`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `invokeNegative`: UniffiCallbackInterfaceNotificationBackendMethod3 {
+        override fun callback(`uniffiHandle`: Long,`id`: RustBuffer.ByValue,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeNotificationBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`invokeNegative`(
                     FfiConverterString.lift(`id`),
                     FfiConverterTypeActionSink.lift(`sink`),
@@ -19400,7 +18402,7 @@ internal object uniffiCallbackInterfaceNotificationBackend {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeNotificationBackend.handleMap.remove(handle)
         }
@@ -20411,7 +19413,7 @@ internal object uniffiCallbackInterfacePhoneBackend {
     internal object `start`: UniffiCallbackInterfacePhoneBackendMethod0 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypePhoneBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypePhoneInbox.lift(`inbox`),
                 )
@@ -20420,29 +19422,21 @@ internal object uniffiCallbackInterfacePhoneBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `stop` : UniffiCallbackInterfacePhoneBackendMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `stop`: UniffiCallbackInterfacePhoneBackendMethod1 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypePhoneBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stop`() }
+            val makeCall = { ->
+                uniffiObj.`stop`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `command` : UniffiCallbackInterfacePhoneBackendMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `cmd`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `command`: UniffiCallbackInterfacePhoneBackendMethod2 {
+        override fun callback(`uniffiHandle`: Long,`cmd`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypePhoneBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`command`(
                     FfiConverterTypePhoneCommand.lift(`cmd`),
                 )
@@ -20451,16 +19445,10 @@ internal object uniffiCallbackInterfacePhoneBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `stateGet` : UniffiCallbackInterfacePhoneBackendMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `stateGet`: UniffiCallbackInterfacePhoneBackendMethod3 {
+        override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypePhoneBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`stateGet`(
                     FfiConverterTypePhoneStateSink.lift(`sink`),
                 )
@@ -20470,7 +19458,7 @@ internal object uniffiCallbackInterfacePhoneBackend {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypePhoneBackend.handleMap.remove(handle)
         }
@@ -21692,7 +20680,7 @@ internal object uniffiCallbackInterfaceSecretStore {
     internal object `get`: UniffiCallbackInterfaceSecretStoreMethod0 {
         override fun callback(`uniffiHandle`: Long,`key`: RustBuffer.ByValue,`uniffiOutReturn`: RustBuffer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeSecretStore.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`get`(
                     FfiConverterString.lift(`key`),
                 )
@@ -21704,7 +20692,7 @@ internal object uniffiCallbackInterfaceSecretStore {
     internal object `set`: UniffiCallbackInterfaceSecretStoreMethod1 {
         override fun callback(`uniffiHandle`: Long,`key`: RustBuffer.ByValue,`value`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeSecretStore.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`set`(
                     FfiConverterString.lift(`key`),
                     FfiConverterString.lift(`value`),
@@ -21717,7 +20705,7 @@ internal object uniffiCallbackInterfaceSecretStore {
     internal object `remove`: UniffiCallbackInterfaceSecretStoreMethod2 {
         override fun callback(`uniffiHandle`: Long,`key`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeSecretStore.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`remove`(
                     FfiConverterString.lift(`key`),
                 )
@@ -21729,7 +20717,7 @@ internal object uniffiCallbackInterfaceSecretStore {
     internal object `getBlob`: UniffiCallbackInterfaceSecretStoreMethod3 {
         override fun callback(`uniffiHandle`: Long,`key`: RustBuffer.ByValue,`uniffiOutReturn`: RustBuffer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeSecretStore.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`getBlob`(
                     FfiConverterString.lift(`key`),
                 )
@@ -22043,7 +21031,7 @@ internal object uniffiCallbackInterfaceSessionEventSink {
     internal object `onEvent`: UniffiCallbackInterfaceSessionEventSinkMethod0 {
         override fun callback(`uniffiHandle`: Long,`event`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeSessionEventSink.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`onEvent`(
                     FfiConverterTypeSessionEvent.lift(`event`),
                 )
@@ -22640,7 +21628,7 @@ internal object uniffiCallbackInterfaceSpeechRecognizer {
     internal object `prepare`: UniffiCallbackInterfaceSpeechRecognizerMethod0 {
         override fun callback(`uniffiHandle`: Long,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeSpeechRecognizer.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`prepare`(
                     FfiConverterTypePrepareSink.lift(`sink`),
                 )
@@ -22649,18 +21637,10 @@ internal object uniffiCallbackInterfaceSpeechRecognizer {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `transcribe` : UniffiCallbackInterfaceSpeechRecognizerMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `pcm`: RustBuffer.ByValue,
-            `sampleRateHz`: Int,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `transcribe`: UniffiCallbackInterfaceSpeechRecognizerMethod1 {
+        override fun callback(`uniffiHandle`: Long,`pcm`: RustBuffer.ByValue,`sampleRateHz`: Int,`sink`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeSpeechRecognizer.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`transcribe`(
                     FfiConverterSequenceFloat.lift(`pcm`),
                     FfiConverterUInt.lift(`sampleRateHz`),
@@ -22672,7 +21652,7 @@ internal object uniffiCallbackInterfaceSpeechRecognizer {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeSpeechRecognizer.handleMap.remove(handle)
         }
@@ -22831,759 +21811,6 @@ public object FfiConverterTypeSpeechRecognizer: FfiConverter<SpeechRecognizer, L
 // [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
 //
 
-public interface StreamBackend {
-    fun `appBundle`(): kotlin.String
-
-    fun `play`(
-        `source`: StreamSource,
-        `sink`: StreamSink,
-    )
-
-    fun `present`(`presentation`: StreamPresentation)
-
-    fun `pause`()
-
-    fun `resume`()
-
-    fun `seekTo`(`positionMs`: kotlin.UInt)
-
-    fun `stop`()
-
-    companion object
-}
-
-open class StreamBackendImpl :
-    Disposable,
-    AutoCloseable,
-    StreamBackend {
-    /**
-     * @suppress
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(withHandle: UniffiWithHandle, handle: Long) {
-        this.handle = handle
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(handle))
-    }
-
-    /**
-     * @suppress
-     *
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noHandle: NoHandle) {
-        this.handle = 0
-        this.cleanable = null
-    }
-
-    protected val handle: Long
-    protected val cleanable: UniffiCleaner.Cleanable?
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    /**
-     * Whether the current object has been destroyed and its reference is gone in the Rust side.
-     */
-    val uniffiIsDestroyed: Boolean get() = wasDestroyed.get()
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable?.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithHandle(block: (handle: Long) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (!this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the handle being freed concurrently.
-        try {
-            return block(this.uniffiCloneHandle())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable?.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(
-        private val handle: Long,
-    ) : Runnable {
-        override fun run() {
-            if (handle == 0.toLong()) {
-                // Fake object created with `NoHandle`, don't try to free.
-                return
-            }
-            uniffiRustCall { status ->
-                UniffiLib.uniffi_bridgething_companion_fn_free_streambackend(handle, status)
-            }
-        }
-    }
-
-    /**
-     * @suppress
-     */
-    fun uniffiCloneHandle(): Long {
-        if (handle == 0.toLong()) {
-            throw InternalException("uniffiCloneHandle() called on NoHandle object")
-        }
-        return uniffiRustCall { status ->
-            UniffiLib.uniffi_bridgething_companion_fn_clone_streambackend(handle, status)
-        }
-    }
-
-    override fun `appBundle`(): kotlin.String =
-        FfiConverterString.lift(
-            callWithHandle {
-                uniffiRustCall { _status ->
-                    UniffiLib.uniffi_bridgething_companion_fn_method_streambackend_app_bundle(
-                        it,
-                        _status,
-                    )
-                }
-            },
-        )
-
-    override fun `play`(
-        `source`: StreamSource,
-        `sink`: StreamSink,
-    ) = callWithHandle {
-        uniffiRustCall { _status ->
-            UniffiLib.uniffi_bridgething_companion_fn_method_streambackend_play(
-                it,
-                FfiConverterTypeStreamSource.lower(`source`),
-                FfiConverterTypeStreamSink.lower(`sink`),
-                _status,
-            )
-        }
-    }
-
-    override fun `present`(`presentation`: StreamPresentation) =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_streambackend_present(
-                    it,
-                    FfiConverterTypeStreamPresentation.lower(`presentation`),
-                    _status,
-                )
-            }
-        }
-
-    override fun `pause`() =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_streambackend_pause(
-                    it,
-                    _status,
-                )
-            }
-        }
-
-    override fun `resume`() =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_streambackend_resume(
-                    it,
-                    _status,
-                )
-            }
-        }
-
-    override fun `seekTo`(`positionMs`: kotlin.UInt) =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_streambackend_seek_to(
-                    it,
-                    FfiConverterUInt.lower(`positionMs`),
-                    _status,
-                )
-            }
-        }
-
-    override fun `stop`() =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_streambackend_stop(
-                    it,
-                    _status,
-                )
-            }
-        }
-
-    /**
-     * @suppress
-     */
-    companion object
-}
-
-// Put the implementation in an object so we don't pollute the top-level namespace
-internal object uniffiCallbackInterfaceStreamBackend {
-    internal object `appBundle` : UniffiCallbackInterfaceStreamBackendMethod0 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: RustBuffer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeStreamBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`appBundle`() }
-            val writeReturn = { value: kotlin.String -> uniffiOutReturn.setValue(FfiConverterString.lower(value)) }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `play` : UniffiCallbackInterfaceStreamBackendMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `source`: RustBuffer.ByValue,
-            `sink`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeStreamBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
-                uniffiObj.`play`(
-                    FfiConverterTypeStreamSource.lift(`source`),
-                    FfiConverterTypeStreamSink.lift(`sink`),
-                )
-            }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `present` : UniffiCallbackInterfaceStreamBackendMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `presentation`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeStreamBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
-                uniffiObj.`present`(
-                    FfiConverterTypeStreamPresentation.lift(`presentation`),
-                )
-            }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `pause` : UniffiCallbackInterfaceStreamBackendMethod3 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeStreamBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`pause`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `resume` : UniffiCallbackInterfaceStreamBackendMethod4 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeStreamBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`resume`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `seekTo` : UniffiCallbackInterfaceStreamBackendMethod5 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `positionMs`: Int,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeStreamBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
-                uniffiObj.`seekTo`(
-                    FfiConverterUInt.lift(`positionMs`),
-                )
-            }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `stop` : UniffiCallbackInterfaceStreamBackendMethod6 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeStreamBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`stop`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
-        override fun callback(handle: Long) {
-            FfiConverterTypeStreamBackend.handleMap.remove(handle)
-        }
-    }
-
-    internal object uniffiClone : UniffiCallbackInterfaceClone {
-        override fun callback(handle: Long): Long = FfiConverterTypeStreamBackend.handleMap.clone(handle)
-    }
-
-    internal var vtable =
-        UniffiVTableCallbackInterfaceStreamBackend.UniffiByValue(
-            uniffiFree,
-            uniffiClone,
-            `appBundle`,
-            `play`,
-            `present`,
-            `pause`,
-            `resume`,
-            `seekTo`,
-            `stop`,
-        )
-
-    // Registers the foreign callback with the Rust side.
-    // This method is generated for each callback interface.
-    internal fun register(lib: UniffiLib) {
-        lib.uniffi_bridgething_companion_fn_init_callback_vtable_streambackend(vtable)
-    }
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeStreamBackend : FfiConverter<StreamBackend, Long> {
-    internal val handleMap = UniffiHandleMap<StreamBackend>()
-
-    override fun lower(value: StreamBackend): Long {
-        if (value is StreamBackendImpl) {
-            // Rust-implemented object.  Clone the handle and return it
-            return value.uniffiCloneHandle()
-        } else {
-            // Kotlin object, generate a new vtable handle and return that.
-            return handleMap.insert(value)
-        }
-    }
-
-    override fun lift(value: Long): StreamBackend {
-        if ((value and 1.toLong()) == 0.toLong()) {
-            // Rust-generated handle, construct a new class that uses the handle to implement the
-            // interface
-            return StreamBackendImpl(UniffiWithHandle, value)
-        } else {
-            // Kotlin-generated handle, get the object from the handle map
-            return handleMap.remove(value)
-        }
-    }
-
-    override fun read(buf: ByteBuffer): StreamBackend = lift(buf.getLong())
-
-    override fun allocationSize(value: StreamBackend) = 8UL
-
-    override fun write(
-        value: StreamBackend,
-        buf: ByteBuffer,
-    ) {
-        buf.putLong(lower(value))
-    }
-}
-
-// This template implements a class for working with a Rust struct via a handle
-// to the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque handle to the underlying Rust struct.
-//     Method calls need to read this handle from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its handle should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the handle, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the handle, but is interrupted
-//      before it can pass the handle over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read handle value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-public interface StreamSinkInterface {
-    fun `onMetadata`(`metadata`: StreamMetadata)
-
-    fun `onStatus`(`status`: StreamStatus)
-
-    fun `onTiming`(`timing`: StreamTiming)
-
-    companion object
-}
-
-open class StreamSink :
-    Disposable,
-    AutoCloseable,
-    StreamSinkInterface {
-    /**
-     * @suppress
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(withHandle: UniffiWithHandle, handle: Long) {
-        this.handle = handle
-        this.cleanable = UniffiLib.CLEANER.register(this, UniffiCleanAction(handle))
-    }
-
-    /**
-     * @suppress
-     *
-     * This constructor can be used to instantiate a fake object. Only used for tests. Any
-     * attempt to actually use an object constructed this way will fail as there is no
-     * connected Rust object.
-     */
-    @Suppress("UNUSED_PARAMETER")
-    constructor(noHandle: NoHandle) {
-        this.handle = 0
-        this.cleanable = null
-    }
-
-    protected val handle: Long
-    protected val cleanable: UniffiCleaner.Cleanable?
-
-    private val wasDestroyed = AtomicBoolean(false)
-    private val callCounter = AtomicLong(1)
-
-    /**
-     * Whether the current object has been destroyed and its reference is gone in the Rust side.
-     */
-    val uniffiIsDestroyed: Boolean get() = wasDestroyed.get()
-
-    override fun destroy() {
-        // Only allow a single call to this method.
-        // TODO: maybe we should log a warning if called more than once?
-        if (this.wasDestroyed.compareAndSet(false, true)) {
-            // This decrement always matches the initial count of 1 given at creation time.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable?.clean()
-            }
-        }
-    }
-
-    @Synchronized
-    override fun close() {
-        this.destroy()
-    }
-
-    internal inline fun <R> callWithHandle(block: (handle: Long) -> R): R {
-        // Check and increment the call counter, to keep the object alive.
-        // This needs a compare-and-set retry loop in case of concurrent updates.
-        do {
-            val c = this.callCounter.get()
-            if (c == 0L) {
-                throw IllegalStateException("${this.javaClass.simpleName} object has already been destroyed")
-            }
-            if (c == Long.MAX_VALUE) {
-                throw IllegalStateException("${this.javaClass.simpleName} call counter would overflow")
-            }
-        } while (!this.callCounter.compareAndSet(c, c + 1L))
-        // Now we can safely do the method call without the handle being freed concurrently.
-        try {
-            return block(this.uniffiCloneHandle())
-        } finally {
-            // This decrement always matches the increment we performed above.
-            if (this.callCounter.decrementAndGet() == 0L) {
-                cleanable?.clean()
-            }
-        }
-    }
-
-    // Use a static inner class instead of a closure so as not to accidentally
-    // capture `this` as part of the cleanable's action.
-    private class UniffiCleanAction(
-        private val handle: Long,
-    ) : Runnable {
-        override fun run() {
-            if (handle == 0.toLong()) {
-                // Fake object created with `NoHandle`, don't try to free.
-                return
-            }
-            uniffiRustCall { status ->
-                UniffiLib.uniffi_bridgething_companion_fn_free_streamsink(handle, status)
-            }
-        }
-    }
-
-    /**
-     * @suppress
-     */
-    fun uniffiCloneHandle(): Long {
-        if (handle == 0.toLong()) {
-            throw InternalException("uniffiCloneHandle() called on NoHandle object")
-        }
-        return uniffiRustCall { status ->
-            UniffiLib.uniffi_bridgething_companion_fn_clone_streamsink(handle, status)
-        }
-    }
-
-    override fun `onMetadata`(`metadata`: StreamMetadata) =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_streamsink_on_metadata(
-                    it,
-                    FfiConverterTypeStreamMetadata.lower(`metadata`),
-                    _status,
-                )
-            }
-        }
-
-    override fun `onStatus`(`status`: StreamStatus) =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_streamsink_on_status(
-                    it,
-                    FfiConverterTypeStreamStatus.lower(`status`),
-                    _status,
-                )
-            }
-        }
-
-    override fun `onTiming`(`timing`: StreamTiming) =
-        callWithHandle {
-            uniffiRustCall { _status ->
-                UniffiLib.uniffi_bridgething_companion_fn_method_streamsink_on_timing(
-                    it,
-                    FfiConverterTypeStreamTiming.lower(`timing`),
-                    _status,
-                )
-            }
-        }
-
-    /**
-     * @suppress
-     */
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeStreamSink : FfiConverter<StreamSink, Long> {
-    override fun lower(value: StreamSink): Long = value.uniffiCloneHandle()
-
-    override fun lift(value: Long): StreamSink = StreamSink(UniffiWithHandle, value)
-
-    override fun read(buf: ByteBuffer): StreamSink = lift(buf.getLong())
-
-    override fun allocationSize(value: StreamSink) = 8UL
-
-    override fun write(
-        value: StreamSink,
-        buf: ByteBuffer,
-    ) {
-        buf.putLong(lower(value))
-    }
-}
-
-// This template implements a class for working with a Rust struct via a handle
-// to the live Rust struct on the other side of the FFI.
-//
-// There's some subtlety here, because we have to be careful not to operate on a Rust
-// struct after it has been dropped, and because we must expose a public API for freeing
-// theq Kotlin wrapper object in lieu of reliable finalizers. The core requirements are:
-//
-//   * Each instance holds an opaque handle to the underlying Rust struct.
-//     Method calls need to read this handle from the object's state and pass it in to
-//     the Rust FFI.
-//
-//   * When an instance is no longer needed, its handle should be passed to a
-//     special destructor function provided by the Rust FFI, which will drop the
-//     underlying Rust struct.
-//
-//   * Given an instance, calling code is expected to call the special
-//     `destroy` method in order to free it after use, either by calling it explicitly
-//     or by using a higher-level helper like the `use` method. Failing to do so risks
-//     leaking the underlying Rust struct.
-//
-//   * We can't assume that calling code will do the right thing, and must be prepared
-//     to handle Kotlin method calls executing concurrently with or even after a call to
-//     `destroy`, and to handle multiple (possibly concurrent!) calls to `destroy`.
-//
-//   * We must never allow Rust code to operate on the underlying Rust struct after
-//     the destructor has been called, and must never call the destructor more than once.
-//     Doing so may trigger memory unsafety.
-//
-//   * To mitigate many of the risks of leaking memory and use-after-free unsafety, a `Cleaner`
-//     is implemented to call the destructor when the Kotlin object becomes unreachable.
-//     This is done in a background thread. This is not a panacea, and client code should be aware that
-//      1. the thread may starve if some there are objects that have poorly performing
-//     `drop` methods or do significant work in their `drop` methods.
-//      2. the thread is shared across the whole library. This can be tuned by using `android_cleaner = true`,
-//         or `android = true` in the [`kotlin` section of the `uniffi.toml` file](https://mozilla.github.io/uniffi-rs/kotlin/configuration.html).
-//
-// If we try to implement this with mutual exclusion on access to the handle, there is the
-// possibility of a race between a method call and a concurrent call to `destroy`:
-//
-//    * Thread A starts a method call, reads the value of the handle, but is interrupted
-//      before it can pass the handle over the FFI to Rust.
-//    * Thread B calls `destroy` and frees the underlying Rust struct.
-//    * Thread A resumes, passing the already-read handle value to Rust and triggering
-//      a use-after-free.
-//
-// One possible solution would be to use a `ReadWriteLock`, with each method call taking
-// a read lock (and thus allowed to run concurrently) and the special `destroy` method
-// taking a write lock (and thus blocking on live method calls). However, we aim not to
-// generate methods with any hidden blocking semantics, and a `destroy` method that might
-// block if called incorrectly seems to meet that bar.
-//
-// So, we achieve our goals by giving each instance an associated `AtomicLong` counter to track
-// the number of in-flight method calls, and an `AtomicBoolean` flag to indicate whether `destroy`
-// has been called. These are updated according to the following rules:
-//
-//    * The initial value of the counter is 1, indicating a live object with no in-flight calls.
-//      The initial value for the flag is false.
-//
-//    * At the start of each method call, we atomically check the counter.
-//      If it is 0 then the underlying Rust struct has already been destroyed and the call is aborted.
-//      If it is nonzero them we atomically increment it by 1 and proceed with the method call.
-//
-//    * At the end of each method call, we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-//    * When `destroy` is called, we atomically flip the flag from false to true.
-//      If the flag was already true we silently fail.
-//      Otherwise we atomically decrement and check the counter.
-//      If it has reached zero then we destroy the underlying Rust struct.
-//
-// Astute readers may observe that this all sounds very similar to the way that Rust's `Arc<T>` works,
-// and indeed it is, with the addition of a flag to guard against multiple calls to `destroy`.
-//
-// The overall effect is that the underlying Rust struct is destroyed only when `destroy` has been
-// called *and* all in-flight method calls have completed, avoiding violating any of the expectations
-// of the underlying Rust code.
-//
-// This makes a cleaner a better alternative to _not_ calling `destroy()` as
-// and when the object is finished with, but the abstraction is not perfect: if the Rust object's `drop`
-// method is slow, and/or there are many objects to cleanup, and it's on a low end Android device, then the cleaner
-// thread may be starved, and the app will leak memory.
-//
-// In this case, `destroy`ing manually may be a better solution.
-//
-// The cleaner can live side by side with the manual calling of `destroy`. In the order of responsiveness, uniffi objects
-// with Rust peers are reclaimed:
-//
-// 1. By calling the `destroy` method of the object, which calls `rustObject.free()`. If that doesn't happen:
-// 2. When the object becomes unreachable, AND the Cleaner thread gets to call `rustObject.free()`. If the thread is starved then:
-// 3. The memory is reclaimed when the process terminates.
-//
-// [1] https://stackoverflow.com/questions/24376768/can-java-finalize-an-object-when-it-is-still-in-scope/24380219
-//
-
-public interface TranscriptionSinkInterface {
-    fun `complete`(`transcription`: Transcription)
-
-    fun `fail`(`reason`: kotlin.String)
 
 public interface StreamBackend {
     
@@ -25175,7 +23402,7 @@ internal object uniffiCallbackInterfaceVolumeBackend {
     internal object `start`: UniffiCallbackInterfaceVolumeBackendMethod0 {
         override fun callback(`uniffiHandle`: Long,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeVolumeBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`start`(
                     FfiConverterTypeVolumeInbox.lift(`inbox`),
                 )
@@ -25209,7 +23436,7 @@ internal object uniffiCallbackInterfaceVolumeBackend {
     internal object `setVolume`: UniffiCallbackInterfaceVolumeBackendMethod3 {
         override fun callback(`uniffiHandle`: Long,`level`: Float,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeVolumeBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`setVolume`(
                     FfiConverterFloat.lift(`level`),
                 )
@@ -25218,16 +23445,10 @@ internal object uniffiCallbackInterfaceVolumeBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `setMute` : UniffiCallbackInterfaceVolumeBackendMethod4 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `muted`: Byte,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `setMute`: UniffiCallbackInterfaceVolumeBackendMethod4 {
+        override fun callback(`uniffiHandle`: Long,`muted`: Byte,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeVolumeBackend.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`setMute`(
                     FfiConverterBoolean.lift(`muted`),
                 )
@@ -25236,47 +23457,41 @@ internal object uniffiCallbackInterfaceVolumeBackend {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `volumeUp` : UniffiCallbackInterfaceVolumeBackendMethod5 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `volumeUp`: UniffiCallbackInterfaceVolumeBackendMethod5 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeVolumeBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`volumeUp`() }
+            val makeCall = { ->
+                uniffiObj.`volumeUp`(
+                )
+            }
+            val writeReturn = { _: Unit -> Unit }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+    internal object `volumeDown`: UniffiCallbackInterfaceVolumeBackendMethod6 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeVolumeBackend.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`volumeDown`(
+                )
+            }
+            val writeReturn = { _: Unit -> Unit }
+            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
+        }
+    }
+    internal object `muteToggle`: UniffiCallbackInterfaceVolumeBackendMethod7 {
+        override fun callback(`uniffiHandle`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
+            val uniffiObj = FfiConverterTypeVolumeBackend.handleMap.get(uniffiHandle)
+            val makeCall = { ->
+                uniffiObj.`muteToggle`(
+                )
+            }
             val writeReturn = { _: Unit -> Unit }
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
 
-    internal object `volumeDown` : UniffiCallbackInterfaceVolumeBackendMethod6 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeVolumeBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`volumeDown`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object `muteToggle` : UniffiCallbackInterfaceVolumeBackendMethod7 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
-            val uniffiObj = FfiConverterTypeVolumeBackend.handleMap.get(uniffiHandle)
-            val makeCall = { uniffiObj.`muteToggle`() }
-            val writeReturn = { _: Unit -> Unit }
-            uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
-        }
-    }
-
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeVolumeBackend.handleMap.remove(handle)
         }
@@ -25840,7 +24055,7 @@ internal object uniffiCallbackInterfaceWebappBundleSink {
     internal object `installed`: UniffiCallbackInterfaceWebappBundleSinkMethod0 {
         override fun callback(`uniffiHandle`: Long,`bundle`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeWebappBundleSink.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`installed`(
                     FfiConverterString.lift(`bundle`),
                 )
@@ -26490,7 +24705,7 @@ internal object uniffiCallbackInterfaceWsTransport {
     internal object `connect`: UniffiCallbackInterfaceWsTransportMethod0 {
         override fun callback(`uniffiHandle`: Long,`connect`: RustBuffer.ByValue,`inbox`: Long,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeWsTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`connect`(
                     FfiConverterTypeWsConnect.lift(`connect`),
                     FfiConverterTypeWsInbox.lift(`inbox`),
@@ -26500,17 +24715,10 @@ internal object uniffiCallbackInterfaceWsTransport {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `send` : UniffiCallbackInterfaceWsTransportMethod1 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `id`: RustBuffer.ByValue,
-            `frame`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `send`: UniffiCallbackInterfaceWsTransportMethod1 {
+        override fun callback(`uniffiHandle`: Long,`id`: RustBuffer.ByValue,`frame`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeWsTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`send`(
                     FfiConverterString.lift(`id`),
                     FfiConverterTypeWsFrame.lift(`frame`),
@@ -26520,18 +24728,10 @@ internal object uniffiCallbackInterfaceWsTransport {
             uniffiTraitInterfaceCall(uniffiCallStatus, makeCall, writeReturn)
         }
     }
-
-    internal object `disconnect` : UniffiCallbackInterfaceWsTransportMethod2 {
-        override fun callback(
-            `uniffiHandle`: Long,
-            `id`: RustBuffer.ByValue,
-            `code`: RustBuffer.ByValue,
-            `reason`: RustBuffer.ByValue,
-            `uniffiOutReturn`: Pointer,
-            uniffiCallStatus: UniffiRustCallStatus,
-        ) {
+    internal object `disconnect`: UniffiCallbackInterfaceWsTransportMethod2 {
+        override fun callback(`uniffiHandle`: Long,`id`: RustBuffer.ByValue,`code`: RustBuffer.ByValue,`reason`: RustBuffer.ByValue,`uniffiOutReturn`: Pointer,uniffiCallStatus: UniffiRustCallStatus,) {
             val uniffiObj = FfiConverterTypeWsTransport.handleMap.get(uniffiHandle)
-            val makeCall = {
+            val makeCall = { ->
                 uniffiObj.`disconnect`(
                     FfiConverterString.lift(`id`),
                     FfiConverterOptionalUShort.lift(`code`),
@@ -26543,7 +24743,7 @@ internal object uniffiCallbackInterfaceWsTransport {
         }
     }
 
-    internal object uniffiFree : UniffiCallbackInterfaceFree {
+    internal object uniffiFree: UniffiCallbackInterfaceFree {
         override fun callback(handle: Long) {
             FfiConverterTypeWsTransport.handleMap.remove(handle)
         }
@@ -27284,56 +25484,86 @@ public object FfiConverterTypeCommunicationsState: FfiConverterRustBuffer<Commun
     }
 }
 
-data class CompanionBackends(
-    var `link`: LinkTransport?,
-    var `host`: HostEnvironment,
-    var `http`: HttpTransport,
-    var `ws`: WsTransport,
-    var `secrets`: SecretStore,
-    var `log`: LogSink,
-    var `audio`: AudioBackend? = null,
-    var `volume`: VolumeBackend? = null,
-    var `geo`: GeoProvider? = null,
-    var `notifications`: NotificationBackend? = null,
-    var `phone`: PhoneBackend? = null,
-    var `mediaSessions`: MediaSessionBackend? = null,
-    var `stream`: StreamBackend? = null,
-    var `speech`: SpeechRecognizer? = null,
-    var `nlu`: NluModelRunner? = null,
-    var `appleMusic`: AppleMusicBackend? = null,
-    var `image`: ImageScaler? = null,
-    var `modelValidator`: ModelArtifactValidator? = null,
-    var `transferPolicy`: TransferPolicy? = null,
-    var `connectivity`: ConnectivityMonitor? = null,
-    var `deviceWaker`: DeviceWaker? = null,
-    var `extensions`: ExtensionHost? = null,
-) : Disposable {
+
+
+data class CompanionBackends (
+    var `link`: LinkTransport?
+    , 
+    var `host`: HostEnvironment
+    , 
+    var `http`: HttpTransport
+    , 
+    var `ws`: WsTransport
+    , 
+    var `secrets`: SecretStore
+    , 
+    var `log`: LogSink
+    , 
+    var `audio`: AudioBackend? = null 
+    , 
+    var `volume`: VolumeBackend? = null 
+    , 
+    var `geo`: GeoProvider? = null 
+    , 
+    var `notifications`: NotificationBackend? = null 
+    , 
+    var `phone`: PhoneBackend? = null 
+    , 
+    var `mediaSessions`: MediaSessionBackend? = null 
+    , 
+    var `stream`: StreamBackend? = null 
+    , 
+    var `speech`: SpeechRecognizer? = null 
+    , 
+    var `nlu`: NluModelRunner? = null 
+    , 
+    var `appleMusic`: AppleMusicBackend? = null 
+    , 
+    var `image`: ImageScaler? = null 
+    , 
+    var `modelValidator`: ModelArtifactValidator? = null 
+    , 
+    var `transferPolicy`: TransferPolicy? = null 
+    , 
+    var `connectivity`: ConnectivityMonitor? = null 
+    , 
+    var `deviceWaker`: DeviceWaker? = null 
+    , 
+    var `extensions`: ExtensionHost? = null 
+    
+): Disposable{
+    
+
+    
+
+    
     @Suppress("UNNECESSARY_SAFE_CALL") // codegen is much simpler if we unconditionally emit safe calls here
     override fun destroy() {
-        Disposable.destroy(
-            this.`link`,
-            this.`host`,
-            this.`http`,
-            this.`ws`,
-            this.`secrets`,
-            this.`log`,
-            this.`audio`,
-            this.`volume`,
-            this.`geo`,
-            this.`notifications`,
-            this.`phone`,
-            this.`mediaSessions`,
-            this.`stream`,
-            this.`speech`,
-            this.`nlu`,
-            this.`appleMusic`,
-            this.`image`,
-            this.`modelValidator`,
-            this.`transferPolicy`,
-            this.`connectivity`,
-            this.`deviceWaker`,
-            this.`extensions`,
-        )
+        
+    Disposable.destroy(
+        this.`link`,
+        this.`host`,
+        this.`http`,
+        this.`ws`,
+        this.`secrets`,
+        this.`log`,
+        this.`audio`,
+        this.`volume`,
+        this.`geo`,
+        this.`notifications`,
+        this.`phone`,
+        this.`mediaSessions`,
+        this.`stream`,
+        this.`speech`,
+        this.`nlu`,
+        this.`appleMusic`,
+        this.`image`,
+        this.`modelValidator`,
+        this.`transferPolicy`,
+        this.`connectivity`,
+        this.`deviceWaker`,
+        this.`extensions`
+    )
     }
     
     companion object
@@ -27372,55 +25602,52 @@ public object FfiConverterTypeCompanionBackends: FfiConverterRustBuffer<Companio
 
     override fun allocationSize(value: CompanionBackends) = (
             FfiConverterOptionalTypeLinkTransport.allocationSize(value.`link`) +
-                FfiConverterTypeHostEnvironment.allocationSize(value.`host`) +
-                FfiConverterTypeHttpTransport.allocationSize(value.`http`) +
-                FfiConverterTypeWsTransport.allocationSize(value.`ws`) +
-                FfiConverterTypeSecretStore.allocationSize(value.`secrets`) +
-                FfiConverterTypeLogSink.allocationSize(value.`log`) +
-                FfiConverterOptionalTypeAudioBackend.allocationSize(value.`audio`) +
-                FfiConverterOptionalTypeVolumeBackend.allocationSize(value.`volume`) +
-                FfiConverterOptionalTypeGeoProvider.allocationSize(value.`geo`) +
-                FfiConverterOptionalTypeNotificationBackend.allocationSize(value.`notifications`) +
-                FfiConverterOptionalTypePhoneBackend.allocationSize(value.`phone`) +
-                FfiConverterOptionalTypeMediaSessionBackend.allocationSize(value.`mediaSessions`) +
-                FfiConverterOptionalTypeStreamBackend.allocationSize(value.`stream`) +
-                FfiConverterOptionalTypeSpeechRecognizer.allocationSize(value.`speech`) +
-                FfiConverterOptionalTypeNluModelRunner.allocationSize(value.`nlu`) +
-                FfiConverterOptionalTypeAppleMusicBackend.allocationSize(value.`appleMusic`) +
-                FfiConverterOptionalTypeImageScaler.allocationSize(value.`image`) +
-                FfiConverterOptionalTypeModelArtifactValidator.allocationSize(value.`modelValidator`) +
-                FfiConverterOptionalTypeTransferPolicy.allocationSize(value.`transferPolicy`) +
-                FfiConverterOptionalTypeConnectivityMonitor.allocationSize(value.`connectivity`) +
-                FfiConverterOptionalTypeDeviceWaker.allocationSize(value.`deviceWaker`) +
-                FfiConverterOptionalTypeExtensionHost.allocationSize(value.`extensions`)
-        )
+            FfiConverterTypeHostEnvironment.allocationSize(value.`host`) +
+            FfiConverterTypeHttpTransport.allocationSize(value.`http`) +
+            FfiConverterTypeWsTransport.allocationSize(value.`ws`) +
+            FfiConverterTypeSecretStore.allocationSize(value.`secrets`) +
+            FfiConverterTypeLogSink.allocationSize(value.`log`) +
+            FfiConverterOptionalTypeAudioBackend.allocationSize(value.`audio`) +
+            FfiConverterOptionalTypeVolumeBackend.allocationSize(value.`volume`) +
+            FfiConverterOptionalTypeGeoProvider.allocationSize(value.`geo`) +
+            FfiConverterOptionalTypeNotificationBackend.allocationSize(value.`notifications`) +
+            FfiConverterOptionalTypePhoneBackend.allocationSize(value.`phone`) +
+            FfiConverterOptionalTypeMediaSessionBackend.allocationSize(value.`mediaSessions`) +
+            FfiConverterOptionalTypeStreamBackend.allocationSize(value.`stream`) +
+            FfiConverterOptionalTypeSpeechRecognizer.allocationSize(value.`speech`) +
+            FfiConverterOptionalTypeNluModelRunner.allocationSize(value.`nlu`) +
+            FfiConverterOptionalTypeAppleMusicBackend.allocationSize(value.`appleMusic`) +
+            FfiConverterOptionalTypeImageScaler.allocationSize(value.`image`) +
+            FfiConverterOptionalTypeModelArtifactValidator.allocationSize(value.`modelValidator`) +
+            FfiConverterOptionalTypeTransferPolicy.allocationSize(value.`transferPolicy`) +
+            FfiConverterOptionalTypeConnectivityMonitor.allocationSize(value.`connectivity`) +
+            FfiConverterOptionalTypeDeviceWaker.allocationSize(value.`deviceWaker`) +
+            FfiConverterOptionalTypeExtensionHost.allocationSize(value.`extensions`)
+    )
 
-    override fun write(
-        value: CompanionBackends,
-        buf: ByteBuffer,
-    ) {
-        FfiConverterOptionalTypeLinkTransport.write(value.`link`, buf)
-        FfiConverterTypeHostEnvironment.write(value.`host`, buf)
-        FfiConverterTypeHttpTransport.write(value.`http`, buf)
-        FfiConverterTypeWsTransport.write(value.`ws`, buf)
-        FfiConverterTypeSecretStore.write(value.`secrets`, buf)
-        FfiConverterTypeLogSink.write(value.`log`, buf)
-        FfiConverterOptionalTypeAudioBackend.write(value.`audio`, buf)
-        FfiConverterOptionalTypeVolumeBackend.write(value.`volume`, buf)
-        FfiConverterOptionalTypeGeoProvider.write(value.`geo`, buf)
-        FfiConverterOptionalTypeNotificationBackend.write(value.`notifications`, buf)
-        FfiConverterOptionalTypePhoneBackend.write(value.`phone`, buf)
-        FfiConverterOptionalTypeMediaSessionBackend.write(value.`mediaSessions`, buf)
-        FfiConverterOptionalTypeStreamBackend.write(value.`stream`, buf)
-        FfiConverterOptionalTypeSpeechRecognizer.write(value.`speech`, buf)
-        FfiConverterOptionalTypeNluModelRunner.write(value.`nlu`, buf)
-        FfiConverterOptionalTypeAppleMusicBackend.write(value.`appleMusic`, buf)
-        FfiConverterOptionalTypeImageScaler.write(value.`image`, buf)
-        FfiConverterOptionalTypeModelArtifactValidator.write(value.`modelValidator`, buf)
-        FfiConverterOptionalTypeTransferPolicy.write(value.`transferPolicy`, buf)
-        FfiConverterOptionalTypeConnectivityMonitor.write(value.`connectivity`, buf)
-        FfiConverterOptionalTypeDeviceWaker.write(value.`deviceWaker`, buf)
-        FfiConverterOptionalTypeExtensionHost.write(value.`extensions`, buf)
+    override fun write(value: CompanionBackends, buf: ByteBuffer) {
+            FfiConverterOptionalTypeLinkTransport.write(value.`link`, buf)
+            FfiConverterTypeHostEnvironment.write(value.`host`, buf)
+            FfiConverterTypeHttpTransport.write(value.`http`, buf)
+            FfiConverterTypeWsTransport.write(value.`ws`, buf)
+            FfiConverterTypeSecretStore.write(value.`secrets`, buf)
+            FfiConverterTypeLogSink.write(value.`log`, buf)
+            FfiConverterOptionalTypeAudioBackend.write(value.`audio`, buf)
+            FfiConverterOptionalTypeVolumeBackend.write(value.`volume`, buf)
+            FfiConverterOptionalTypeGeoProvider.write(value.`geo`, buf)
+            FfiConverterOptionalTypeNotificationBackend.write(value.`notifications`, buf)
+            FfiConverterOptionalTypePhoneBackend.write(value.`phone`, buf)
+            FfiConverterOptionalTypeMediaSessionBackend.write(value.`mediaSessions`, buf)
+            FfiConverterOptionalTypeStreamBackend.write(value.`stream`, buf)
+            FfiConverterOptionalTypeSpeechRecognizer.write(value.`speech`, buf)
+            FfiConverterOptionalTypeNluModelRunner.write(value.`nlu`, buf)
+            FfiConverterOptionalTypeAppleMusicBackend.write(value.`appleMusic`, buf)
+            FfiConverterOptionalTypeImageScaler.write(value.`image`, buf)
+            FfiConverterOptionalTypeModelArtifactValidator.write(value.`modelValidator`, buf)
+            FfiConverterOptionalTypeTransferPolicy.write(value.`transferPolicy`, buf)
+            FfiConverterOptionalTypeConnectivityMonitor.write(value.`connectivity`, buf)
+            FfiConverterOptionalTypeDeviceWaker.write(value.`deviceWaker`, buf)
+            FfiConverterOptionalTypeExtensionHost.write(value.`extensions`, buf)
     }
 }
 
@@ -27792,19 +26019,37 @@ public object FfiConverterTypeDeviceLogLine: FfiConverterRustBuffer<DeviceLogLin
     }
 }
 
-data class DeviceMeta(
-    var `daemonVersion`: kotlin.String,
-    var `libbridgethingVersion`: kotlin.String,
-    var `imageVersion`: kotlin.String,
-    var `appName`: kotlin.String,
-    var `osName`: kotlin.String,
-    var `osVersion`: kotlin.String,
-    var `channel`: kotlin.String,
-    var `modelName`: kotlin.String,
-    var `serialNumber`: kotlin.String,
-    var `nickname`: kotlin.String?,
-    var `launcherGesture`: LauncherGesture,
-) {
+
+
+data class DeviceMeta (
+    var `daemonVersion`: kotlin.String
+    , 
+    var `libbridgethingVersion`: kotlin.String
+    , 
+    var `imageVersion`: kotlin.String
+    , 
+    var `appName`: kotlin.String
+    , 
+    var `osName`: kotlin.String
+    , 
+    var `osVersion`: kotlin.String
+    , 
+    var `channel`: kotlin.String
+    , 
+    var `modelName`: kotlin.String
+    , 
+    var `serialNumber`: kotlin.String
+    , 
+    var `nickname`: kotlin.String?
+    , 
+    var `launcherGesture`: LauncherGesture
+    
+){
+    
+
+    
+
+    
     companion object
 }
 
@@ -27830,33 +26075,30 @@ public object FfiConverterTypeDeviceMeta: FfiConverterRustBuffer<DeviceMeta> {
 
     override fun allocationSize(value: DeviceMeta) = (
             FfiConverterString.allocationSize(value.`daemonVersion`) +
-                FfiConverterString.allocationSize(value.`libbridgethingVersion`) +
-                FfiConverterString.allocationSize(value.`imageVersion`) +
-                FfiConverterString.allocationSize(value.`appName`) +
-                FfiConverterString.allocationSize(value.`osName`) +
-                FfiConverterString.allocationSize(value.`osVersion`) +
-                FfiConverterString.allocationSize(value.`channel`) +
-                FfiConverterString.allocationSize(value.`modelName`) +
-                FfiConverterString.allocationSize(value.`serialNumber`) +
-                FfiConverterOptionalString.allocationSize(value.`nickname`) +
-                FfiConverterTypeLauncherGesture.allocationSize(value.`launcherGesture`)
-        )
+            FfiConverterString.allocationSize(value.`libbridgethingVersion`) +
+            FfiConverterString.allocationSize(value.`imageVersion`) +
+            FfiConverterString.allocationSize(value.`appName`) +
+            FfiConverterString.allocationSize(value.`osName`) +
+            FfiConverterString.allocationSize(value.`osVersion`) +
+            FfiConverterString.allocationSize(value.`channel`) +
+            FfiConverterString.allocationSize(value.`modelName`) +
+            FfiConverterString.allocationSize(value.`serialNumber`) +
+            FfiConverterOptionalString.allocationSize(value.`nickname`) +
+            FfiConverterTypeLauncherGesture.allocationSize(value.`launcherGesture`)
+    )
 
-    override fun write(
-        value: DeviceMeta,
-        buf: ByteBuffer,
-    ) {
-        FfiConverterString.write(value.`daemonVersion`, buf)
-        FfiConverterString.write(value.`libbridgethingVersion`, buf)
-        FfiConverterString.write(value.`imageVersion`, buf)
-        FfiConverterString.write(value.`appName`, buf)
-        FfiConverterString.write(value.`osName`, buf)
-        FfiConverterString.write(value.`osVersion`, buf)
-        FfiConverterString.write(value.`channel`, buf)
-        FfiConverterString.write(value.`modelName`, buf)
-        FfiConverterString.write(value.`serialNumber`, buf)
-        FfiConverterOptionalString.write(value.`nickname`, buf)
-        FfiConverterTypeLauncherGesture.write(value.`launcherGesture`, buf)
+    override fun write(value: DeviceMeta, buf: ByteBuffer) {
+            FfiConverterString.write(value.`daemonVersion`, buf)
+            FfiConverterString.write(value.`libbridgethingVersion`, buf)
+            FfiConverterString.write(value.`imageVersion`, buf)
+            FfiConverterString.write(value.`appName`, buf)
+            FfiConverterString.write(value.`osName`, buf)
+            FfiConverterString.write(value.`osVersion`, buf)
+            FfiConverterString.write(value.`channel`, buf)
+            FfiConverterString.write(value.`modelName`, buf)
+            FfiConverterString.write(value.`serialNumber`, buf)
+            FfiConverterOptionalString.write(value.`nickname`, buf)
+            FfiConverterTypeLauncherGesture.write(value.`launcherGesture`, buf)
     }
 }
 
@@ -30264,15 +28506,29 @@ public object FfiConverterTypePosition: FfiConverterRustBuffer<Position> {
     }
 }
 
-data class ProviderInfo(
-    var `id`: kotlin.String,
-    var `displayName`: kotlin.String,
-    var `available`: kotlin.Boolean,
-    var `connected`: kotlin.Boolean,
-    var `signIn`: SignInMethod,
-    var `authState`: AuthState,
-    var `serviceHealth`: ServiceHealth,
-) {
+
+
+data class ProviderInfo (
+    var `id`: kotlin.String
+    , 
+    var `displayName`: kotlin.String
+    , 
+    var `available`: kotlin.Boolean
+    , 
+    var `connected`: kotlin.Boolean
+    , 
+    var `signIn`: SignInMethod
+    , 
+    var `authState`: AuthState
+    , 
+    var `serviceHealth`: ServiceHealth
+    
+){
+    
+
+    
+
+    
     companion object
 }
 
@@ -30294,32 +28550,76 @@ public object FfiConverterTypeProviderInfo: FfiConverterRustBuffer<ProviderInfo>
 
     override fun allocationSize(value: ProviderInfo) = (
             FfiConverterString.allocationSize(value.`id`) +
-                FfiConverterString.allocationSize(value.`displayName`) +
-                FfiConverterBoolean.allocationSize(value.`available`) +
-                FfiConverterBoolean.allocationSize(value.`connected`) +
-                FfiConverterTypeSignInMethod.allocationSize(value.`signIn`) +
-                FfiConverterTypeAuthState.allocationSize(value.`authState`) +
-                FfiConverterTypeServiceHealth.allocationSize(value.`serviceHealth`)
-        )
+            FfiConverterString.allocationSize(value.`displayName`) +
+            FfiConverterBoolean.allocationSize(value.`available`) +
+            FfiConverterBoolean.allocationSize(value.`connected`) +
+            FfiConverterTypeSignInMethod.allocationSize(value.`signIn`) +
+            FfiConverterTypeAuthState.allocationSize(value.`authState`) +
+            FfiConverterTypeServiceHealth.allocationSize(value.`serviceHealth`)
+    )
 
-    override fun write(
-        value: ProviderInfo,
-        buf: ByteBuffer,
-    ) {
-        FfiConverterString.write(value.`id`, buf)
-        FfiConverterString.write(value.`displayName`, buf)
-        FfiConverterBoolean.write(value.`available`, buf)
-        FfiConverterBoolean.write(value.`connected`, buf)
-        FfiConverterTypeSignInMethod.write(value.`signIn`, buf)
-        FfiConverterTypeAuthState.write(value.`authState`, buf)
-        FfiConverterTypeServiceHealth.write(value.`serviceHealth`, buf)
+    override fun write(value: ProviderInfo, buf: ByteBuffer) {
+            FfiConverterString.write(value.`id`, buf)
+            FfiConverterString.write(value.`displayName`, buf)
+            FfiConverterBoolean.write(value.`available`, buf)
+            FfiConverterBoolean.write(value.`connected`, buf)
+            FfiConverterTypeSignInMethod.write(value.`signIn`, buf)
+            FfiConverterTypeAuthState.write(value.`authState`, buf)
+            FfiConverterTypeServiceHealth.write(value.`serviceHealth`, buf)
     }
 }
 
-data class ServiceHealth(
-    var `kind`: ServiceHealthKind,
-    var `retryAfterSeconds`: kotlin.UInt?,
-) {
+
+
+data class ScreenshotFile (
+    var `path`: kotlin.String
+    , 
+    var `byteSize`: kotlin.ULong
+    
+){
+    
+
+    
+
+    
+    companion object
+}
+
+/**
+ * @suppress
+ */
+public object FfiConverterTypeScreenshotFile: FfiConverterRustBuffer<ScreenshotFile> {
+    override fun read(buf: ByteBuffer): ScreenshotFile {
+        return ScreenshotFile(
+            FfiConverterString.read(buf),
+            FfiConverterULong.read(buf),
+        )
+    }
+
+    override fun allocationSize(value: ScreenshotFile) = (
+            FfiConverterString.allocationSize(value.`path`) +
+            FfiConverterULong.allocationSize(value.`byteSize`)
+    )
+
+    override fun write(value: ScreenshotFile, buf: ByteBuffer) {
+            FfiConverterString.write(value.`path`, buf)
+            FfiConverterULong.write(value.`byteSize`, buf)
+    }
+}
+
+
+
+data class ServiceHealth (
+    var `kind`: ServiceHealthKind
+    , 
+    var `retryAfterSeconds`: kotlin.UInt?
+    
+){
+    
+
+    
+
+    
     companion object
 }
 
@@ -30650,168 +28950,25 @@ public object FfiConverterTypeSpotifyProviderConfig: FfiConverterRustBuffer<Spot
     }
 }
 
-data class StreamMetadata(
-    var `title`: kotlin.String?,
-    var `artist`: kotlin.String?,
-    var `album`: kotlin.String?,
-    var `artworkUrl`: kotlin.String?,
-    var `artwork`: kotlin.ByteArray?,
-) {
-    companion object
-}
 
-/**
- * @suppress
- */
-public object FfiConverterTypeStreamMetadata : FfiConverterRustBuffer<StreamMetadata> {
-    override fun read(buf: ByteBuffer): StreamMetadata =
-        StreamMetadata(
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalByteArray.read(buf),
-        )
 
-    override fun allocationSize(value: StreamMetadata) =
-        (
-            FfiConverterOptionalString.allocationSize(value.`title`) +
-                FfiConverterOptionalString.allocationSize(value.`artist`) +
-                FfiConverterOptionalString.allocationSize(value.`album`) +
-                FfiConverterOptionalString.allocationSize(value.`artworkUrl`) +
-                FfiConverterOptionalByteArray.allocationSize(value.`artwork`)
-        )
+data class StreamMetadata (
+    var `title`: kotlin.String?
+    , 
+    var `artist`: kotlin.String?
+    , 
+    var `album`: kotlin.String?
+    , 
+    var `artworkUrl`: kotlin.String?
+    , 
+    var `artwork`: kotlin.ByteArray?
+    
+){
+    
 
-    override fun write(
-        value: StreamMetadata,
-        buf: ByteBuffer,
-    ) {
-        FfiConverterOptionalString.write(value.`title`, buf)
-        FfiConverterOptionalString.write(value.`artist`, buf)
-        FfiConverterOptionalString.write(value.`album`, buf)
-        FfiConverterOptionalString.write(value.`artworkUrl`, buf)
-        FfiConverterOptionalByteArray.write(value.`artwork`, buf)
-    }
-}
+    
 
-data class StreamPresentation(
-    var `title`: kotlin.String,
-    var `artist`: kotlin.String?,
-    var `album`: kotlin.String?,
-    var `artwork`: kotlin.ByteArray?,
-) {
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeStreamPresentation : FfiConverterRustBuffer<StreamPresentation> {
-    override fun read(buf: ByteBuffer): StreamPresentation =
-        StreamPresentation(
-            FfiConverterString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalString.read(buf),
-            FfiConverterOptionalByteArray.read(buf),
-        )
-
-    override fun allocationSize(value: StreamPresentation) =
-        (
-            FfiConverterString.allocationSize(value.`title`) +
-                FfiConverterOptionalString.allocationSize(value.`artist`) +
-                FfiConverterOptionalString.allocationSize(value.`album`) +
-                FfiConverterOptionalByteArray.allocationSize(value.`artwork`)
-        )
-
-    override fun write(
-        value: StreamPresentation,
-        buf: ByteBuffer,
-    ) {
-        FfiConverterString.write(value.`title`, buf)
-        FfiConverterOptionalString.write(value.`artist`, buf)
-        FfiConverterOptionalString.write(value.`album`, buf)
-        FfiConverterOptionalByteArray.write(value.`artwork`, buf)
-    }
-}
-
-data class StreamSource(
-    var `url`: kotlin.String,
-    var `live`: kotlin.Boolean,
-    var `station`: kotlin.String?,
-) {
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeStreamSource : FfiConverterRustBuffer<StreamSource> {
-    override fun read(buf: ByteBuffer): StreamSource =
-        StreamSource(
-            FfiConverterString.read(buf),
-            FfiConverterBoolean.read(buf),
-            FfiConverterOptionalString.read(buf),
-        )
-
-    override fun allocationSize(value: StreamSource) =
-        (
-            FfiConverterString.allocationSize(value.`url`) +
-                FfiConverterBoolean.allocationSize(value.`live`) +
-                FfiConverterOptionalString.allocationSize(value.`station`)
-        )
-
-    override fun write(
-        value: StreamSource,
-        buf: ByteBuffer,
-    ) {
-        FfiConverterString.write(value.`url`, buf)
-        FfiConverterBoolean.write(value.`live`, buf)
-        FfiConverterOptionalString.write(value.`station`, buf)
-    }
-}
-
-data class StreamTiming(
-    var `positionMs`: kotlin.UInt,
-    var `durationMs`: kotlin.UInt?,
-    var `seekable`: kotlin.Boolean,
-) {
-    companion object
-}
-
-/**
- * @suppress
- */
-public object FfiConverterTypeStreamTiming : FfiConverterRustBuffer<StreamTiming> {
-    override fun read(buf: ByteBuffer): StreamTiming =
-        StreamTiming(
-            FfiConverterUInt.read(buf),
-            FfiConverterOptionalUInt.read(buf),
-            FfiConverterBoolean.read(buf),
-        )
-
-    override fun allocationSize(value: StreamTiming) =
-        (
-            FfiConverterUInt.allocationSize(value.`positionMs`) +
-                FfiConverterOptionalUInt.allocationSize(value.`durationMs`) +
-                FfiConverterBoolean.allocationSize(value.`seekable`)
-        )
-
-    override fun write(
-        value: StreamTiming,
-        buf: ByteBuffer,
-    ) {
-        FfiConverterUInt.write(value.`positionMs`, buf)
-        FfiConverterOptionalUInt.write(value.`durationMs`, buf)
-        FfiConverterBoolean.write(value.`seekable`, buf)
-    }
-}
-
-data class Transcription(
-    var `text`: kotlin.String,
-    var `alternatives`: List<kotlin.String>,
-    var `segments`: List<SpeechSegment>,
-    var `confidence`: kotlin.Float?,
-) {
+    
     companion object
 }
 
@@ -31356,54 +29513,72 @@ public object FfiConverterTypeWebappInfo: FfiConverterRustBuffer<WebappInfo> {
     }
 }
 
-data class WebappInstallRequest(
-    var `url`: kotlin.String,
-    var `expected`: ArtifactDigest?,
-    var `provenance`: kotlin.String?,
-    var `webappId`: kotlin.String?,
-    var `webappName`: kotlin.String?,
-) {
+
+
+data class WebappInstallRequest (
+    var `url`: kotlin.String
+    , 
+    var `expected`: ArtifactDigest?
+    , 
+    var `provenance`: kotlin.String?
+    , 
+    var `webappId`: kotlin.String?
+    , 
+    var `webappName`: kotlin.String?
+    
+){
+    
+
+    
+
+    
     companion object
 }
 
 /**
  * @suppress
  */
-public object FfiConverterTypeWebappInstallRequest : FfiConverterRustBuffer<WebappInstallRequest> {
-    override fun read(buf: ByteBuffer): WebappInstallRequest =
-        WebappInstallRequest(
+public object FfiConverterTypeWebappInstallRequest: FfiConverterRustBuffer<WebappInstallRequest> {
+    override fun read(buf: ByteBuffer): WebappInstallRequest {
+        return WebappInstallRequest(
             FfiConverterString.read(buf),
             FfiConverterOptionalTypeArtifactDigest.read(buf),
             FfiConverterOptionalString.read(buf),
             FfiConverterOptionalString.read(buf),
             FfiConverterOptionalString.read(buf),
         )
+    }
 
-    override fun allocationSize(value: WebappInstallRequest) =
-        (
+    override fun allocationSize(value: WebappInstallRequest) = (
             FfiConverterString.allocationSize(value.`url`) +
-                FfiConverterOptionalTypeArtifactDigest.allocationSize(value.`expected`) +
-                FfiConverterOptionalString.allocationSize(value.`provenance`) +
-                FfiConverterOptionalString.allocationSize(value.`webappId`) +
-                FfiConverterOptionalString.allocationSize(value.`webappName`)
-        )
+            FfiConverterOptionalTypeArtifactDigest.allocationSize(value.`expected`) +
+            FfiConverterOptionalString.allocationSize(value.`provenance`) +
+            FfiConverterOptionalString.allocationSize(value.`webappId`) +
+            FfiConverterOptionalString.allocationSize(value.`webappName`)
+    )
 
-    override fun write(
-        value: WebappInstallRequest,
-        buf: ByteBuffer,
-    ) {
-        FfiConverterString.write(value.`url`, buf)
-        FfiConverterOptionalTypeArtifactDigest.write(value.`expected`, buf)
-        FfiConverterOptionalString.write(value.`provenance`, buf)
-        FfiConverterOptionalString.write(value.`webappId`, buf)
-        FfiConverterOptionalString.write(value.`webappName`, buf)
+    override fun write(value: WebappInstallRequest, buf: ByteBuffer) {
+            FfiConverterString.write(value.`url`, buf)
+            FfiConverterOptionalTypeArtifactDigest.write(value.`expected`, buf)
+            FfiConverterOptionalString.write(value.`provenance`, buf)
+            FfiConverterOptionalString.write(value.`webappId`, buf)
+            FfiConverterOptionalString.write(value.`webappName`, buf)
     }
 }
 
-data class WebappResourceFile(
-    var `path`: kotlin.String,
-    var `mime`: kotlin.String?,
-) {
+
+
+data class WebappResourceFile (
+    var `path`: kotlin.String
+    , 
+    var `mime`: kotlin.String?
+    
+){
+    
+
+    
+
+    
     companion object
 }
 
@@ -32849,34 +31024,44 @@ public object FfiConverterTypeInitiateCallType: FfiConverterRustBuffer<InitiateC
     }
 }
 
+
+
+
+
+
 enum class LauncherGesture {
+    
     LONG_PRESS,
-    FIVE_PRESS,
-    ;
+    FIVE_PRESS;
+
+    
+
 
     companion object
 }
 
+
 /**
  * @suppress
  */
-public object FfiConverterTypeLauncherGesture : FfiConverterRustBuffer<LauncherGesture> {
-    override fun read(buf: ByteBuffer) =
-        try {
-            LauncherGesture.values()[buf.getInt() - 1]
-        } catch (e: IndexOutOfBoundsException) {
-            throw RuntimeException("invalid enum value, something is very wrong!!", e)
-        }
+public object FfiConverterTypeLauncherGesture: FfiConverterRustBuffer<LauncherGesture> {
+    override fun read(buf: ByteBuffer) = try {
+        LauncherGesture.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
 
     override fun allocationSize(value: LauncherGesture) = 4UL
 
-    override fun write(
-        value: LauncherGesture,
-        buf: ByteBuffer,
-    ) {
+    override fun write(value: LauncherGesture, buf: ByteBuffer) {
         buf.putInt(value.ordinal + 1)
     }
 }
+
+
+
+
+
 
 enum class LogLevel {
     
@@ -35183,21 +33368,39 @@ public object FfiConverterTypePhoneCommand : FfiConverterRustBuffer<PhoneCommand
     }
 }
 
-sealed class ProviderCredentials {
-    data class OauthTokens(
-        val `accessToken`: kotlin.String,
-        val `refreshToken`: kotlin.String,
-    ) : ProviderCredentials() {
-        companion object
-    }
 
-    data class ServerLogin(
-        val `serverUrl`: kotlin.String,
-        val `username`: kotlin.String,
-        val `password`: kotlin.String,
-    ) : ProviderCredentials() {
+
+
+
+sealed class ProviderCredentials {
+    
+    data class OauthTokens(
+        val `accessToken`: kotlin.String, 
+        val `refreshToken`: kotlin.String) : ProviderCredentials()
+        
+    {
+        
+
         companion object
     }
+    
+    data class ServerLogin(
+        val `serverUrl`: kotlin.String, 
+        val `username`: kotlin.String, 
+        val `password`: kotlin.String) : ProviderCredentials()
+        
+    {
+        
+
+        companion object
+    }
+    
+
+    
+
+    
+    
+
 
     companion object
 }
@@ -35205,63 +33408,50 @@ sealed class ProviderCredentials {
 /**
  * @suppress
  */
-public object FfiConverterTypeProviderCredentials : FfiConverterRustBuffer<ProviderCredentials> {
-    override fun read(buf: ByteBuffer): ProviderCredentials =
-        when (buf.getInt()) {
-            1 -> {
-                ProviderCredentials.OauthTokens(
-                    FfiConverterString.read(buf),
-                    FfiConverterString.read(buf),
+public object FfiConverterTypeProviderCredentials : FfiConverterRustBuffer<ProviderCredentials>{
+    override fun read(buf: ByteBuffer): ProviderCredentials {
+        return when(buf.getInt()) {
+            1 -> ProviderCredentials.OauthTokens(
+                FfiConverterString.read(buf),
+                FfiConverterString.read(buf),
                 )
-            }
-
-            2 -> {
-                ProviderCredentials.ServerLogin(
-                    FfiConverterString.read(buf),
-                    FfiConverterString.read(buf),
-                    FfiConverterString.read(buf),
+            2 -> ProviderCredentials.ServerLogin(
+                FfiConverterString.read(buf),
+                FfiConverterString.read(buf),
+                FfiConverterString.read(buf),
                 )
-            }
-
-            else -> {
-                throw RuntimeException("invalid enum value, something is very wrong!!")
-            }
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
         }
+    }
 
-    override fun allocationSize(value: ProviderCredentials): ULong =
-        when (value) {
-            is ProviderCredentials.OauthTokens -> {
-                // Add the size for the Int that specifies the variant plus the size needed for all fields
-                (
-                    4UL +
-                        FfiConverterString.allocationSize(value.`accessToken`) +
-                        FfiConverterString.allocationSize(value.`refreshToken`)
-                )
-            }
-
-            is ProviderCredentials.ServerLogin -> {
-                // Add the size for the Int that specifies the variant plus the size needed for all fields
-                (
-                    4UL +
-                        FfiConverterString.allocationSize(value.`serverUrl`) +
-                        FfiConverterString.allocationSize(value.`username`) +
-                        FfiConverterString.allocationSize(value.`password`)
-                )
-            }
+    override fun allocationSize(value: ProviderCredentials): ULong = when(value) {
+        is ProviderCredentials.OauthTokens -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.`accessToken`)
+                + FfiConverterString.allocationSize(value.`refreshToken`)
+            )
         }
+        is ProviderCredentials.ServerLogin -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.`serverUrl`)
+                + FfiConverterString.allocationSize(value.`username`)
+                + FfiConverterString.allocationSize(value.`password`)
+            )
+        }
+    }
 
-    override fun write(
-        value: ProviderCredentials,
-        buf: ByteBuffer,
-    ) {
-        when (value) {
+    override fun write(value: ProviderCredentials, buf: ByteBuffer) {
+        when(value) {
             is ProviderCredentials.OauthTokens -> {
                 buf.putInt(1)
                 FfiConverterString.write(value.`accessToken`, buf)
                 FfiConverterString.write(value.`refreshToken`, buf)
                 Unit
             }
-
             is ProviderCredentials.ServerLogin -> {
                 buf.putInt(2)
                 FfiConverterString.write(value.`serverUrl`, buf)
@@ -35272,6 +33462,11 @@ public object FfiConverterTypeProviderCredentials : FfiConverterRustBuffer<Provi
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
     }
 }
+
+
+
+
+
 
 enum class RegistrationStatus {
     
@@ -35916,49 +34111,73 @@ public object FfiConverterTypeSessionEvent : FfiConverterRustBuffer<SessionEvent
     }
 }
 
+
+
+
+
+
 enum class SignInMethod {
+    
     HANDSHAKE,
-    SERVER_LOGIN,
-    ;
+    SERVER_LOGIN;
+
+    
+
 
     companion object
 }
 
+
 /**
  * @suppress
  */
-public object FfiConverterTypeSignInMethod : FfiConverterRustBuffer<SignInMethod> {
-    override fun read(buf: ByteBuffer) =
-        try {
-            SignInMethod.values()[buf.getInt() - 1]
-        } catch (e: IndexOutOfBoundsException) {
-            throw RuntimeException("invalid enum value, something is very wrong!!", e)
-        }
+public object FfiConverterTypeSignInMethod: FfiConverterRustBuffer<SignInMethod> {
+    override fun read(buf: ByteBuffer) = try {
+        SignInMethod.values()[buf.getInt() - 1]
+    } catch (e: IndexOutOfBoundsException) {
+        throw RuntimeException("invalid enum value, something is very wrong!!", e)
+    }
 
     override fun allocationSize(value: SignInMethod) = 4UL
 
-    override fun write(
-        value: SignInMethod,
-        buf: ByteBuffer,
-    ) {
+    override fun write(value: SignInMethod, buf: ByteBuffer) {
         buf.putInt(value.ordinal + 1)
     }
 }
 
+
+
+
+
 sealed class StreamStatus {
+    
     object Buffering : StreamStatus()
-
+    
+    
     object Playing : StreamStatus()
-
+    
+    
     object Paused : StreamStatus()
-
+    
+    
     object Ended : StreamStatus()
-
+    
+    
     data class Failed(
-        val `reason`: kotlin.String,
-    ) : StreamStatus() {
+        val `reason`: kotlin.String) : StreamStatus()
+        
+    {
+        
+
         companion object
     }
+    
+
+    
+
+    
+    
+
 
     companion object
 }
@@ -35966,100 +34185,72 @@ sealed class StreamStatus {
 /**
  * @suppress
  */
-public object FfiConverterTypeStreamStatus : FfiConverterRustBuffer<StreamStatus> {
-    override fun read(buf: ByteBuffer): StreamStatus =
-        when (buf.getInt()) {
-            1 -> {
-                StreamStatus.Buffering
-            }
-
-            2 -> {
-                StreamStatus.Playing
-            }
-
-            3 -> {
-                StreamStatus.Paused
-            }
-
-            4 -> {
-                StreamStatus.Ended
-            }
-
-            5 -> {
-                StreamStatus.Failed(
-                    FfiConverterString.read(buf),
+public object FfiConverterTypeStreamStatus : FfiConverterRustBuffer<StreamStatus>{
+    override fun read(buf: ByteBuffer): StreamStatus {
+        return when(buf.getInt()) {
+            1 -> StreamStatus.Buffering
+            2 -> StreamStatus.Playing
+            3 -> StreamStatus.Paused
+            4 -> StreamStatus.Ended
+            5 -> StreamStatus.Failed(
+                FfiConverterString.read(buf),
                 )
-            }
-
-            else -> {
-                throw RuntimeException("invalid enum value, something is very wrong!!")
-            }
+            else -> throw RuntimeException("invalid enum value, something is very wrong!!")
         }
+    }
 
-    override fun allocationSize(value: StreamStatus): ULong =
-        when (value) {
-            is StreamStatus.Buffering -> {
-                // Add the size for the Int that specifies the variant plus the size needed for all fields
-                (
-                    4UL
-                )
-            }
-
-            is StreamStatus.Playing -> {
-                // Add the size for the Int that specifies the variant plus the size needed for all fields
-                (
-                    4UL
-                )
-            }
-
-            is StreamStatus.Paused -> {
-                // Add the size for the Int that specifies the variant plus the size needed for all fields
-                (
-                    4UL
-                )
-            }
-
-            is StreamStatus.Ended -> {
-                // Add the size for the Int that specifies the variant plus the size needed for all fields
-                (
-                    4UL
-                )
-            }
-
-            is StreamStatus.Failed -> {
-                // Add the size for the Int that specifies the variant plus the size needed for all fields
-                (
-                    4UL +
-                        FfiConverterString.allocationSize(value.`reason`)
-                )
-            }
+    override fun allocationSize(value: StreamStatus): ULong = when(value) {
+        is StreamStatus.Buffering -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
         }
+        is StreamStatus.Playing -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is StreamStatus.Paused -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is StreamStatus.Ended -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+            )
+        }
+        is StreamStatus.Failed -> {
+            // Add the size for the Int that specifies the variant plus the size needed for all fields
+            (
+                4UL
+                + FfiConverterString.allocationSize(value.`reason`)
+            )
+        }
+    }
 
-    override fun write(
-        value: StreamStatus,
-        buf: ByteBuffer,
-    ) {
-        when (value) {
+    override fun write(value: StreamStatus, buf: ByteBuffer) {
+        when(value) {
             is StreamStatus.Buffering -> {
                 buf.putInt(1)
                 Unit
             }
-
             is StreamStatus.Playing -> {
                 buf.putInt(2)
                 Unit
             }
-
             is StreamStatus.Paused -> {
                 buf.putInt(3)
                 Unit
             }
-
             is StreamStatus.Ended -> {
                 buf.putInt(4)
                 Unit
             }
-
             is StreamStatus.Failed -> {
                 buf.putInt(5)
                 FfiConverterString.write(value.`reason`, buf)
@@ -36068,6 +34259,11 @@ public object FfiConverterTypeStreamStatus : FfiConverterRustBuffer<StreamStatus
         }.let { /* this makes the `when` an expression, which ensures it is exhaustive */ }
     }
 }
+
+
+
+
+
 
 enum class VoiceModelStatus {
     
@@ -37232,7 +35428,7 @@ public object FfiConverterOptionalTypeSpeechRecognizer: FfiConverterRustBuffer<S
 /**
  * @suppress
  */
-public object FfiConverterOptionalTypeStreamBackend : FfiConverterRustBuffer<StreamBackend?> {
+public object FfiConverterOptionalTypeStreamBackend: FfiConverterRustBuffer<StreamBackend?> {
     override fun read(buf: ByteBuffer): StreamBackend? {
         if (buf.get().toInt() == 0) {
             return null
@@ -37248,10 +35444,7 @@ public object FfiConverterOptionalTypeStreamBackend : FfiConverterRustBuffer<Str
         }
     }
 
-    override fun write(
-        value: StreamBackend?,
-        buf: ByteBuffer,
-    ) {
+    override fun write(value: StreamBackend?, buf: ByteBuffer) {
         if (value == null) {
             buf.put(0)
         } else {
@@ -37261,10 +35454,13 @@ public object FfiConverterOptionalTypeStreamBackend : FfiConverterRustBuffer<Str
     }
 }
 
+
+
+
 /**
  * @suppress
  */
-public object FfiConverterOptionalTypeTransferPolicy : FfiConverterRustBuffer<TransferPolicy?> {
+public object FfiConverterOptionalTypeTransferPolicy: FfiConverterRustBuffer<TransferPolicy?> {
     override fun read(buf: ByteBuffer): TransferPolicy? {
         if (buf.get().toInt() == 0) {
             return null

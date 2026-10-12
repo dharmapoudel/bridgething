@@ -290,6 +290,13 @@ export type BridgethingBtDevice = {
   isCarThing: boolean;
 };
 
+export type BridgethingPairPickKind = 'picked' | 'cancelled' | 'bluetoothOff' | 'notFound';
+
+export type BridgethingPairPickResult = {
+  kind: BridgethingPairPickKind;
+  device?: BridgethingBtDevice;
+};
+
 export type BridgethingLauncherGesture = 'longPress' | 'fivePress';
 
 export type BridgethingDeviceMeta = {
@@ -470,9 +477,11 @@ export interface BridgethingSession extends HybridObject<{ ios: 'swift'; android
 
   deviceSetNickname(deviceId: string, nickname: string): Promise<void>;
 
+  collectScreenshot(deviceId: string, transferId: string, capturedAtMs: number): Promise<string>;
+
   setLauncherGesture(deviceId: string, gesture: BridgethingLauncherGesture): Promise<void>;
 
-  presentPairPicker(): Promise<BridgethingBtDevice | null>;
+  presentPairPicker(): Promise<BridgethingPairPickResult>;
 
   isNotificationAccessGranted(): Promise<boolean>;
   requestNotificationAccess(): Promise<void>;
