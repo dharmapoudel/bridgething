@@ -16,7 +16,11 @@ import { CrashBoundary } from './components/CrashBoundary';
 import { StatusLine } from './components/StatusLine';
 import { TabBar } from './components/TabBar';
 import { Wordmark } from './components/Wordmark';
-import { refreshCatalog, startWebappAutoUpdate } from './lib/catalog';
+import {
+  refreshCatalog,
+  startInstallCensus,
+  startWebappAutoUpdate,
+} from './lib/catalog';
 import { startReachability } from './lib/reachability';
 import { bootstrapSession } from './lib/session';
 import { ScreenshotToast, ScreenshotViewer } from './lib/screenshots';
@@ -230,6 +234,7 @@ export default function App() {
     setBoot(getSetupCompleted() ? 'Tabs' : 'Setup');
     startReachability();
     startWebappAutoUpdate();
+    startInstallCensus();
     bootstrapSession().catch(err => {
       if (cancelled) return;
       console.warn('[bridgething] bootstrap failed', err);

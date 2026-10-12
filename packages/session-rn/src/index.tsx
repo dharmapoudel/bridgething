@@ -9,6 +9,7 @@ import type {
   BridgethingDeviceMeta,
   BridgethingDeviceWebappsEntry,
   BridgethingDocEntry,
+  BridgethingLauncherGesture,
   BridgethingLogArchive,
   BridgethingNowPlaying,
   BridgethingOtaAvailable,
@@ -17,7 +18,6 @@ import type {
   BridgethingOtaPollStatus,
   BridgethingOtaProgress,
   BridgethingOtaRun,
-  BridgethingPairPickResult,
   BridgethingProviderCredentials,
   BridgethingProviderInfo,
   BridgethingResourceOrigin,
@@ -52,6 +52,7 @@ export type {
   BridgethingDeviceMetaEntry,
   BridgethingDocEntry,
   BridgethingHostInfo,
+  BridgethingLauncherGesture,
   BridgethingLogArchive,
   BridgethingNowPlaying,
   BridgethingNowPlayingPlayback,
@@ -365,11 +366,11 @@ export class BridgethingSession {
     await this.native.deviceSetNickname(deviceId, nickname);
   }
 
-  async collectScreenshot(deviceId: string, transferId: string, capturedAtMs: number): Promise<string> {
-    return this.native.collectScreenshot(deviceId, transferId, capturedAtMs);
+  async setLauncherGesture(deviceId: string, gesture: BridgethingLauncherGesture): Promise<void> {
+    await this.native.setLauncherGesture(deviceId, gesture);
   }
 
-  async presentPairPicker(): Promise<BridgethingPairPickResult> {
+  async presentPairPicker(): Promise<BridgethingBtDevice | null> {
     return this.native.presentPairPicker();
   }
 

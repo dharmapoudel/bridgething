@@ -77,7 +77,9 @@ public protocol BridgethingSessionBackend: AnyObject, Sendable {
 
     func deviceSetNickname(deviceId: String, nickname: String) async throws
 
-    func presentPairPicker() async throws -> BridgethingPairPickResult
+    func setLauncherGesture(deviceId: String, gesture: BridgethingLauncherGesture) async throws
+
+    func presentPairPicker() async throws -> BridgethingBtDevice?
 
     func isNotificationAccessGranted() async -> Bool
     func requestNotificationAccess() async throws
@@ -569,6 +571,12 @@ public final class HybridBridgethingSession: HybridBridgethingSessionSpec, @unch
     public func deviceSetNickname(deviceId: String, nickname: String) throws -> Promise<Void> {
         Promise.async {
             try await Self.backend().deviceSetNickname(deviceId: deviceId, nickname: nickname)
+        }
+    }
+
+    public func setLauncherGesture(deviceId: String, gesture: BridgethingLauncherGesture) throws -> Promise<Void> {
+        Promise.async {
+            try await Self.backend().setLauncherGesture(deviceId: deviceId, gesture: gesture)
         }
     }
 

@@ -92,6 +92,7 @@ export type DeviceMeta = {
   modelName: string;
   serialNumber: string;
   nickname: string | null;
+  launcherGesture: LauncherGesture;
 };
 
 export type DeviceMetaEntry = { deviceId: string; meta: DeviceMeta };
@@ -116,6 +117,8 @@ export type HostInfo = {
   osVersion: string;
   hostIdentifier: string;
 };
+
+export type LauncherGesture = 'longPress' | 'fivePress';
 
 export type LogLevel = 'trace' | 'debug' | 'info' | 'warn' | 'error';
 
@@ -452,6 +455,14 @@ export type WebappInfo = {
   config: Array<ConfigField>;
   permissions: Array<string>;
   extension: ExtensionInfo | null;
+};
+
+export type WebappInstallRequest = {
+  url: string;
+  expected: ArtifactDigest | null;
+  provenance: string | null;
+  webappId: string | null;
+  webappName: string | null;
 };
 
 export type WebappResourceFile = { path: string; mime: string | null };

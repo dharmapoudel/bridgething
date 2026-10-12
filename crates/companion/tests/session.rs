@@ -29,8 +29,8 @@ use std::{
 use backends::{Heard, Offline, RigHost};
 use bridgething_companion::{
   api::{
-    AncsAuthStatus, AuthKind, CapabilityFlags, CompanionBackends, CompanionConfig, HostInfo, LogOrigin, PeerLinkStatus,
-    ProviderCredentials, SessionEvent, SessionPeer, SpotifyProviderConfig,
+    AncsAuthStatus, AuthKind, CapabilityFlags, CompanionBackends, CompanionConfig, HostInfo, LauncherGesture,
+    LogOrigin, PeerLinkStatus, ProviderCredentials, SessionEvent, SessionPeer, SpotifyProviderConfig,
   },
   backend::{
     AmActionSink, AmAuthSink, AmAuthStatus, AmCatalogSink, AmFavoritesSink, AmFlagSink, AmItemSink, AmLibraryScope,
@@ -682,6 +682,7 @@ fn meta(serial: &str) -> libbridgething::BridgeThingMeta {
     libbridgething_version: "0.0.0".into(),
     app_name: "bridgething".into(),
     nickname: None,
+    launcher_gesture: libbridgething::LauncherGesture::default(),
     app_version: "0.0.0".into(),
     daemon_sha256: None,
     wakeword_model_version: None,
@@ -862,6 +863,63 @@ async fn device_meta_is_attributed_to_the_peer_that_announced_it() {
 }
 
 #[tokio::test(flavor = "multi_thread")]
+async fn a_gesture_change_rewrites_the_held_meta_for_that_peer_alone() {
+  let link = Arc::new(HandLink::default());
+  let (session, _heard, _spool) = session(link.clone());
+  session.start();
+  two_peers(&link, &session).await;
+
+  for (device_id, serial) in [(DEVICE, "serial-one"), (OTHER, "serial-two")] {
+    link.say(
+      device_id,
+      BridgeToGatewayMsg {
+        id: Uuid::now_v7(),
+        meta: MsgMeta::Event,
+        data: BridgeToGatewayMsgData::Version(Box::new(meta(serial))),
+      },
+    );
+  }
+
+  let gesture_of = |device_id: &'static str| {
+    session
+      .observer()
+      .device_metas()
+      .iter()
+      .find(|entry| entry.device_id == device_id)
+      .map(|entry| entry.meta.launcher_gesture)
+  };
+  assert!(
+    eventually(|| gesture_of(DEVICE) == Some(LauncherGesture::FivePress)).await,
+    "the announce seeds the gesture along with the rest of the meta, saw {:?}",
+    gesture_of(DEVICE)
+  );
+
+  link.say(
+    DEVICE,
+    BridgeToGatewayMsg {
+      id: Uuid::now_v7(),
+      meta: MsgMeta::Event,
+      data: BridgeToGatewayMsgData::System(BridgeToGatewaySystemMsg::LauncherGestureChanged(
+        libbridgething::gateway::LauncherGestureReply {
+          gesture: libbridgething::LauncherGesture::LongPress,
+        },
+      )),
+    },
+  );
+
+  assert!(
+    eventually(|| gesture_of(DEVICE) == Some(LauncherGesture::LongPress)).await,
+    "a gesture change rewrites the meta the host reads rather than arriving as its own event, saw {:?}",
+    gesture_of(DEVICE)
+  );
+  assert_eq!(
+    gesture_of(OTHER),
+    Some(LauncherGesture::FivePress),
+    "and the peer that did not change keeps its own"
+  );
+}
+
+#[tokio::test(flavor = "multi_thread")]
 async fn an_ancs_seed_lands_on_a_session_with_no_notification_backend() {
   let link = Arc::new(HandLink::default());
   let (session, heard, _spool) = session(link.clone());
@@ -906,11 +964,12 @@ async fn an_ancs_seed_lands_on_a_session_with_no_notification_backend() {
     snap.ancs_auth_statuses
   );
   assert!(
-    heard.events().iter().any(|event| matches!(
+    eventually(|| heard.events().iter().any(|event| matches!(
       event,
       SessionEvent::AncsAuthStatusChanged { device_id, status }
         if device_id == DEVICE && *status == AncsAuthStatus::Authorized
-    )),
+    )))
+    .await,
     "the host also gets the live edge, not only the reconcile"
   );
 }
@@ -977,10 +1036,11 @@ async fn a_batch_the_transport_could_not_send_closes_the_link_rather_than_wedgin
      outbound half waits on a credit that is never coming and every later command dies in the queue"
   );
   assert!(
-    heard.events().iter().any(|event| matches!(
+    eventually(|| heard.events().iter().any(|event| matches!(
       event,
       SessionEvent::PeerDisconnected { device_id } if device_id == DEVICE
-    )),
+    )))
+    .await,
     "and the host is told the peer is gone rather than left showing it linked"
   );
 }
@@ -1160,13 +1220,14 @@ async fn a_daemon_log_entry_lands_in_the_ring_and_the_event_stream() {
     "the forwarded line is retained with a device origin, got {tail:?}"
   );
   assert!(
-    heard.events().iter().any(|event| matches!(
+    eventually(|| heard.events().iter().any(|event| matches!(
       event,
       SessionEvent::Log {
         origin: LogOrigin::Device,
         ..
       }
-    )),
+    )))
+    .await,
     "and the live event said which side produced it"
   );
 }
@@ -1335,6 +1396,7 @@ async fn a_stream_switched_off_while_its_subscribe_was_in_flight_hands_the_tap_b
   });
   let subscribe = awaited(&link, |msg| matches!(msg, GatewayToBridgeSystemMsg::LogsSubscribe(_))).await;
   link.say(DEVICE, said(log_line("spoken while the subscribe was in flight")));
+  drained(&link, 7).await;
 
   session.set_device_log_streaming(false).await;
   link.say(

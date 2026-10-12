@@ -1,6 +1,7 @@
 import type {
   AuthState,
   CapabilityFlags,
+  LauncherGesture,
   ProviderInfo,
   ResumeTarget,
   VoiceModelState,
@@ -41,6 +42,7 @@ import {
   providerPriority,
   providers,
   resumeTarget,
+  selectedMeta,
   snapshot,
   voiceModel,
 } from '../stores/session.ts';
@@ -155,6 +157,7 @@ export function SettingsScreen(): VNode {
             ))}
             <AutoResumeRow />
             <ResumeTargetRow />
+            <LauncherGestureRow />
           </ListGroup>
         ) : (
           <SectionEmpty>connect a Car Thing to see its details</SectionEmpty>
@@ -521,6 +524,34 @@ function ResumeTargetRow(): VNode {
           value={target}
           onChange={next => {
             void session.setDeviceResumeTarget(next);
+          }}
+        />
+      }
+    />
+  );
+}
+
+function LauncherGestureRow(): VNode {
+  const session = useDesktop();
+  const gesture = selectedMeta.value?.launcherGesture ?? 'fivePress';
+
+  return (
+    <ListRow
+      icon={<Icon name="grid" />}
+      iconTint="default"
+      title="jump back to apps"
+      subtitle="the m button gesture that opens the launcher from any app"
+      trailing={
+        <Segmented<LauncherGesture>
+          size="sm"
+          label="jump back to apps"
+          options={[
+            { value: 'longPress', label: 'hold m' },
+            { value: 'fivePress', label: 'press m 5x' },
+          ]}
+          value={gesture}
+          onChange={next => {
+            void session.setLauncherGesture(next);
           }}
         />
       }

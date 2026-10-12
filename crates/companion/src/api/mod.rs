@@ -215,6 +215,17 @@ pub trait WebappBundleSink: Send + Sync {
   fn installed(&self, bundle: String);
 }
 
+#[derive(Debug, Clone, uniffi::Record, serde::Serialize, serde::Deserialize, ts_rs::TS)]
+#[serde(rename_all = "camelCase")]
+#[ts(export, export_to = "companion.ts")]
+pub struct WebappInstallRequest {
+  pub url: String,
+  pub expected: Option<ArtifactDigest>,
+  pub provenance: Option<String>,
+  pub webapp_id: Option<String>,
+  pub webapp_name: Option<String>,
+}
+
 #[derive(uniffi::Object)]
 pub struct CompanionSession {
   session: Arc<Session>,
@@ -365,6 +376,17 @@ impl CompanionSession {
       .map_err(device_error)
   }
 
+  pub async fn set_launcher_gesture(&self, device_id: String, gesture: LauncherGesture) -> Result<(), CompanionError> {
+    let gateway = self.gateway_checked(&device_id)?;
+    gateway
+      .system()
+      .launcher_gesture_set(libbridgething::gateway::LauncherGestureSet {
+        gesture: gesture.into(),
+      })
+      .await
+      .map_err(|failure| CompanionError::Device(format!("{failure:?}")))
+  }
+
   pub async fn list_webapps(&self, device_id: String) -> Result<Vec<WebappInfo>, CompanionError> {
     let gateway = self.gateway_checked(&device_id)?;
     let list = gateway.webapp().list().await.map_err(device_error)?;
@@ -380,11 +402,14 @@ impl CompanionSession {
     }))
   }
 
+  #[uniffi::method(default(webapp_id = None, webapp_name = None))]
   pub async fn install_webapp(
     &self,
     device_id: String,
     archive_path: String,
     provenance: Option<String>,
+    webapp_id: Option<String>,
+    webapp_name: Option<String>,
   ) -> Result<WebappInfo, CompanionError> {
     self.gateway_checked(&device_id)?;
     let source = std::sync::Arc::new(bridgething_delivery::ota::stream::FileSource::open(
@@ -396,7 +421,12 @@ impl CompanionSession {
     match self
       .session
       .ota()
-      .install_webapp(&device_id, source, provenance.as_deref())
+      .install_webapp(
+        &device_id,
+        source,
+        provenance.as_deref(),
+        webapp_label(webapp_id, webapp_name),
+      )
       .await
     {
       bridgething_delivery::ota::service::WebappInstallResult::Installed(info) => {
@@ -411,11 +441,16 @@ impl CompanionSession {
   pub async fn install_webapp_from_url(
     &self,
     device_id: String,
-    url: String,
-    expected: Option<ArtifactDigest>,
-    provenance: Option<String>,
+    request: WebappInstallRequest,
     sink: Option<Arc<dyn WebappBundleSink>>,
   ) -> Result<WebappInfo, CompanionError> {
+    let WebappInstallRequest {
+      url,
+      expected,
+      provenance,
+      webapp_id,
+      webapp_name,
+    } = request;
     self.gateway_checked(&device_id)?;
     let path = self
       .session
@@ -434,7 +469,13 @@ impl CompanionSession {
       .await
       .map_err(|failure| CompanionError::Device(failure.to_string()))?;
     let installed = self
-      .install_webapp(device_id, path.display().to_string(), provenance)
+      .install_webapp(
+        device_id,
+        path.display().to_string(),
+        provenance,
+        webapp_id,
+        webapp_name,
+      )
       .await;
     if let (Ok(_), Some(sink)) = (&installed, sink) {
       let bundle = path.display().to_string();
@@ -798,6 +839,10 @@ impl CompanionSession {
 
 fn device_error<E: std::fmt::Debug>(failure: bridgething_sdk_runtime::RequestFailure<E>) -> CompanionError {
   CompanionError::Device(format!("{failure:?}"))
+}
+
+fn webapp_label(id: Option<String>, name: Option<String>) -> Option<bridgething_delivery::ota::run_store::WebappLabel> {
+  Some(bridgething_delivery::ota::run_store::WebappLabel { id: id?, name: name? })
 }
 
 fn webapp_id(raw: &str) -> Result<uuid::Uuid, CompanionError> {

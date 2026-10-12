@@ -10,6 +10,7 @@ import com.margelo.nitro.bridgething.session.BridgethingCompanionDebug
 import com.margelo.nitro.bridgething.session.BridgethingConfigEntry
 import com.margelo.nitro.bridgething.session.BridgethingDeviceLogLine
 import com.margelo.nitro.bridgething.session.BridgethingDeviceMeta
+import com.margelo.nitro.bridgething.session.BridgethingLauncherGesture
 import com.margelo.nitro.bridgething.session.BridgethingLogArchive
 import com.margelo.nitro.bridgething.session.BridgethingDocEntry
 import com.margelo.nitro.bridgething.session.BridgethingNowPlaying
@@ -115,9 +116,9 @@ public interface BridgethingSessionBackend {
 
     public suspend fun deviceSetNickname(deviceId: String, nickname: String)
 
-    public suspend fun collectScreenshot(deviceId: String, transferId: String, capturedAtMs: Double): String
+    public suspend fun setLauncherGesture(deviceId: String, gesture: BridgethingLauncherGesture)
 
-    public suspend fun presentPairPicker(): BridgethingPairPickResult
+    public suspend fun presentPairPicker(): BridgethingBtDevice?
 
     public suspend fun isNotificationAccessGranted(): Boolean
     public suspend fun requestNotificationAccess()

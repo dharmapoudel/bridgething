@@ -23,6 +23,7 @@ import type {
   InitiateCallType,
   ItemKind,
   ItemRef,
+  LauncherGesture,
   LibraryError,
   LogEntry,
   LogLevel,
@@ -202,6 +203,8 @@ export type BridgeToGatewaySystemMsg =
   | { event: 'deviceNickname'; data: DeviceNicknameReply }
   | { event: 'deviceNicknameRejected'; data: DeviceNicknameRejected }
   | { event: 'deviceNicknameChanged'; data: DeviceNicknameReply }
+  | { event: 'launcherGestureReply'; data: LauncherGestureReply }
+  | { event: 'launcherGestureChanged'; data: LauncherGestureReply }
   | { event: 'logsTailReply'; data: LogsTailReply }
   | { event: 'logsSubscribeReply'; data: LogsSubscribeReply }
   | { event: 'logEntry'; data: LogEntry }
@@ -396,6 +399,8 @@ export type GatewayToBridgeSystemMsg =
   | { event: 'otaAssetRangeRejected'; data: OtaAssetRangeRejected }
   | { event: 'deviceGetNickname' }
   | { event: 'deviceSetNickname'; data: DeviceSetNickname }
+  | { event: 'launcherGestureGet' }
+  | { event: 'launcherGestureSet'; data: LauncherGestureSet }
   | { event: 'logsTail'; data: LogsTail }
   | { event: 'logsSubscribe'; data: LogsSubscribe }
   | { event: 'logsUnsubscribe'; data: LogsUnsubscribe }
@@ -448,6 +453,10 @@ export type GeoWatch = { accuracy: GeoAccuracy; minIntervalMs: number };
 export type KeepaliveAck = { seq: number };
 
 export type KeepalivePing = { seq: number };
+
+export type LauncherGestureReply = { gesture: LauncherGesture };
+
+export type LauncherGestureSet = { gesture: LauncherGesture };
 
 export type LibraryBrowseRequest = {
   nodeId: string | null;

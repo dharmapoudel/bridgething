@@ -97,6 +97,7 @@ export class TauriSession implements CompanionSession {
   setDeviceNickname = (nickname: string) => invoke<void>('set_device_nickname', { nickname });
   deviceAutoResume = () => invoke<boolean>('device_auto_resume');
   setDeviceAutoResume = (enabled: boolean) => invoke<void>('set_device_auto_resume', { enabled });
+  setLauncherGesture = (gesture: api.LauncherGesture) => invoke<void>('set_launcher_gesture', { gesture });
   deviceResumeTarget = () => invoke<api.ResumeTarget>('device_resume_target');
   setDeviceResumeTarget = (target: api.ResumeTarget) => invoke<void>('set_device_resume_target', { target });
 
@@ -111,11 +112,16 @@ export class TauriSession implements CompanionSession {
     provenance?: string,
     expected?: api.ArtifactDigest | null,
     confirmed?: string[],
+    webapp?: { id: string; name: string },
   ) =>
     invoke<api.WebappInfo>('install_webapp_from_url', {
-      url,
-      expected: expected ?? null,
-      provenance: provenance ?? null,
+      request: {
+        url,
+        expected: expected ?? null,
+        provenance: provenance ?? null,
+        webappId: webapp?.id ?? null,
+        webappName: webapp?.name ?? null,
+      },
       confirmed: confirmed ?? null,
     });
   webappResource = (id: string, kind: api.WebappResourceKind, origin?: ResourceOrigin | null) =>

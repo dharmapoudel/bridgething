@@ -3358,9 +3358,9 @@ public protocol CompanionSessionProtocol: AnyObject, Sendable {
     
     func getWebappDoc(deviceId: String, id: String, key: String) async throws  -> String?
     
-    func installWebapp(deviceId: String, archivePath: String, provenance: String?) async throws  -> WebappInfo
+    func installWebapp(deviceId: String, archivePath: String, provenance: String?, webappId: String?, webappName: String?) async throws  -> WebappInfo
     
-    func installWebappFromUrl(deviceId: String, url: String, expected: ArtifactDigest?, provenance: String?, sink: WebappBundleSink?) async throws  -> WebappInfo
+    func installWebappFromUrl(deviceId: String, request: WebappInstallRequest, sink: WebappBundleSink?) async throws  -> WebappInfo
     
     func listWebappConfig(deviceId: String, id: String) async throws  -> [ConfigEntry]
     
@@ -3381,6 +3381,8 @@ public protocol CompanionSessionProtocol: AnyObject, Sendable {
     func setDeviceLogStreaming(enabled: Bool) async 
     
     func setDeviceResumeTarget(deviceId: String, target: ResumeTarget) async 
+    
+    func setLauncherGesture(deviceId: String, gesture: LauncherGesture) async throws 
     
     func setOtaPollConfig(config: OtaPollConfig?) async 
     
@@ -3815,12 +3817,12 @@ open func getWebappDoc(deviceId: String, id: String, key: String)async throws  -
         )
 }
     
-open func installWebapp(deviceId: String, archivePath: String, provenance: String?)async throws  -> WebappInfo  {
+open func installWebapp(deviceId: String, archivePath: String, provenance: String?, webappId: String? = nil, webappName: String? = nil)async throws  -> WebappInfo  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_bridgething_companion_fn_method_companionsession_install_webapp(
-                        self.uniffiCloneHandle(),FfiConverterString.lower(deviceId),FfiConverterString.lower(archivePath),FfiConverterOptionString.lower(provenance)
+                        self.uniffiCloneHandle(),FfiConverterString.lower(deviceId),FfiConverterString.lower(archivePath),FfiConverterOptionString.lower(provenance),FfiConverterOptionString.lower(webappId),FfiConverterOptionString.lower(webappName)
                 )
             },
             pollFunc: ffi_bridgething_companion_rust_future_poll_rust_buffer,
@@ -3831,12 +3833,12 @@ open func installWebapp(deviceId: String, archivePath: String, provenance: Strin
         )
 }
     
-open func installWebappFromUrl(deviceId: String, url: String, expected: ArtifactDigest?, provenance: String?, sink: WebappBundleSink? = nil)async throws  -> WebappInfo  {
+open func installWebappFromUrl(deviceId: String, request: WebappInstallRequest, sink: WebappBundleSink? = nil)async throws  -> WebappInfo  {
     return
         try  await uniffiRustCallAsync(
             rustFutureFunc: {
                 uniffi_bridgething_companion_fn_method_companionsession_install_webapp_from_url(
-                        self.uniffiCloneHandle(),FfiConverterString.lower(deviceId),FfiConverterString.lower(url),FfiConverterOptionTypeArtifactDigest.lower(expected),FfiConverterOptionString.lower(provenance),FfiConverterOptionTypeWebappBundleSink.lower(sink)
+                        self.uniffiCloneHandle(),FfiConverterString.lower(deviceId),FfiConverterTypeWebappInstallRequest_lower(request),FfiConverterOptionTypeWebappBundleSink.lower(sink)
                 )
             },
             pollFunc: ffi_bridgething_companion_rust_future_poll_rust_buffer,
@@ -3997,6 +3999,22 @@ open func setDeviceResumeTarget(deviceId: String, target: ResumeTarget)async   {
             liftFunc: { $0 },
             errorHandler: nil
             
+        )
+}
+    
+open func setLauncherGesture(deviceId: String, gesture: LauncherGesture)async throws   {
+    return
+        try  await uniffiRustCallAsync(
+            rustFutureFunc: {
+                uniffi_bridgething_companion_fn_method_companionsession_set_launcher_gesture(
+                        self.uniffiCloneHandle(),FfiConverterString.lower(deviceId),FfiConverterTypeLauncherGesture_lower(gesture)
+                )
+            },
+            pollFunc: ffi_bridgething_companion_rust_future_poll_void,
+            completeFunc: ffi_bridgething_companion_rust_future_complete_void,
+            freeFunc: ffi_bridgething_companion_rust_future_free_void,
+            liftFunc: { $0 },
+            errorHandler: FfiConverterTypeCompanionError_lift
         )
 }
     
@@ -14982,10 +15000,11 @@ public struct DeviceMeta: Equatable, Hashable {
     public var modelName: String
     public var serialNumber: String
     public var nickname: String?
+    public var launcherGesture: LauncherGesture
 
     // Default memberwise initializers are never public by default, so we
     // declare one manually.
-    public init(daemonVersion: String, libbridgethingVersion: String, imageVersion: String, appName: String, osName: String, osVersion: String, channel: String, modelName: String, serialNumber: String, nickname: String?) {
+    public init(daemonVersion: String, libbridgethingVersion: String, imageVersion: String, appName: String, osName: String, osVersion: String, channel: String, modelName: String, serialNumber: String, nickname: String?, launcherGesture: LauncherGesture) {
         self.daemonVersion = daemonVersion
         self.libbridgethingVersion = libbridgethingVersion
         self.imageVersion = imageVersion
@@ -14996,6 +15015,7 @@ public struct DeviceMeta: Equatable, Hashable {
         self.modelName = modelName
         self.serialNumber = serialNumber
         self.nickname = nickname
+        self.launcherGesture = launcherGesture
     }
 
     
@@ -15023,7 +15043,8 @@ public struct FfiConverterTypeDeviceMeta: FfiConverterRustBuffer {
                 channel: FfiConverterString.read(from: &buf), 
                 modelName: FfiConverterString.read(from: &buf), 
                 serialNumber: FfiConverterString.read(from: &buf), 
-                nickname: FfiConverterOptionString.read(from: &buf)
+                nickname: FfiConverterOptionString.read(from: &buf), 
+                launcherGesture: FfiConverterTypeLauncherGesture.read(from: &buf)
         )
     }
 
@@ -15038,6 +15059,7 @@ public struct FfiConverterTypeDeviceMeta: FfiConverterRustBuffer {
         FfiConverterString.write(value.modelName, into: &buf)
         FfiConverterString.write(value.serialNumber, into: &buf)
         FfiConverterOptionString.write(value.nickname, into: &buf)
+        FfiConverterTypeLauncherGesture.write(value.launcherGesture, into: &buf)
     }
 }
 
@@ -18187,60 +18209,6 @@ public func FfiConverterTypeProviderInfo_lower(_ value: ProviderInfo) -> RustBuf
 }
 
 
-public struct ScreenshotFile: Equatable, Hashable {
-    public var path: String
-    public var byteSize: UInt64
-
-    // Default memberwise initializers are never public by default, so we
-    // declare one manually.
-    public init(path: String, byteSize: UInt64) {
-        self.path = path
-        self.byteSize = byteSize
-    }
-
-    
-
-    
-}
-
-#if compiler(>=6)
-extension ScreenshotFile: Sendable {}
-#endif
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public struct FfiConverterTypeScreenshotFile: FfiConverterRustBuffer {
-    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> ScreenshotFile {
-        return
-            try ScreenshotFile(
-                path: FfiConverterString.read(from: &buf), 
-                byteSize: FfiConverterUInt64.read(from: &buf)
-        )
-    }
-
-    public static func write(_ value: ScreenshotFile, into buf: inout [UInt8]) {
-        FfiConverterString.write(value.path, into: &buf)
-        FfiConverterUInt64.write(value.byteSize, into: &buf)
-    }
-}
-
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeScreenshotFile_lift(_ buf: RustBuffer) throws -> ScreenshotFile {
-    return try FfiConverterTypeScreenshotFile.lift(buf)
-}
-
-#if swift(>=5.8)
-@_documentation(visibility: private)
-#endif
-public func FfiConverterTypeScreenshotFile_lower(_ value: ScreenshotFile) -> RustBuffer {
-    return FfiConverterTypeScreenshotFile.lower(value)
-}
-
-
 public struct ServiceHealth: Equatable, Hashable {
     public var kind: ServiceHealthKind
     public var retryAfterSeconds: UInt32?
@@ -19364,6 +19332,72 @@ public func FfiConverterTypeWebappInfo_lift(_ buf: RustBuffer) throws -> WebappI
 #endif
 public func FfiConverterTypeWebappInfo_lower(_ value: WebappInfo) -> RustBuffer {
     return FfiConverterTypeWebappInfo.lower(value)
+}
+
+
+public struct WebappInstallRequest: Equatable, Hashable {
+    public var url: String
+    public var expected: ArtifactDigest?
+    public var provenance: String?
+    public var webappId: String?
+    public var webappName: String?
+
+    // Default memberwise initializers are never public by default, so we
+    // declare one manually.
+    public init(url: String, expected: ArtifactDigest?, provenance: String?, webappId: String?, webappName: String?) {
+        self.url = url
+        self.expected = expected
+        self.provenance = provenance
+        self.webappId = webappId
+        self.webappName = webappName
+    }
+
+    
+
+    
+}
+
+#if compiler(>=6)
+extension WebappInstallRequest: Sendable {}
+#endif
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeWebappInstallRequest: FfiConverterRustBuffer {
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> WebappInstallRequest {
+        return
+            try WebappInstallRequest(
+                url: FfiConverterString.read(from: &buf), 
+                expected: FfiConverterOptionTypeArtifactDigest.read(from: &buf), 
+                provenance: FfiConverterOptionString.read(from: &buf), 
+                webappId: FfiConverterOptionString.read(from: &buf), 
+                webappName: FfiConverterOptionString.read(from: &buf)
+        )
+    }
+
+    public static func write(_ value: WebappInstallRequest, into buf: inout [UInt8]) {
+        FfiConverterString.write(value.url, into: &buf)
+        FfiConverterOptionTypeArtifactDigest.write(value.expected, into: &buf)
+        FfiConverterOptionString.write(value.provenance, into: &buf)
+        FfiConverterOptionString.write(value.webappId, into: &buf)
+        FfiConverterOptionString.write(value.webappName, into: &buf)
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeWebappInstallRequest_lift(_ buf: RustBuffer) throws -> WebappInstallRequest {
+    return try FfiConverterTypeWebappInstallRequest.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeWebappInstallRequest_lower(_ value: WebappInstallRequest) -> RustBuffer {
+    return FfiConverterTypeWebappInstallRequest.lower(value)
 }
 
 
@@ -21325,6 +21359,72 @@ public func FfiConverterTypeInitiateCallType_lift(_ buf: RustBuffer) throws -> I
 #endif
 public func FfiConverterTypeInitiateCallType_lower(_ value: InitiateCallType) -> RustBuffer {
     return FfiConverterTypeInitiateCallType.lower(value)
+}
+
+
+
+
+public enum LauncherGesture: Equatable, Hashable {
+    
+    case longPress
+    case fivePress
+
+
+
+
+
+}
+
+#if compiler(>=6)
+extension LauncherGesture: Sendable {}
+#endif
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public struct FfiConverterTypeLauncherGesture: FfiConverterRustBuffer {
+    typealias SwiftType = LauncherGesture
+
+    public static func read(from buf: inout (data: Data, offset: Data.Index)) throws -> LauncherGesture {
+        let variant: Int32 = try readInt(&buf)
+        switch variant {
+        
+        case 1: return .longPress
+        
+        case 2: return .fivePress
+        
+        default: throw UniffiInternalError.unexpectedEnumCase
+        }
+    }
+
+    public static func write(_ value: LauncherGesture, into buf: inout [UInt8]) {
+        switch value {
+        
+        
+        case .longPress:
+            writeInt(&buf, Int32(1))
+        
+        
+        case .fivePress:
+            writeInt(&buf, Int32(2))
+        
+        }
+    }
+}
+
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeLauncherGesture_lift(_ buf: RustBuffer) throws -> LauncherGesture {
+    return try FfiConverterTypeLauncherGesture.lift(buf)
+}
+
+#if swift(>=5.8)
+@_documentation(visibility: private)
+#endif
+public func FfiConverterTypeLauncherGesture_lower(_ value: LauncherGesture) -> RustBuffer {
+    return FfiConverterTypeLauncherGesture.lower(value)
 }
 
 
@@ -28240,10 +28340,10 @@ private let initializationResult: InitializationResult = {
     if (uniffi_bridgething_companion_checksum_method_companionsession_get_webapp_doc() != 55247) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_bridgething_companion_checksum_method_companionsession_install_webapp() != 50155) {
+    if (uniffi_bridgething_companion_checksum_method_companionsession_install_webapp() != 21517) {
         return InitializationResult.apiChecksumMismatch
     }
-    if (uniffi_bridgething_companion_checksum_method_companionsession_install_webapp_from_url() != 57765) {
+    if (uniffi_bridgething_companion_checksum_method_companionsession_install_webapp_from_url() != 37415) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_bridgething_companion_checksum_method_companionsession_list_webapp_config() != 1816) {
@@ -28274,6 +28374,9 @@ private let initializationResult: InitializationResult = {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_bridgething_companion_checksum_method_companionsession_set_device_resume_target() != 16467) {
+        return InitializationResult.apiChecksumMismatch
+    }
+    if (uniffi_bridgething_companion_checksum_method_companionsession_set_launcher_gesture() != 33595) {
         return InitializationResult.apiChecksumMismatch
     }
     if (uniffi_bridgething_companion_checksum_method_companionsession_set_ota_poll_config() != 63985) {

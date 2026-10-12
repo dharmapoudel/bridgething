@@ -32,6 +32,7 @@ import com.margelo.nitro.bridgething.session.BridgethingDeviceLogLine
 import com.margelo.nitro.bridgething.session.BridgethingDeviceMeta
 import com.margelo.nitro.bridgething.session.BridgethingDeviceWebappsEntry
 import com.margelo.nitro.bridgething.session.BridgethingDocEntry
+import com.margelo.nitro.bridgething.session.BridgethingLauncherGesture
 import com.margelo.nitro.bridgething.session.BridgethingLogArchive
 import com.margelo.nitro.bridgething.session.BridgethingNowPlaying
 import com.margelo.nitro.bridgething.session.BridgethingOtaAvailable
@@ -74,6 +75,7 @@ import uniffi.bridgething_companion.LinkDevice
 import uniffi.bridgething_companion.LogOrigin
 import uniffi.bridgething_companion.SessionEvent
 import uniffi.bridgething_companion.SpotifyProviderConfig
+import uniffi.bridgething_companion.WebappInstallRequest
 import uniffi.bridgething_companion.WebappResourceKind
 import uniffi.bridgething_companion.WebappResourceOrigin
 
@@ -408,7 +410,7 @@ public class HybridBridgethingSessionImpl(
             ?: BridgethingAncsAuthStatus.UNKNOWN
 
     override suspend fun listWebapps(deviceId: String): Array<BridgethingWebappInfo> =
-        requireSession().listWebapps(deviceId).visible().map(::toRnWebappInfo).toTypedArray()
+        requireSession().listWebapps(deviceId).map(::toRnWebappInfo).toTypedArray()
 
     override suspend fun currentWebapp(deviceId: String): BridgethingActiveWebapp? =
         requireSession().currentWebapp(deviceId)?.let(::toRnActiveWebapp)
@@ -417,7 +419,11 @@ public class HybridBridgethingSessionImpl(
         val session = requireSession()
         val info = when (URI(sourceUri).scheme?.lowercase()) {
             "file" -> session.installWebapp(deviceId, File(URI(sourceUri)).absolutePath, null)
-            "http", "https" -> session.installWebappFromUrl(deviceId, sourceUri, null, sourceUri)
+            "http", "https" ->
+                session.installWebappFromUrl(
+                    deviceId,
+                    WebappInstallRequest(sourceUri, null, sourceUri, null, null),
+                )
             else -> throw IllegalArgumentException("invalid archive uri")
         }
         return toRnWebappInfo(info)
@@ -434,9 +440,13 @@ public class HybridBridgethingSessionImpl(
     ): BridgethingWebappInfo = toRnWebappInfo(
         requireSession().installWebappFromUrl(
             deviceId,
-            url,
-            ArtifactDigest(size = size.toLong().toULong(), sha256 = sha256.lowercase()),
-            provenance,
+            WebappInstallRequest(
+                url = url,
+                expected = ArtifactDigest(size = size.toLong().toULong(), sha256 = sha256.lowercase()),
+                provenance = provenance,
+                webappId = webappId,
+                webappName = webappName,
+            ),
         ),
     )
 
@@ -576,6 +586,10 @@ public class HybridBridgethingSessionImpl(
 
     override suspend fun deviceSetNickname(deviceId: String, nickname: String) {
         requireSession().deviceSetNickname(deviceId, nickname)
+    }
+
+    override suspend fun setLauncherGesture(deviceId: String, gesture: BridgethingLauncherGesture) {
+        requireSession().setLauncherGesture(deviceId, toLauncherGesture(gesture))
     }
 
     override suspend fun exportLogs(archiveId: String?): String = withContext(Dispatchers.IO) {

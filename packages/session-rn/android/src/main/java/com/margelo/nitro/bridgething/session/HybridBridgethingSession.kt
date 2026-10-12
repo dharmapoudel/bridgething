@@ -345,12 +345,15 @@ public class HybridBridgethingSession : HybridBridgethingSessionSpec() {
         require().deviceSetNickname(deviceId, nickname)
     }
 
-    override fun collectScreenshot(deviceId: String, transferId: String, capturedAtMs: Double): Promise<String> = Promise.async {
-        require().collectScreenshot(deviceId, transferId, capturedAtMs)
-    }
+    override fun setLauncherGesture(deviceId: String, gesture: BridgethingLauncherGesture): Promise<Unit> =
+        Promise.async {
+            require().setLauncherGesture(deviceId, gesture)
+        }
 
-    override fun presentPairPicker(): Promise<BridgethingPairPickResult> = Promise.async {
-        require().presentPairPicker()
+    override fun presentPairPicker(): Promise<Variant_NullType_BridgethingBtDevice> = Promise.async {
+        val device = require().presentPairPicker()
+        if (device != null) Variant_NullType_BridgethingBtDevice.Second(device)
+        else Variant_NullType_BridgethingBtDevice.First(NullType.NULL)
     }
 
     override fun isNotificationAccessGranted(): Promise<Boolean> = Promise.async {
